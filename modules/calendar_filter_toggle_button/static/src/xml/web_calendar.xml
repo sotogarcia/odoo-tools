@@ -1,0 +1,9 @@
+<template>
+
+    <t t-name="CalendarView.sidebar.filter" t-extend="CalendarView.sidebar.filter">
+        <t t-jquery="div.o_calendar_filter" t-operation="append">
+            <button id="8D57C95F9A7E4AE995333FD77E0918E6" class="btn btn-sm btn-secondary d-block mt-3">Toogle all</button>
+        </t>
+    </t>
+
+</template>
