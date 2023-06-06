@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data noupdate="0">
+
+        <record id="view_facility_search_available_wizard_form" model="ir.ui.view">
+            <field name="name">Search available facilities</field>
+            <field name="model">facility.search.available.wizard</field>
+            <field name="type">form</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <form string="Search available facilities" create="1" delete="1" edit="1">
+                    <header>
+                        <button name="view_facilities"
+                                string="&#160;Search"
+                                type="object"
+                                default_focus="0"
+                                icon="fa-search"
+                                help="Show found facilities using all the window"
+                                class="btn-primary" />
+                    </header>
+
+                    <group col="6" id="schedule" string="Schedule">
+                        <field name="date_base" class="oe_field_date_base" />
+                        <field name="weekday" class="oe_field_week_day text-info font-italic"
+                            colspan="2" nolabel="1" />
+                        <field name="full_day" class="oe_field_full_day" />
+
+                        <field name="time_start" class="oe_field_time_start" widget="float_time"
+                            attrs="{'invisible': [('full_day', '=', True)]}" />
+                        <field name="time_stop" class="oe_field_time_stop" widget="float_time"
+                            attrs="{'invisible': [('full_day', '=', True)]}" />
+                        <field name="date_delay" class="oe_field_date_delay" widget="float_time"
+                            attrs="{'invisible': [('full_day', '=', True)]}" />
+                    </group>
+
+                    <group col="2" id="repeat" string="Repeat">
+                        <group col="2" class="mt-0">
+                            <field name="repeat" class="oe_field_repeat" />
+                            <field name="interval_number" class="oe_field_interval_number" min="1"
+                                attrs="{'invisible': [('repeat', '&lt;&gt;', True)]}"/>
+
+                            <separator colspan="2"
+                                attrs="{'invisible': [('repeat', '&lt;&gt;', True)]}"/>
+                            <field name="finish_type" class="oe_field_finish_type"
+                                attrs="{'invisible': [('repeat', '&lt;&gt;', True)]}"/>
+                            <field name="finish_date" class="oe_field_finish_date"
+                                attrs="{'invisible': ['|', ('repeat', '&lt;&gt;', True), ('finish_type', '&lt;&gt;', 'date')]}" />
+                            <field name="finish_number" class="oe_field_finish_number"
+                                attrs="{'invisible': ['|', ('repeat', '&lt;&gt;', True), ('finish_type', '&lt;&gt;', 'number')]}" />
+                        </group>
+                        <group col="2" class="mt-0" attrs="{'invisible': [('repeat', '&lt;&gt;', True)]}">
+                            <separator colspan="2" />
+                            <field name="interval_type" class="oe_field_interval_type" />
+                            <field name="weekday_ids" class="oe_field_weekday_ids"
+                                attrs="{'invisible': [('interval_type', '&lt;&gt;', 'week')]}"
+                                widget="many2many_checkboxes"/>
+                            <field name="month_type" class="oe_field_month_type"
+                                attrs="{'invisible': [('interval_type', '&lt;&gt;', 'month')]}" />
+                            <field name="week_day_str" class="oe_field_week_day_str text-info font-italic"
+                                attrs="{'invisible': ['|', ('interval_type', '&lt;&gt;', 'month'), ('month_type', '&lt;&gt;', 'week')]}" />
+                        </group>
+                    </group>
+
+                    <group col="6" id="restrictions" string="Restrictions">
+                        <field name="type_ids" class="oe_field_type_ids"
+                            colspan="4" widget="many2many_tags"
+                            options="{'no_quick_create': True, 'no_create': True, 'no_open': True}" />
+                        <field name="exclude_types" class="oe_field_exclude_types"
+                            attrs="{'readonly': [('type_ids', '=', [])]}" string="Exclude" />
+                        <field name="complex_ids" class="oe_field_complex_ids"
+                            colspan="4" widget="many2many_tags"
+                            options="{'no_quick_create': True, 'no_create': True, 'no_open': True}" />
+                        <field name="exclude_complexes" class="oe_field_exclude_complexes"
+                            attrs="{'readonly': [('complex_ids', '=', [])]}" string="Exclude" />
+                    </group>
+
+                    <footer />
+                </form>
+            </field>
+        </record>
+
+        <record id="action_search_available_facilities_act_window" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Search available facilities</field>
+            <field name="res_model">facility.search.available.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <!-- Main menu for model.name -->
+        <record id="menu_search_available_facilities" model="ir.ui.menu" >
+            <field name="name">Search available</field>
+            <field name="sequence" eval="20" />
+            <field name="action" ref="action_search_available_facilities_act_window" />
+            <field name="parent_id" ref="facility_management.menu_facility_management_facilities" />
+            <field name="groups_id" eval="[(4, ref('facility_management.facility_group_applicant'))]"/>
+        </record>
+
+    </data>
+</openerp>

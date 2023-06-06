@@ -1,0 +1,8 @@
+th[data-name="view_reservations"] {
+    max-width: 35px!important;
+}
+
+td.o_list_button:has(button[name="view_reservations"]) {
+    text-align: center;
+}
+

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data noupdate="0">
+
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.academy.timesheets</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="20" />
+            <field name="inherit_id" ref="base.res_config_settings_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="Facilities"
+                         data-key="facility_management" groups="base.group_system" >
+
+                        <div name="facility_management_settings_attribute_values">
+                            <h2>Hidden resources</h2>
+                            <div class="row mt16 o_settings_container" name="hidden_resources">
+                                <div class="col-12 col-md-6 o_setting_box">
+                                    <div class="o_setting_right_pane">
+                                        <span class="o_form_label">
+                                            Setup weekdays
+                                        </span>
+                                        <div class="text-muted">
+                                            Establish the order for the days of the week and
+                                            determine which of them are working days.
+                                        </div>
+                                        <div class="content-group mt8">
+                                            <button
+                                                name="%(facility_management.action_weekdays_act_window)d"
+                                                string="&#160;Weekdays"
+                                                type="action"
+                                                class="oe_link"
+                                                icon="fa-arrow-right"
+                                            />
+                                        </div>
+                                    </div>
+                                </div> <!-- col -->
+
+                                <div class="col-12 col-md-6 o_setting_box">
+                                    <div class="o_setting_right_pane">
+                                        <span class="o_form_label">
+                                            Setup schedulers
+                                        </span>
+                                        <div class="text-muted">
+                                            List and/or modify the schedulers.
+                                        </div>
+                                        <div class="content-group mt8">
+                                            <button
+                                                name="%(facility_management.action_facility_reservation_scheduler_act_window)d"
+                                                string="&#160;Schedulers"
+                                                type="action"
+                                                class="oe_link"
+                                                icon="fa-arrow-right"
+                                            />
+                                        </div>
+                                    </div>
+                                </div> <!-- col -->
+
+                            </div> <!-- row -->
+                        </div>
+
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

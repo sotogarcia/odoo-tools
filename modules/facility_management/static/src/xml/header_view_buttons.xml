@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="facility_management_header_view_buttons" xml:space="preserve">
+
+    <t t-name="ListView.buttons.search_available_facility">
+        <button type="button" class="btn btn-info" id="EB40E9ABF36F47739DB909F26B9A857B">
+            Available
+        </button>
+    </t>
+
+    <t t-name="KanbanView.buttons.search_available_facility">
+        <button type="button" class="btn btn-info" id="EB40E9ABF36F47739DB909F26B9A857B">
+            Available
+        </button>
+    </t>
+
+    <t t-name="CalendarView.buttons.search_available_facility">
+        <t t-jquery="div.o_calendar_buttons > div:last" t-operation="after">
+            <div class="btn-group ml-2">
+                <button type="button" class="btn btn-info" id="EB40E9ABF36F47739DB909F26B9A857B">
+                    Available
+                </button>
+            </div>
+        </t>
+    </t>
+
+</templates>

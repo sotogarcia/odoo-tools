@@ -1,0 +1,107 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* record_ownership
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-11-01 15:51+0000\n"
+"PO-Revision-Date: 2022-11-01 16:55+0100\n"
+"Last-Translator: \n"
+"Language-Team: Jorge Soto Garcia\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: es_ES\n"
+"X-Generator: Poedit 2.3\n"
+
+#. module: record_ownership
+#: model:ir.model.fields,help:record_ownership.field_ownership_mixin__prerogative
+msgid "Compute current user access rights to change authorship"
+msgstr "Calcula los derechos de acceso del usuario actual para cambiar la titularidad"
+
+#. module: record_ownership
+#: model:ir.model.fields.selection,name:record_ownership.selection__ownership_mixin__prerogative__1
+#: model:res.groups,name:record_ownership.record_ownership_consultant
+msgid "Consultant"
+msgstr "Consultor"
+
+#. module: record_ownership
+#: model:ir.model.fields,help:record_ownership.field_ownership_mixin__owner_id
+msgid "Current record owner"
+msgstr "Titular del registro actual"
+
+#. module: record_ownership
+#: model:ir.model.fields.selection,name:record_ownership.selection__ownership_mixin__prerogative__0
+msgid "Forbidden"
+msgstr "Prohibido"
+
+#. module: record_ownership
+#: model:ir.model.fields,field_description:record_ownership.field_ownership_mixin__manager_id
+#: model:ir.model.fields.selection,name:record_ownership.selection__ownership_mixin__prerogative__3
+#: model:res.groups,name:record_ownership.record_ownership_manager
+msgid "Manager"
+msgstr "Administrador"
+
+#. module: record_ownership
+#: model:ir.model.fields,field_description:record_ownership.field_ownership_mixin__owner_id
+msgid "Owner"
+msgstr "Titular"
+
+#. module: record_ownership
+#: model:ir.module.category,name:record_ownership.module_record_ownership
+msgid "Ownership"
+msgstr "Titularidad"
+
+#. module: record_ownership
+#: model:ir.model.fields,help:record_ownership.field_ownership_mixin__manager_id
+msgid "Person in charge of this record"
+msgstr "Responsable de este registro"
+
+#. module: record_ownership
+#: model:ir.model.fields,help:record_ownership.field_ownership_mixin__subrogate_id
+msgid "Person who assumes the obligations of the owner"
+msgstr "Persona que asume las obligaciones del titular"
+
+#. module: record_ownership
+#: model:ir.model.fields,field_description:record_ownership.field_ownership_mixin__prerogative
+msgid "Prerogative"
+msgstr "Prerrogativa"
+
+#. module: record_ownership
+#: model:ir.model,name:record_ownership.model_ownership_mixin
+msgid "Provides owner field and behavior"
+msgstr "Proporciona el campo y el comportamiento del propietario"
+
+#. module: record_ownership
+#: model:ir.model.fields.selection,name:record_ownership.selection__ownership_mixin__prerogative__2
+#: model:res.groups,name:record_ownership.record_ownership_proxy
+msgid "Proxy"
+msgstr "Apoderado"
+
+#. module: record_ownership
+#: model:ir.module.category,description:record_ownership.module_record_ownership
+msgid "Record ownership"
+msgstr "Titularidad del registro"
+
+#. module: record_ownership
+#: model:ir.model.fields,field_description:record_ownership.field_ownership_mixin__subrogate_id
+msgid "Subrogate"
+msgstr "Subrogar a"
+
+#. module: record_ownership
+#: model:res.groups,comment:record_ownership.record_ownership_manager
+msgid "Users who can change ownership of records"
+msgstr "Usuarios que pueden cambiar la titularidad de los registros"
+
+#. module: record_ownership
+#: model:res.groups,comment:record_ownership.record_ownership_proxy
+msgid "Users who can subrogate records"
+msgstr "Usuarios que pueden subrogar registros"
+
+#. module: record_ownership
+#: model:res.groups,comment:record_ownership.record_ownership_consultant
+msgid "Users who can view record ownership"
+msgstr "Usuarios que pueden ver la titularidad de los registros"

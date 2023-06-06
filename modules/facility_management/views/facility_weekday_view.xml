@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data noupdate="0">
+
+        <!-- VIEWS: "Weekdays"
+
+            - Model·········: facility.weekday
+            - _rec_name·····: name
+            - Domain········: []
+            - Context·······: {}
+            - Parent menu ··: base.menu_custom
+            - View priority·: 16    Sequence····: 10
+            - Action help···: here are no weekdays
+        - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <!-- Tree view for "facility.weekday" -->
+        <record id="view_facility_weekday_tree" model="ir.ui.view">
+            <field name="name">view.facility.weekday.tree</field>
+            <field name="model">facility.weekday</field>
+            <field name="type">tree</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <tree string="facility_weekday_tree" create="0" delete="0" edit="1" editable="bottom">
+                    <field name="sequence" class="oe_field_sequence" widget="handle" />
+                    <field name="name" class="oe_field_name" />
+                    <field name="workday" class="oe_field_workday" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form view for "facility.weekday" -->
+        <record id="view_facility_weekday_form" model="ir.ui.view">
+            <field name="name">view.facility.weekday.form</field>
+            <field name="model">facility.weekday</field>
+            <field name="type">form</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <form string="facility_weekday_form" create="1" delete="1" edit="1">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only" />
+                            <h1>
+                                <field name="name" class="oe_field_name" />
+                            </h1>
+                        </div>
+                        <group col="2">
+                            <field name="workday" class="oe_field_workday" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search view for "facility.weekday" -->
+        <record id="view_facility_weekday_search" model="ir.ui.view">
+            <field name="name">view.facility.weekday.search</field>
+            <field name="model">facility.weekday</field>
+            <field name="type">search</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <search string="facility_weekday_search">
+                    <field name="name" />
+                    <filter string="Working days"
+                        name="workdays"
+                        domain="[('workday', '=', True)]"
+                        context="{}"
+                        help="Show weekdays only" />
+                    <filter string="Non working days"
+                        name="workdays"
+                        domain="[('workday', '&lt;&gt;', True)]"
+                        context="{}"
+                        help="Show non working days" />
+                </search>
+            </field>
+        </record>
+
+        <!-- Main window action for model.name -->
+        <record id="action_weekdays_act_window" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Weekdays</field>
+            <field name="res_model">facility.weekday</field>
+            <field name="view_mode">tree</field>
+            <field name="target">current</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="view_facility_weekday_search" />
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add new Weekdays
+                </p><p>
+                    here are no weekdays
+                </p>
+            </field>
+        </record>
+
+    </data>
+</openerp>
