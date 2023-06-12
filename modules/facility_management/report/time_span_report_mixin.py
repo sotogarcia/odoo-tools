@@ -70,8 +70,8 @@ class TimeSpanReportMixin(models.AbstractModel):
 
         return [date_start + timedelta(days=value) for value in range(0, days)]
 
-    @staticmethod
-    def _get_interval(data):
+    @api.model
+    def _get_interval(self, data):
         """ Get date_start and date_stop value from given ``data['interval']``
             dictionary if have been set
 
@@ -90,17 +90,20 @@ class TimeSpanReportMixin(models.AbstractModel):
         date_start, date_stop = None, None
 
         if data:
-
             interval = data.get('interval', False)
-            if interval:
 
-                date_start = interval.get('date_start', False)
-                if isinstance(date_start, str):
-                    date_start = fields.Datetime.to_datetime(date_start)
+        if not interval:
+            interval = self.env.context.get('time_span', False)
 
-                date_stop = interval.get('date_stop', False)
-                if isinstance(date_stop, str):
-                    date_stop = fields.Datetime.to_datetime(date_stop)
+        if interval:
+
+            date_start = interval.get('date_start', False)
+            if isinstance(date_start, str):
+                date_start = fields.Datetime.to_datetime(date_start)
+
+            date_stop = interval.get('date_stop', False)
+            if isinstance(date_stop, str):
+                date_stop = fields.Datetime.to_datetime(date_stop)
 
         if not date_start:
             date_start = fields.Datetime.now()

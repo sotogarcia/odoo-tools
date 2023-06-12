@@ -826,7 +826,7 @@ msgstr "Código interno de la instalación"
 #. module: facility_management
 #: model:ir.module.category,name:facility_management.module_category_facility_management
 msgid "Facility management"
-msgstr "Gestión de instalaciones"
+msgstr "Instalaciones"
 
 #. module: facility_management
 #: model:ir.module.category,description:facility_management.module_category_facility_management
