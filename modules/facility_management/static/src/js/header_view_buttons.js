@@ -13,17 +13,17 @@ odoo.define('facility_management.header_view_buttons', function (require) {
         renderButtons: function ($node) {
             this._super.apply(this, arguments);
 
-            if (this.$buttons && this.modelMatches()) {
-                this.tryToAppendCustomButton();
+            if (this.$buttons && this.facilityModelMatches()) {
+                this.facilityTryToAppendCustomButton();
             }
         },
 
-        modelMatches: function() {
+        facilityModelMatches: function() {
             return this.modelName == 'facility.facility' ||
                    this.modelName == 'facility.reservation';
         },
 
-        tryToAppendCustomButton: function() {
+        facilityTryToAppendCustomButton: function() {
             let template = false;
             let selector = false;
 
@@ -31,24 +31,24 @@ odoo.define('facility_management.header_view_buttons', function (require) {
                 case 'list':
                     template = 'CalendarView.buttons.search_available_facility';
                     selector = 'button:last';
-                    this.appendCustomButton(selector, template);
+                    this.facilityAppendCustomButton(selector, template);
                     break;
 
                 case 'kanban':
                     template = 'CalendarView.buttons.search_available_facility';
                     selector = 'button:last';
-                    this.appendCustomButton(selector, template);
+                    this.facilityAppendCustomButton(selector, template);
                     break;
 
                 case 'calendar':
                     template = 'CalendarView.buttons.search_available_facility';
                     selector = '> div.btn-group:last';
-                    this.appendCustomButton(selector, template);
+                    this.facilityAppendCustomButton(selector, template);
                     break;
             } // switch
         },
 
-        appendCustomButton: function(selector, template) {
+        facilityAppendCustomButton: function(selector, template) {
             let element = this.$buttons.find(selector);
             let custom = null;
 
@@ -56,20 +56,20 @@ odoo.define('facility_management.header_view_buttons', function (require) {
                 custom = $(QWeb.render(template));
                 custom = element.after(custom);
 
-                this.listenForClickEvent();
+                this.facilityListenForClickEvent();
             }
 
             return custom;
         },
 
-        listenForClickEvent: function(event) {
+        facilityListenForClickEvent: function(event) {
             let selector = '#EB40E9ABF36F47739DB909F26B9A857B';
             let button = this.$buttons.find(selector);
 
-            button.on('click', this.proxy('showFacilityWizard'));
+            button.on('click', this.proxy('facilityShowWizard'));
         },
 
-        showFacilityWizard: function(event) {
+        facilityShowWizard: function(event) {
 
             var action = {
                 type: "ir.actions.act_window",

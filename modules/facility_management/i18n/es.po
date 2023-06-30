@@ -531,7 +531,7 @@ msgstr "Mes actual"
 #: model:ir.model.fields,help:facility_management.field_facility_reservation__owner_id
 #: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__owner_id
 msgid "Current record owner"
-msgstr "Dueño del registro actual"
+msgstr "Titular del registro actual"
 
 #. module: facility_management
 #: model:ir.model.fields,help:facility_management.field_facility_reservation__state
@@ -1546,12 +1546,12 @@ msgstr "Opciones"
 #: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__owner_id
 #: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_search
 msgid "Owner"
-msgstr "Responsable"
+msgstr "Titular"
 
 #. module: facility_management
 #: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_kanban
 msgid "Owner:"
-msgstr "Responsable:"
+msgstr "Titular:"
 
 #. module: facility_management
 #: model:ir.model.fields,field_description:facility_management.field_facility_complex__parent_name
@@ -1587,7 +1587,7 @@ msgstr "Responsable de este registro"
 #: model:ir.model.fields,help:facility_management.field_facility_reservation__subrogate_id
 #: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__subrogate_id
 msgid "Person who assumes the obligations of the owner"
-msgstr "Persona que asume las obligaciones del responsable"
+msgstr "Persona que asume las obligaciones del titular"
 
 #. module: facility_management
 #: model:ir.model.fields,field_description:facility_management.field_facility_complex__phone
@@ -1957,7 +1957,7 @@ msgstr "Calle # 2"
 #. module: facility_management
 #: model:ir.model.fields,field_description:facility_management.field_facility_complex__student_id
 msgid "Student"
-msgstr "Alumno"
+msgstr "Estudiante"
 
 #. module: facility_management
 #: model:ir.model.fields,field_description:facility_management.field_facility_complex__subrogate_id
@@ -1965,7 +1965,7 @@ msgstr "Alumno"
 #: model:ir.model.fields,field_description:facility_management.field_facility_reservation__subrogate_id
 #: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__subrogate_id
 msgid "Subrogate"
-msgstr "Subrogar"
+msgstr "Delegar"
 
 #. module: facility_management
 #: model:facility.weekday,name:facility_management.facility_weekday_sunday

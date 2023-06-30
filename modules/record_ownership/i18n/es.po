@@ -73,7 +73,7 @@ msgstr "Prerrogativa"
 #. module: record_ownership
 #: model:ir.model,name:record_ownership.model_ownership_mixin
 msgid "Provides owner field and behavior"
-msgstr "Proporciona el campo y el comportamiento del propietario"
+msgstr "Proporciona el campo y el comportamiento del titular"
 
 #. module: record_ownership
 #: model:ir.model.fields.selection,name:record_ownership.selection__ownership_mixin__prerogative__2
