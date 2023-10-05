@@ -1770,7 +1770,7 @@ msgstr "Progamación"
 #: code:addons/facility_management/models/facility_scheduler_mixin.py:0
 #, python-format
 msgid "Schedule time out of training action timespan"
-msgstr "Programar tiempo fuera del intervalo de tiempo de acción de entrenamiento"
+msgstr "Programar tiempo fuera del intervalo de tiempo de acción formativa"
 
 #. module: facility_management
 #: model_terms:ir.ui.view,arch_db:facility_management.view_facility_tree

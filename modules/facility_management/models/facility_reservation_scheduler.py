@@ -282,8 +282,6 @@ class FacilityReservationScheduler(models.Model):
             else:
                 dates = [record.date_base]
 
-            print(dates)
-
             default = {
                 'name': record.name,
                 'description': record.description,
