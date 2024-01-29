@@ -58,7 +58,36 @@
                                 </div> <!-- col -->
 
                             </div> <!-- row -->
-                        </div>
+                        </div> <!-- Hidden resources -->
+
+
+                        <div name="facility_management_settings_attribute_values">
+                            <h2>Others</h2>
+                            <div class="row mt16 o_settings_container" name="hidden_resources">
+
+                               <div class="col-12 col-md-6 o_setting_box">
+                                    <div class="o_setting_right_pane">
+                                        <span class="o_form_label">
+                                            Rejection
+                                        </span>
+                                        <div class="text-muted">
+                                            Auto-archive reservation requests when they are rejected
+                                        </div>
+                                        <div class="content-group">
+                                            <div class="row mt8">
+                                                <label
+                                                    class="col-md-3 o_light_label"
+                                                    for="auto_archive_on_rejection"
+                                                />
+                                                <field name="auto_archive_on_rejection" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> <!-- col -->
+
+                            </div> <!-- row -->
+                        </div> <!-- Hidden resources -->
+
 
                     </div>
                 </xpath>

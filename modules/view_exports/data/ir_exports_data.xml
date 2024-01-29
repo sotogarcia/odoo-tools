@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data noupdate="0">
+
+        <record id="ir_exports_exports" model="ir.exports">
+            <field name="name">Export ir.exports records</field>
+            <field name="resource">ir.exports</field>
+            <field name="export_fields" eval="[(5, 0, 0), (0, 0, {'name': 'name'})]" />
+        </record>
+
+    </data>
+</openerp>

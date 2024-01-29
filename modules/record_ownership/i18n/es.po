@@ -4,23 +4,70 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-01 15:51+0000\n"
-"PO-Revision-Date: 2022-11-01 16:55+0100\n"
+"POT-Creation-Date: 2023-12-18 19:35+0000\n"
+"PO-Revision-Date: 2023-12-18 20:41+0100\n"
 "Last-Translator: \n"
-"Language-Team: Jorge Soto Garcia\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Language: es_ES\n"
+"Plural-Forms: \n"
+"Language: es\n"
 "X-Generator: Poedit 2.3\n"
+
+#. module: record_ownership
+#: model:ir.model.fields.selection,name:record_ownership.selection__record_ownership_wizard__fix_redundancy__db
+msgid "All the records"
+msgstr "Todos los registros"
+
+#. module: record_ownership
+#: model_terms:ir.ui.view,arch_db:record_ownership.view_record_ownership_wizard
+msgid "Are you sure to perform changes"
+msgstr "Estás seguro de realizar cambios"
+
+#. module: record_ownership
+#: model_terms:ir.ui.view,arch_db:record_ownership.view_record_ownership_wizard
+msgid "Change"
+msgstr "Cambiar"
+
+#. module: record_ownership
+#: model:ir.model.fields,field_description:record_ownership.field_record_ownership_wizard__change_owner
+msgid "Change owner"
+msgstr "Cambiar el titular"
+
+#. module: record_ownership
+#: model:ir.model.fields,field_description:record_ownership.field_record_ownership_wizard__change_subrogate
+msgid "Change subrogate"
+msgstr "Delegar en"
+
+#. module: record_ownership
+#: model:ir.model.fields,help:record_ownership.field_record_ownership_wizard__change_owner
+msgid "Check it to establish owner"
+msgstr "Marcar para cambiar el titular"
+
+#. module: record_ownership
+#: model:ir.model.fields,help:record_ownership.field_record_ownership_wizard__change_subrogate
+msgid "Check it to establish surrogacy"
+msgstr "Marcar para delegar en"
+
+#. module: record_ownership
+#: model:ir.model.fields,help:record_ownership.field_record_ownership_wizard__fix_redundancy
+msgid "Choose it to correct delegations to the owner himself"
+msgstr "Elígelo para corregir delegaciones en el propio titular"
+
+#. module: record_ownership
+#: model:ir.model.fields.selection,name:record_ownership.selection__record_ownership_wizard__fix_redundancy__ch
+msgid "Chosen records"
+msgstr "Registros elegidos"
 
 #. module: record_ownership
 #: model:ir.model.fields,help:record_ownership.field_ownership_mixin__prerogative
 msgid "Compute current user access rights to change authorship"
-msgstr "Calcula los derechos de acceso del usuario actual para cambiar la titularidad"
+msgstr ""
+"Calcula los derechos de acceso del usuario actual para cambiar la "
+"titularidad"
 
 #. module: record_ownership
 #: model:ir.model.fields.selection,name:record_ownership.selection__ownership_mixin__prerogative__1
@@ -29,14 +76,73 @@ msgid "Consultant"
 msgstr "Consultor"
 
 #. module: record_ownership
+#: model:ir.model.fields,field_description:record_ownership.field_record_ownership_wizard__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: record_ownership
+#: model:ir.model.fields,field_description:record_ownership.field_record_ownership_wizard__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: record_ownership
 #: model:ir.model.fields,help:record_ownership.field_ownership_mixin__owner_id
 msgid "Current record owner"
 msgstr "Titular del registro actual"
 
 #. module: record_ownership
+#: model:ir.model.fields,help:record_ownership.field_record_ownership_wizard__tracking_disable
+msgid "Disable tracking"
+msgstr "Desactivar seguimiento"
+
+#. module: record_ownership
+#: model:ir.model.fields,field_description:record_ownership.field_ownership_mixin__display_name
+#: model:ir.model.fields,field_description:record_ownership.field_record_ownership_wizard__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: record_ownership
+#: model_terms:ir.ui.view,arch_db:record_ownership.view_record_ownership_wizard
+msgid "Ownership wizard"
+msgstr "Asistente de titularidad"
+
+#. module: record_ownership
+#: model:ir.model.fields,field_description:record_ownership.field_record_ownership_wizard__fix_redundancy
+msgid "Fix redundancy"
+msgstr "Corregir redundancia"
+
+#. module: record_ownership
 #: model:ir.model.fields.selection,name:record_ownership.selection__ownership_mixin__prerogative__0
 msgid "Forbidden"
 msgstr "Prohibido"
+
+#. module: record_ownership
+#: model:ir.model.fields,field_description:record_ownership.field_ownership_mixin__id
+#: model:ir.model.fields,field_description:record_ownership.field_record_ownership_wizard__id
+msgid "ID"
+msgstr ""
+
+#. module: record_ownership
+#: code:addons/record_ownership/wizard/record_ownership_wizard.py:0
+#, python-format
+msgid "Invalid value in fix_redundancy field"
+msgstr "Valor no válido en el campo fix_redundancy"
+
+#. module: record_ownership
+#: model:ir.model.fields,field_description:record_ownership.field_ownership_mixin____last_update
+#: model:ir.model.fields,field_description:record_ownership.field_record_ownership_wizard____last_update
+msgid "Last Modified on"
+msgstr "Última modificación el"
+
+#. module: record_ownership
+#: model:ir.model.fields,field_description:record_ownership.field_record_ownership_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Actualizado por última vez por"
+
+#. module: record_ownership
+#: model:ir.model.fields,field_description:record_ownership.field_record_ownership_wizard__write_date
+msgid "Last Updated on"
+msgstr "Ultima actualización en"
 
 #. module: record_ownership
 #: model:ir.model.fields,field_description:record_ownership.field_ownership_mixin__manager_id
@@ -46,7 +152,23 @@ msgid "Manager"
 msgstr "Administrador"
 
 #. module: record_ownership
+#: model:ir.model.fields,field_description:record_ownership.field_record_ownership_wizard__model_id
+msgid "Model"
+msgstr "Modelo"
+
+#. module: record_ownership
+#: model:ir.model.fields.selection,name:record_ownership.selection__record_ownership_wizard__fix_redundancy__no
+msgid "No"
+msgstr ""
+
+#. module: record_ownership
+#: model:ir.model.fields,help:record_ownership.field_record_ownership_wizard__target_count
+msgid "Number of target records"
+msgstr "Número de registros objetivo"
+
+#. module: record_ownership
 #: model:ir.model.fields,field_description:record_ownership.field_ownership_mixin__owner_id
+#: model:ir.model.fields,field_description:record_ownership.field_record_ownership_wizard__owner_id
 msgid "Owner"
 msgstr "Titular"
 
@@ -54,6 +176,11 @@ msgstr "Titular"
 #: model:ir.module.category,name:record_ownership.module_record_ownership
 msgid "Ownership"
 msgstr "Titularidad"
+
+#. module: record_ownership
+#: model_terms:ir.ui.view,arch_db:record_ownership.view_record_ownership_wizard
+msgid "Perform changes"
+msgstr "Realizar cambios"
 
 #. module: record_ownership
 #: model:ir.model.fields,help:record_ownership.field_ownership_mixin__manager_id
@@ -82,14 +209,66 @@ msgid "Proxy"
 msgstr "Apoderado"
 
 #. module: record_ownership
+#: model:ir.model.fields,field_description:record_ownership.field_record_ownership_wizard__record_count
+msgid "Record count"
+msgstr "Nº de registros"
+
+#. module: record_ownership
 #: model:ir.module.category,description:record_ownership.module_record_ownership
 msgid "Record ownership"
 msgstr "Titularidad del registro"
 
 #. module: record_ownership
+#: model:ir.model,name:record_ownership.model_record_ownership_wizard
+msgid "Record ownership wizard"
+msgstr "Asistente de titularidad de registros"
+
+#. module: record_ownership
+#: model:ir.model.fields,help:record_ownership.field_record_ownership_wizard__owner_id
+msgid "Select the user to appear as the owner"
+msgstr "Seleccione el usuario que figurará como titular"
+
+#. module: record_ownership
+#: model:ir.model.fields,help:record_ownership.field_record_ownership_wizard__subrogate_id
+msgid "Select the user to which the records will be subrogated"
+msgstr "Seleccionar el usuario en el que se delegarán los registros"
+
+#. module: record_ownership
 #: model:ir.model.fields,field_description:record_ownership.field_ownership_mixin__subrogate_id
+#: model:ir.model.fields,field_description:record_ownership.field_record_ownership_wizard__subrogate_id
 msgid "Subrogate"
 msgstr "Subrogar a"
+
+#. module: record_ownership
+#: model:ir.model.fields,field_description:record_ownership.field_record_ownership_wizard__target_count
+msgid "Target count"
+msgstr "Nº de objetivos"
+
+#. module: record_ownership
+#: model:ir.model.fields,help:record_ownership.field_record_ownership_wizard__model_id
+msgid "Target model"
+msgstr "Modelo objetivo"
+
+#. module: record_ownership
+#: model:ir.model.fields.selection,name:record_ownership.selection__record_ownership_wizard__fix_redundancy__tg
+msgid "Target records"
+msgstr "Registros objetivo"
+
+#. module: record_ownership
+#: code:addons/record_ownership/wizard/record_ownership_wizard.py:0
+#, python-format
+msgid "The operation could not be completed. The system says: {}"
+msgstr "La operación no pudo ser completada. El sistema dice: {}"
+
+#. module: record_ownership
+#: model:ir.model.fields,help:record_ownership.field_record_ownership_wizard__record_count
+msgid "Total number of selected records"
+msgstr "Número total de registros seleccionados"
+
+#. module: record_ownership
+#: model:ir.model.fields,field_description:record_ownership.field_record_ownership_wizard__tracking_disable
+msgid "Tracking disable"
+msgstr "No comunicar"
 
 #. module: record_ownership
 #: model:res.groups,comment:record_ownership.record_ownership_manager

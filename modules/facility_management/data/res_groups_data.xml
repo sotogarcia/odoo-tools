@@ -16,7 +16,7 @@
             <field name="name">Consultant</field>
             <field name="comment">Users who can only consult facilities and reservations</field>
             <field name="category_id" ref="module_category_facility_management"/>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('record_ownership.record_ownership_consultant'))]" />
         </record>
 
         <record id="facility_group_applicant" model="res.groups">

@@ -27,7 +27,9 @@
                     <field name="name" class="oe_field_name" />
                     <field name="code" class="oe_field_code" />
                     <field name="company_id" class="oe_field_company_id" />
-                    <field name="description" class="oe_field_description" />
+                    <field name="manager_id" class="oe_field_manager_id" />
+                    <field name="facility_count" class="oe_field_facility_count" />
+                    <field name="unconfirmed_reservation_count" class="oe_field_unconfirmed_reservation_count" string="Awaiting" />
                 </tree>
             </field>
         </record>
@@ -44,6 +46,10 @@
                 <form string="facility_complex_form" create="1" delete="1" edit="1">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
+                            <button name="view_reservations" type="object" class="oe_stat_button oe_read_only"
+                                icon="fa-spinner" help="Show related reservations">
+                                <field name="unconfirmed_reservation_count" widget="statinfo" string="Awaiting" />
+                            </button>
                             <button name="view_facilities" type="object" class="oe_stat_button oe_read_only"
                                 icon="fa-building-o" help="Show related facilities">
                                 <field name="facility_count" widget="statinfo" string="Facilities" />
@@ -99,11 +105,18 @@
                                 </group>
                             </page>
                             <page string="Setup" class="oe_page_setup" accesskey="S">
-                                <group col="4">
+                                <group col="4" groups="base.group_multi_company">
                                     <field name="company_id" class="oe_field_company_id" groups="base.group_multi_company" />
-                                    <separator colspan="2" groups="base.group_multi_company" />
+                                    <separator colspan="2" />
+                                </group>
+                                <group col="4" string="Ownership">
                                     <field name="owner_id" class="oe_field_owner_id" />
                                     <field name="subrogate_id" class="oe_field_subrogate_id" />
+                                    <field name="supervisor_ids" class="oe_field_supervisor_ids"
+                                        widget="many2many_tags" colspan="4" />
+                                </group>
+                                <group col="4" string="Others">
+                                    <field name="tz" class="oe_field_tz" />
                                 </group>
                             </page>
                         </notebook>

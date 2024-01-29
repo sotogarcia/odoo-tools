@@ -18,13 +18,19 @@
     'depends': [
         'base',
         'record_ownership',
+        'base_field_m2m_view',
         'mail'
     ],
 
     'data': [
         'data/res_groups_data.xml',
+        'data/ir_config_parameter_data.xml',
         'data/facility_weekday_data.xml',
         'data/ir_actions_server_data.xml',
+        'data/ir_cron_data.xml',
+        'data/mail_template_data.xml',
+        'data/mail_message_subtype_data.xml',
+        'data/mail_notification_email_data.xml',
 
         'views/facility_management.xml',
 
@@ -35,6 +41,7 @@
         'security/facility_reservation.xml',
         'security/facility_weekday.xml',
         'security/facility_reservation_scheduler.xml',
+        'security/facility_complex_reservation_rel.xml',
 
         'views/facility_weekday_view.xml',
         'views/facility_complex_view.xml',
@@ -46,6 +53,7 @@
 
         'wizard/facility_search_available_wizard_view.xml',
         'wizard/facility_reporting_wizard_view.xml',
+        'wizard/facility_reservation_massive_actions_wizard_view.xml',
 
         'report/facility_report.xml'
     ],

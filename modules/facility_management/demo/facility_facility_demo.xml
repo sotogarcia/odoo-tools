@@ -62,5 +62,6 @@
             <field name="excess">0</field>
             <field name="owner_id" ref="base.user_admin" />
         </record>
+
     </data>
 </openerp>

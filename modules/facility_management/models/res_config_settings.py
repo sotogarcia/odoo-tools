@@ -18,3 +18,14 @@ class ResConfigSettings(models.TransientModel):
     '''
 
     _inherit = ['res.config.settings']
+
+    auto_archive_on_rejection = fields.Boolean(
+        string='Auto archive',
+        required=False,
+        readonly=False,
+        index=False,
+        default=False,
+        help=('If enabled, records will be automatically archived when they '
+              'are rejected'),
+        config_parameter='facility_management.auto_archive_on_rejection'
+    )

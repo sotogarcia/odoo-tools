@@ -45,13 +45,27 @@
                                 type="object"
                                 icon="fa-play"
                                 help="Make reservations"
-                                class="btn-primary"
+                                class="btn btn-primary"
                                 attrs="{'invisible': [
                                     '|',
                                     '|',
+                                    ('date_base', '=', False),
                                     ('facility_id', '=', False),
-                                    ('state', '&lt;&gt;', 'finish'),
-                                    ('reservation_ids', '&lt;&gt;', [])
+                                    ('state', '&lt;&gt;', 'finish')
+                                ]}" />
+                        <button name="remove_reservations"
+                                string="&#160;Remove"
+                                type="object"
+                                icon="fa-trash"
+                                help="Remove"
+                                class="btn btn-warning"
+                                confirm="Are your sure to want to remove all shedule reservations?"
+                                attrs="{'invisible': [
+                                    '|',
+                                    '|',
+                                    ('date_base', '=', False),
+                                    ('facility_id', '=', False),
+                                    ('state', '&lt;&gt;', 'finish')
                                 ]}" />
                         <field name="state" widget="statusbar" clickable="1" />
                     </header>
@@ -100,7 +114,7 @@
 
                     <group col="6" states="facility" id="facility" string="Facility">
                         <field name="facility_id" class="oe_field_facility_id" colspan="4"
- context="{'facility_name_with_complex': True}"
+                            context="{'facility_name_with_complex': True}"
                             options="{'no_quick_create': True, 'no_create': True, 'no_open': True}" />
                         <field name="validate" class="oe_field_validate" />
                     </group>
@@ -125,6 +139,8 @@
                     <group col="4" states="finish" id="options" string="Options"
                         groups="facility_management.facility_group_monitor">
                         <field name="confirm" class="oe_field_confirm"/>
+                        <field name="tracking_disable" class="oe_field_tracking_disable"
+                            string="No track" />
                     </group>
 
                     <group col="4" states="finish" id="finish" string="Manager"

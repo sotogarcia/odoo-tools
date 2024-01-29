@@ -1,0 +1,61 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* view_exports
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-30 20:18+0000\n"
+"PO-Revision-Date: 2023-10-30 21:25+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.3\n"
+"Language: es_ES\n"
+
+#. module: view_exports
+#: model_terms:ir.ui.view,arch_db:view_exports.view_ir_exports_form
+msgid "Describe the item..."
+msgstr "Describe el artículo..."
+
+#. module: view_exports
+#: model_terms:ir.ui.view,arch_db:view_exports.view_ir_exports_form
+msgid "Export"
+msgstr "Exportación"
+
+#. module: view_exports
+#: model_terms:ir.ui.view,arch_db:view_exports.view_ir_exports_line_tree
+msgid "Export field"
+msgstr "Línea de Exportaciones"
+
+#. module: view_exports
+#: model:ir.actions.act_window,name:view_exports.action_export_list_act_window
+#: model:ir.ui.menu,name:view_exports.menu_export_list
+msgid "Export list"
+msgstr "Lista de exportaciones"
+
+#. module: view_exports
+#: model:ir.model,name:view_exports.model_ir_exports
+#: model_terms:ir.ui.view,arch_db:view_exports.view_ir_exports_search
+#: model_terms:ir.ui.view,arch_db:view_exports.view_ir_exports_tree
+msgid "Exports"
+msgstr "Exportaciones"
+
+#. module: view_exports
+#: model:ir.model.fields,field_description:view_exports.field_ir_exports__export_fields_count
+msgid "Field count"
+msgstr "Nº de campos"
+
+#. module: view_exports
+#: model_terms:ir.ui.view,arch_db:view_exports.view_ir_exports_form
+msgid "Fields"
+msgstr "Campos"
+
+#. module: view_exports
+#: model:ir.model.fields,help:view_exports.field_ir_exports__export_fields_count
+msgid "Number of fields in export record"
+msgstr "Nº de campos en el registro de exportación"

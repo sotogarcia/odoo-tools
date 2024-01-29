@@ -21,5 +21,11 @@
             <field name="active" eval="True" />
         </record>
 
+        <record id="facility_type_test" model="facility.type">
+            <field name="name">Test type</field>
+            <field name="description"><![CDATA[Facilities to perform unity tests]]></field>
+            <field name="active" eval="True" />
+        </record>
+
     </data>
 </openerp>

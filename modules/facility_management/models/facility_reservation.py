@@ -7,10 +7,13 @@
 from odoo import models, fields, api
 from odoo.tools.translate import _
 from odoo.osv.expression import TRUE_DOMAIN, FALSE_DOMAIN
-from odoo.exceptions import UserError
+from odoo.osv.expression import NEGATIVE_TERM_OPERATORS
+from odoo.exceptions import UserError, ValidationError
 
 from datetime import timedelta
 from odoo.tools import safe_eval
+import pytz
+from datetime import datetime, date, time
 
 from logging import getLogger
 
@@ -42,7 +45,7 @@ class FacilityReservation(models.Model):
         index=True,
         default=None,
         help='A short description to this reservation',
-        size=50,
+        size=255,
         translate=True,
         track_visibility='onchange'
     )
@@ -63,7 +66,8 @@ class FacilityReservation(models.Model):
         readonly=False,
         index=False,
         default=True,
-        help='Enables/disables this reservation'
+        help='Enables/disables this reservation',
+        track_visibility='onchange'
     )
 
     state = fields.Selection(
@@ -83,7 +87,7 @@ class FacilityReservation(models.Model):
     )
 
     def default_state(self):
-        return 'confirmed' if self._uid_is_technical() else 'requested'
+        return 'confirmed' if self._uid_is_manager() else 'requested'
 
     facility_id = fields.Many2one(
         string='Facility',
@@ -99,6 +103,15 @@ class FacilityReservation(models.Model):
         auto_join=False,
         track_visibility='onchange'
     )
+
+    @api.onchange('facility_id')
+    def _onchange_facility_id(self):
+        facility_complex = self.facility_id.complex_id
+
+        if facility_complex and facility_complex.is_an_allowed_supervisor():
+            self.state = 'confirmed'
+        else:
+            self.state = 'requested'
 
     complex_id = fields.Many2one(
         string='Complex',
@@ -247,6 +260,37 @@ class FacilityReservation(models.Model):
         auto_join=False
     )
 
+    has_scheduler = fields.Boolean(
+        string='Has scheduler',
+        required=False,
+        readonly=True,
+        index=False,
+        default=False,
+        help='Check it when the reservation has a related scheduler',
+        compute='_compute_has_scheduler',
+        search='_search_has_scheduler'
+    )
+
+    @api.depends('scheduler_id')
+    def _compute_has_scheduler(self):
+        for record in self:
+            record.has_scheduler = bool(record.scheduler_id)
+
+    @api.model
+    def _search_has_scheduler(self, operator, value):
+        value = bool(value)  # Prevents None
+
+        if value is True:
+            operator = NEGATIVE_TERM_OPERATORS(operator)
+            value = not value
+
+        return [('scheduler_id', operator, value)]
+
+    reservation_count = fields.Integer(
+        string='Reservation count',
+        related='scheduler_id.reservation_count'
+    )
+
     color = fields.Integer(
         string='Color',
         required=True,
@@ -270,6 +314,57 @@ class FacilityReservation(models.Model):
                 else:
                     record.color = 3
 
+    def get_tz(self):
+        """Retrieve session timezone if available.
+
+        The timezone can correspond, in order of priority, to:
+        1) The complex pertaining to the main classroom.
+        2) The company associated with the session.
+        3) The administrator of the session.
+        4) Default to Coordinated Universal Time (UTC).
+
+        Returns:
+            pytz.timezone: Timezone instance or UTC if not found.
+        """
+
+        self.ensure_one()
+
+        tz = self.mapped('facility_id.complex_id.partner_id.tz')
+        if not tz:
+            tz = self.mapped('facility_id.complex_id.company_id.partner_id.tz')
+        if not tz:
+            tz = self.mapped('facility_id.complex_id.manager_id.partner_id.tz')
+
+        tz = tz and tz[0] or 'UTC'  # First value in list or 'UTC'
+
+        return pytz.timezone(tz)
+
+    def get_localized(self, field, strftime=None):
+        """
+        Converts and localizes a given datetime or date value to the specified
+        timezone.
+
+        Returns:
+            datetime: localized date or datetime
+        """
+
+        self.ensure_one()
+
+        value = getattr(self, field)
+        tz = self.get_tz()
+
+        if isinstance(value, datetime):
+            dt = value
+        elif isinstance(value, date):
+            dt = datetime.combine(value, time.min)
+        else:
+            return value
+
+        dt = pytz.utc.localize(dt)
+        dt = dt.astimezone(tz)
+
+        return dt.strftime(strftime) if strftime else dt
+
     _sql_constraints = [
         (
             'unique_facility_id',
@@ -277,7 +372,9 @@ class FacilityReservation(models.Model):
                 facility_id WITH =,
                 tsrange ( date_start, date_stop ) WITH &&
             ) WHERE (
-                validate AND state = 'confirmed'
+                active
+                AND validate
+                AND state = 'confirmed'
             ); -- Requires btree_gist''',
             _('This facility is occupied by another reservation')
         ),
@@ -297,6 +394,38 @@ class FacilityReservation(models.Model):
         )
     ]
 
+    def _name_get(self):
+        """ Computes a single facility display name
+
+        This is a private user-defined method, Not to be confused with the
+        ``name_get`` starndard public method.
+
+        Returns:
+            str: name will be shown in GUI
+        """
+
+        self.ensure_one()
+
+        if self.name:
+            name = self.name
+
+        elif self.facility_id:
+            facility = self.facility_id.name
+
+            facility_complex = self.facility_id.complex_id
+            uid_is_allowed = facility_complex \
+                and facility_complex.is_an_allowed_supervisor()
+
+            if uid_is_allowed and self.owner_id:
+                owner = self.owner_id.name
+                name = '{} - {}'.format(facility, owner)
+            else:
+                name = '{}'.format(facility)
+        else:
+            name = _('New facility')
+
+        return name
+
     def name_get(self):
         """ Only technicals can see the reservation owner. Other users see only
         facility name.
@@ -307,23 +436,8 @@ class FacilityReservation(models.Model):
 
         result = []
 
-        uid_is_technical = self._uid_is_technical()
-
         for record in self:
-            if record.name:
-                name = record.name
-
-            elif record.facility_id:
-                facility = record.facility_id.name
-
-                if uid_is_technical and record.owner_id:
-                    owner = record.owner_id.name
-                    name = '{} - {}'.format(facility, owner)
-                else:
-                    name = '{}'.format(facility)
-            else:
-                name = _('New facility')
-
+            name = record._name_get()
             result.append((record.id, name))
 
         return result
@@ -359,8 +473,8 @@ class FacilityReservation(models.Model):
 
         return oclock + timedelta(hours=offset_hours)
 
-    def _uid_is_technical(self):
-        technical_group = 'facility_management.facility_group_monitor'
+    def _uid_is_manager(self):
+        technical_group = 'facility_management.facility_group_manager'
 
         result = False
 
@@ -452,8 +566,8 @@ class FacilityReservation(models.Model):
             'domain': [],
             'context': ctx,
             'search_view_id': action.search_view_id.id,
-            'help': action.help,
-            'flags': {'mode': 'readonly'}
+            'help': action.help
+            # , 'flags': {'mode': 'readonly'}
         }
 
         return serialized
@@ -479,3 +593,210 @@ class FacilityReservation(models.Model):
 
     #     return pattern.format(h=hours, m=minutes, s=seconds)
 
+    def check_authorization_to_confirm(self, values):
+        """
+        Check if the change to 'confirmed' state is authorized based on
+        the supervisor's authorization for the complex.
+
+        Parameters:
+            values (dict): The fields and their new values.
+
+        Returns:
+            bool: True if authorized, False otherwise.
+        """
+
+        # Change of status to ``confirmed`` has not been requested
+        if values.get('state', False) != 'confirmed':
+            return True
+
+        facility_id = values.get('facility_id', False)
+        if facility_id:  # New facility will be set
+            facility_set = self.env['facility.facility'].browse(facility_id)
+        else:  # Current facility will be kept
+            facility_set = self.mapped('facility_id')
+
+        for facility in facility_set:
+            if not facility.complex_id.is_an_allowed_supervisor():
+                return False
+
+        return True
+
+    @api.model
+    def create(self, values):
+        """ Overridden method 'create'
+        """
+
+        if not self.check_authorization_to_confirm(values):
+            msg = \
+                'You lack permission to confirm reservations in this complex'
+            raise ValidationError(msg)
+
+        parent = super(FacilityReservation, self)
+        result = parent.create(values)
+
+        return result
+
+    def write(self, values):
+        """ Overridden method 'write'
+        """
+
+        if values.get('state', False) == 'rejected':
+            if self.get_param('auto_archive_on_rejection', False):
+                values.update(active=False)
+
+        if not self.check_authorization_to_confirm(values):
+            msg = \
+                'You lack permission to confirm reservations in this complex'
+            raise ValidationError(msg)
+
+        parent = super(FacilityReservation, self)
+        result = parent.write(values)
+
+        return result
+
+    def _track_subtype(self, init_values):
+        self.ensure_one()
+
+        if isinstance(init_values, dict) and len(init_values) == 1:
+            old_state = init_values.get('state', False)
+            new_state = self.state
+
+            if old_state and old_state != new_state:
+                if new_state == 'confirmed':
+                    xid = ('facility_management.message_subtype_'
+                           'facility_reservation_state_confirmed')
+                    return self.env.ref(xid)
+
+                elif new_state == 'rejected':
+                    xid = ('facility_management.message_subtype_'
+                           'facility_reservation_state_rejected')
+                    return self.env.ref(xid)
+
+                elif new_state == 'requested':
+                    xid = ('facility_management.message_subtype_'
+                           'facility_reservation_state_pending')
+                    return self.env.ref(xid)
+
+        # The following lines, which are common, are not needed in this case.
+        # parent = super(FacilityReservation, self)
+        # result = parent._track_subtype(init_values)
+
+        xid = ('facility_management.'
+               'message_subtype_facility_reservation_has_updated')
+        return self.env.ref(xid)
+
+    def _get_message_subtype_reservation_state_ids(self):
+        xml_ids = [
+            ('facility_management.'
+             'message_subtype_facility_reservation_state_pending'),
+            ('facility_management.'
+             'message_subtype_facility_reservation_state_confirmed'),
+            ('facility_management.'
+             'message_subtype_facility_reservation_state_rejected')
+        ]
+
+        subtype_set = self.env['mail.message.subtype']
+        for xmlid in xml_ids:
+            subtype_set |= self.env.ref(xmlid)
+
+        return subtype_set
+
+    def _get_message_subtype_reservation_ids(self):
+        updated_xid = ('facility_management.'
+                       'message_subtype_facility_reservation_has_updated')
+        subtype_set = self._get_message_subtype_reservation_state_ids()
+        subtype_set |= self.env.ref(updated_xid)
+
+        return subtype_set
+
+    def _notify_record_by_email(self, message, recipients_data, msg_vals=False,
+                                model_description=False, mail_auto_delete=True,
+                                check_existing=False, force_send=True,
+                                send_after_commit=True, **kwargs):
+
+        subtype_set = self._get_message_subtype_reservation_state_ids()
+        updated_xid = ('facility_management.'
+                       'message_subtype_facility_reservation_has_updated')
+
+        if message.subtype_id in subtype_set:
+            msg_vals['email_layout_xmlid'] = \
+                'facility_management.facility_reservation_state_changed_email'
+        elif message.subtype_id == self.env.ref(updated_xid):
+            msg_vals['email_layout_xmlid'] = \
+                'facility_management.facility_reservation_has_changed_email'
+
+        parent = super(FacilityReservation, self)
+        return parent._notify_record_by_email(
+            message, recipients_data, msg_vals, model_description,
+            mail_auto_delete, check_existing, force_send, send_after_commit,
+            **kwargs)
+
+    @staticmethod
+    def _append_recipients(recipient_list, targets, notif='email'):
+        follower_partner_ids = [
+            item['id'] for item in recipient_list if item['notif'] == notif]
+
+        for target in targets:
+            if hasattr(targets, 'groups_id'):  # It's an user
+                partner = target.partner_id
+
+                values = {
+                    'id': partner.id,
+                    'active': target.active,
+                    'share': False,
+                    'groups': target.groups_id.ids,
+                    'notif': notif,
+                    'type': 'user'
+                }
+            else:  # presumably it's a partner
+                partner = target
+
+                values = {
+                    'id': partner.id,
+                    'active': target.active,
+                    'share': True,
+                    'groups': [],
+                    'notif': notif,
+                    'type': 'customer'
+                }
+
+            if partner.email and partner.id not in follower_partner_ids:
+                recipient_list.append(values)
+
+    def _notify_compute_recipients(self, message, msg_vals=None):
+
+        parent = super(FacilityReservation, self)
+        result = parent._notify_compute_recipients(message, msg_vals)
+
+        subtype_set = self._get_message_subtype_reservation_ids()
+        if message.subtype_id in subtype_set:
+
+            for record in self:
+
+                # Send notification to the complex email address
+                recipient_set = record.complex_id.partner_id
+                self._append_recipients(
+                    result['partners'], recipient_set, notif='email')
+
+                # Send notification to the complex manager email address
+                recipient_set = record.manager_id
+                self._append_recipients(
+                    result['partners'], recipient_set, notif='email')
+
+                # Send notification to the complex supervisors odoo inbox
+                recipient_set = record.complex_id.supervisor_ids
+                self._append_recipients(
+                    result['partners'], recipient_set, notif='inbox')
+
+        return result
+
+    @api.model
+    def get_param(self, param_name, default):
+        param_obj = self.env['ir.config_parameter'].sudo()
+
+        full_param_name = 'facility_management.{}'.format(param_name)
+
+        return param_obj.get_param(full_param_name, default)
+
+    def unbind(self):
+        self.write({'scheduler_id': None})

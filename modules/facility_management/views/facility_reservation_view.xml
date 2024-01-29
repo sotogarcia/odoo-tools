@@ -26,16 +26,19 @@
                 <tree string="facility_reservation_tree" create="1" delete="1" edit="1"
                     decoration-success="color == 10" decoration-danger="color == 1"
                     decoration-info="color == 4" decoration-warning="color == 3" >
+                    <field name="company_id" invisible="1" />
                     <field name="color" class="oe_field_color" invisible="1" />
+
                     <field name="display_name" class="oe_field_display_name" string="Name" />
                     <field name="facility_id" class="oe_field_facility_id"
                         context="{'facility_name_with_complex': True}" />
-                    <field name="owner_id" class="oe_field_owner_id"
+                    <field name="owner_id" class="oe_field_owner_id" optional="show"
                         groups="facility_management.facility_group_monitor" />
                     <field name="date_start" class="oe_field_date_start" />
-                    <field name="date_stop" class="oe_field_date_stop" />
-                    <field name="date_delay" class="oe_field_date_delay" widget="float_time" />
-                    <field name="state" class="oe_field_state" />
+                    <field name="date_stop" class="oe_field_date_stop" optional="show" />
+                    <field name="date_delay" class="oe_field_date_delay" optional="show" widget="float_time" />
+                    <field name="state" class="oe_field_state" optional="show" />
+                    <field name="has_scheduler" class="oe_field_has_scheduler" optional="hide" />
                 </tree>
             </field>
         </record>
@@ -53,15 +56,30 @@
                     <header>
                         <field name="state" widget="statusbar" clickable="1"
                             groups="facility_management.facility_group_monitor" />
+                        <button name="unbind"
+                                class="btn btn-danger"
+                                string="Unbind"
+                                type="object"
+                                default_focus="0"
+                                icon="fa-chain-broken"
+                                confirm="Are you sure to unbind this reservation from scheduler"
+                                help="Unbind from scheduler"
+                                attrs="{'invisible': [('scheduler_id', '=', False)]}" />
                     </header>
 
                     <sheet>
-                        <div class="oe_button_box" name="button_box" />
+                        <div class="oe_button_box" name="button_box">
+                            <button name="view_scheduler" type="object" class="oe_stat_button oe_read_only"
+                                icon="fa-calendar-o" help="Scheduler" attrs="{'invisible': [('scheduler_id', '=', False)]}">
+                                <field name="reservation_count" widget="statinfo" />
+                            </button>
+                        </div>
 
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
                             attrs="{'invisible': [('active', '=', True)]}"/>
 
                         <div class="oe_title">
+                            <field name="company_id" invisible="1" />
                             <field name="id" invisible="1" />
                             <field name="active" invisible="1"/>
                             <field name="scheduler_id" invisible="1" />
@@ -78,10 +96,6 @@
                                 context="{'facility_name_with_complex': True}"
                                 options="{'no_quick_create': True, 'no_create': True}"
                                 readonly="context.get('default_facility_id', 0)" />
-                            <field name="owner_id" colspan="4" class="oe_field_owner_id"
-                                options="{'no_quick_create': True, 'no_create': True}"
-                                readonly="context.get('default_owner_id', 0)"
-                                groups="facility_management.facility_group_monitor" />
 
                             <separator colspan="4" />
 
@@ -90,11 +104,26 @@
                             <field name="date_delay" class="oe_field_date_delay" widget="float_time" />
                             <field name="validate" class="oe_field_validate oe_edit_only"
                                 groups="facility_management.facility_group_monitor" />
+
                         </group>
-                        <group col="2" string="Description">
-                            <field name="description" class="oe_field_description"
-                                placeholder="Enter new description" colspan="4" nolabel="1" />
-                        </group>
+                        <notebook>
+                            <page id="description" string="Description" class="oe_page_description" accesskey="D">
+                                <field name="description" colspan="4" nolabel="1"
+                                    class="oe_field_description w-100" />
+                            </page>
+                            <page id="setup" string="Setup" class="oe_page_setup" accesskey="S">
+                                <group col="4">
+                                    <field name="owner_id" class="oe_field_owner_id"
+                                        options="{'no_quick_create': True, 'no_create': True}"
+                                        readonly="context.get('default_owner_id', 0)"
+                                        groups="facility_management.facility_group_monitor" />
+                                    <field name="subrogate_id" class="oe_field_subrogate_id"
+                                        options="{'no_quick_create': True, 'no_create': True}"
+                                        readonly="context.get('default_subrogate_id', 0)"
+                                        groups="facility_management.facility_group_monitor" />
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
 
                     <div class="oe_chatter">
@@ -125,6 +154,7 @@
                     <field name="date_delay" />
                     <field name="facility_id" />
                     <field name="color"/>
+                    <field name="company_id" />
 
                     <templates>
                         <t t-name="kanban-box">
@@ -190,14 +220,19 @@
 
                     <field name="facility_id" />
                     <field name="complex_id" />
+
+                    <separator />
                     <field name="owner_id" />
 
+                    <separator />
                     <field name="date_start" />
                     <field name="date_stop" />
                     <field name="date_delay" />
 
+                    <separator />
                     <field name="state" />
 
+                    <separator />
                     <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
 
                     <separator />
@@ -210,6 +245,13 @@
                         ('date_start', '&lt;', (context_today()+relativedelta(months=1)).strftime('%Y-%m-01')),
                         ('date_stop','&gt;=', context_today().strftime('%Y-%m-01'))
                     ]"/>
+
+                    <separator />
+                    <filter string="My own"
+                        name="my_own"
+                        domain="[('manager_id', '=', uid)]"
+                        context="{}"
+                        help="Reservations that I am responsible for" />
 
                     <separator />
                     <filter string="Not confirmed" name="unconfirmed_reservation"

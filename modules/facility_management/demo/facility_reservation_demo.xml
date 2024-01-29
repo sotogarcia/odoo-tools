@@ -11,7 +11,7 @@
             <field name="date_stop" eval="DateTime.today().strftime('%Y-%m-%d 18:00:00')" />
             <field name="validate" eval="True" />
             <field name="owner_id" ref="base.public_user" />
-            <field name="state">confirmed</field>
+            <field name="state">requested</field>
         </record>
 
         <record id="facility_reservation_2" model="facility.reservation">

@@ -16,6 +16,8 @@
     ],
 
     'data': [
-        'data/res_groups_data.xml'
+        'data/res_groups_data.xml',
+
+        'wizard/record_ownership_wizard_view.xml'
     ],
 }

@@ -7,6 +7,8 @@
 from odoo import models, fields, api
 from odoo.tools.translate import _
 from odoo.osv.expression import TRUE_DOMAIN, FALSE_DOMAIN
+from odoo.tools import safe_eval
+
 from logging import getLogger
 
 _logger = getLogger(__name__)
@@ -31,7 +33,7 @@ class FacilityReservationScheduler(models.Model):
         index=True,
         default=None,
         help='A short description to this reservation',
-        size=50,
+        size=255,
         translate=True
     )
 
@@ -153,7 +155,7 @@ class FacilityReservationScheduler(models.Model):
     )
 
     def default_confirm(self):
-        return self._uid_is_technical()
+        return self._uid_is_manager()
 
     validate = fields.Boolean(
         string='Validate',
@@ -188,6 +190,15 @@ class FacilityReservationScheduler(models.Model):
         help='Number of reservations for this facility',
         compute='_compute_reservation_count',
         search='_search_reservation_count'
+    )
+
+    tracking_disable = fields.Boolean(
+        string='Tracking disable',
+        required=False,
+        readonly=False,
+        index=False,
+        default=True,
+        help='Disable the e-mail notification'
     )
 
     @api.depends('reservation_ids')
@@ -245,8 +256,8 @@ class FacilityReservationScheduler(models.Model):
             COUNT ( ar.facility_id ) {operator} {value}
     '''
 
-    def _uid_is_technical(self):
-        technical_group = 'facility_management.facility_group_monitor'
+    def _uid_is_manager(self):
+        technical_group = 'facility_management.facility_group_manager'
 
         result = False
 
@@ -272,37 +283,183 @@ class FacilityReservationScheduler(models.Model):
 
         return str(domain) if as_string else domain
 
-    def make_reservations(self):
+    def _build_reservation_values(self):
+        """ Build a dictionary of reservation values based on the scheduler
 
-        reservation_obj = self.env['facility.reservation']
+        This method prepares the values needed to create or update a
+        reservation record from the current scheduler record.
 
-        for record in self:
-            if record.repeat:
-                dates = record._compute_repetition_dates()
-            else:
-                dates = [record.date_base]
+        Returns:
+            dict: A dictionary of field values for a reservation.
+        """
 
-            default = {
-                'name': record.name,
-                'description': record.description,
-                'active': True,
-                'state': 'confirmed' if record.confirm else 'requested',
-                'facility_id': record.facility_id.id,
-                'date_start': None,
-                'date_stop': None,
-                'validate': record.validate,
-                'owner_id': record.owner_id.id,
-                'subrogate_id': record.subrogate_id.id,
-                'scheduler_id': record.id
-            }
+        self.ensure_one()
 
+        return {
+            'name': self.name,
+            'description': self.description,
+            # 'active': True,
+            'state': 'confirmed' if self.confirm else 'requested',
+            'facility_id': self.facility_id.id,
+            'date_start': None,
+            'date_stop': None,
+            'validate': self.validate,
+            'owner_id': self.owner_id.id,
+            'subrogate_id': self.subrogate_id.id,
+            'scheduler_id': self.id
+            # ,'training_action_id': record.training_action_id.id
+        }
+
+    def _search_related_reservation(self):
+        """ Search for existing reservations related to this scheduler.
+
+        Finds all reservation records that are linked to the current scheduler
+        and applies the 'tracking_disable' context if it is set.
+
+        Returns:
+            recordset('facility.reservation'): The reservations associated with
+            this scheduler.
+        """
+
+        self.ensure_one()
+
+        reservation_set = self.env['facility.reservation']
+
+        if self:
+            ids = self.ids
+
+            domain = [
+                '&',
+                ('scheduler_id', 'in', ids),
+                '|',
+                ('active', '=', True),
+                ('active', '!=', True)
+            ]
+
+            reservation_set = reservation_set.search(
+                domain, order='date_start ASC')
+
+        if self.tracking_disable:
+            reservation_set = \
+                reservation_set.with_context(tracking_disable=True)
+
+        return reservation_set
+
+    @staticmethod
+    def _toggle_reservation_status(reservation_set, status, no_track=True):
+        """Silently change the status of reservations.
+
+        This method changes the status of reservations in the provided
+        recordset to a specified new state. It is intended to be used both
+        before and after performing bulk reservation changes.
+
+        Args:
+            reservation_set (recordset): Set of reservation records.
+            status (bool): New activation status (True to activate, False
+                           to deactivate).
+            no_track (bool, optional): Indicates whether change tracking should
+                                       be disabled (default is True).
+
+        Returns:
+            recordset: Set of records that were modified as a result of the
+                       status change.
+        """
+        status = bool(status)
+
+        target_set = reservation_set.filtered(
+            lambda r: bool(r.active) != status)
+
+        if target_set:
+            if no_track:
+                context = {'tracking_disable': True}
+                reservation_set = reservation_set.with_context(context)
+
+            values = {'active': bool(status)}
+            target_set.write(values)
+
+        return target_set
+
+    def _make_reservations(self):
+        """ Compute the intervals and either create new reservations or update
+        existing ones accordingly. Excess reservations are unlinked.
+        """
+
+        self.ensure_one()
+
+        if self.repeat:
+            dates = self._compute_repetition_dates()
+        else:
+            dates = [self.date_base]
+
+        defaults = self._build_reservation_values()
+
+        reservation_set = self._search_related_reservation()
+
+        with self.env.cr.savepoint():
+            changed_set = self._toggle_reservation_status(
+                reservation_set, False)
+
+            index, length = 0, len(reservation_set)
             for dt in dates:
 
-                date_start, date_stop = record.compute_interval(dt)
-
-                values = default.copy()
+                date_start, date_stop = self.compute_interval(dt)
+                values = defaults.copy()
                 values.update({
                     'date_start': date_start,
                     'date_stop': date_stop
                 })
-                reservation_obj.create(values)
+
+                if index < length:
+                    reservation_set[index].write(values)
+                    index = index + 1
+                else:
+                    reservation_set.create(values)
+
+            if index < length:
+                reservation_set[index:].unlink()
+
+            self._toggle_reservation_status(changed_set.exists(), True)
+
+    def make_reservations(self):
+        """ Create or update reservations from the current scheduler.
+        """
+
+        for record in self:
+            record._make_reservations()
+
+        return self._sertialize_reservation_act(target='main')
+
+    def remove_reservations(self):
+        removed_ids = []
+
+        for record in self:
+            today = fields.Date.context_today(record)
+            today = fields.Date.to_string(today)
+
+            reservation_set = record._search_related_reservation()
+            if reservation_set:
+                removed_ids.extend(reservation_set.ids)
+                reservation_set.unlink()
+
+        return self._sertialize_reservation_act(target='main')
+
+    def _sertialize_reservation_act(self, target=None):
+        action_xid = 'facility_management.action_reservations_act_window'
+        act_wnd = self.env.ref(action_xid)
+
+        context = self.env.context.copy()
+        context.update(safe_eval(act_wnd.context))
+
+        serialized = {
+            'type': 'ir.actions.act_window',
+            'res_model': act_wnd.res_model,
+            'target': target or act_wnd.target,
+            'name': act_wnd.name,
+            'view_mode': act_wnd.view_mode,
+            'domain': safe_eval(act_wnd.domain),
+            'context': context,
+            'search_view_id': act_wnd.search_view_id.id,
+            'help': act_wnd.help
+        }
+
+        return serialized

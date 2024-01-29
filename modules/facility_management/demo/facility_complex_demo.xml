@@ -32,5 +32,21 @@
             <field name="owner_id" ref="base.user_admin" />
         </record>
 
+        <record id="facility_complex_test_complex" model="facility.complex">
+            <field name="company_id" ref="base.main_company" />
+            <field name="code">TC</field>
+            <field name="name">Test complex</field>
+            <field name="description"><![CDATA[Group of buildings used for specific activities]]></field>
+            <field name="active" eval="True" />
+            <field name="street">Severo Ochoca, 4</field>
+            <field name="street2" />
+            <field name="city"><![CDATA[Vigo]]></field>
+            <field name="zip">36202</field>
+            <field name="state_id" ref="base.state_es_po" />
+            <field name="country_id" ref="base.es" />
+            <field name="owner_id" ref="base.user_admin" />
+            <field name="supervisor_ids" eval="[(4, ref('base.user_admin'), 0)]" />
+        </record>
+
     </data>
 </openerp>
