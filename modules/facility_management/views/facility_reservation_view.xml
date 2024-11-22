@@ -33,7 +33,7 @@
                     <field name="facility_id" class="oe_field_facility_id"
                         context="{'facility_name_with_complex': True}" />
                     <field name="owner_id" class="oe_field_owner_id" optional="show"
-                        groups="facility_management.facility_group_monitor" />
+                         groups="record_ownership.record_ownership_consultant" />
                     <field name="date_start" class="oe_field_date_start" />
                     <field name="date_stop" class="oe_field_date_stop" optional="show" />
                     <field name="date_delay" class="oe_field_date_delay" optional="show" widget="float_time" />
@@ -112,7 +112,7 @@
                                     class="oe_field_description w-100" />
                             </page>
                             <page id="setup" string="Setup" class="oe_page_setup" accesskey="S">
-                                <group col="4">
+                                <group col="4" groups="record_ownership.record_ownership_proxy">
                                     <field name="owner_id" class="oe_field_owner_id"
                                         options="{'no_quick_create': True, 'no_create': True}"
                                         readonly="context.get('default_owner_id', 0)"
@@ -279,9 +279,9 @@
 
 
                     <group expand="0" name="group_by" string="Group By">
-                        <filter name="group_by_facility_id"  string="Facility" domain="[]" context="{'group_by' : 'facility_id'}" />
-                        <filter name="group_by_complex_id"  string="Complex" domain="[]" context="{'group_by' : 'complex_id'}" />
-                        <filter name="group_by_owner_id"  string="Owner" domain="[]" context="{'group_by' : 'owner_id'}" />
+                        <filter name="group_by_facility_id" string="Facility" domain="[]" context="{'group_by' : 'facility_id'}" />
+                        <filter name="group_by_complex_id" string="Complex" domain="[]" context="{'group_by' : 'complex_id'}" />
+                        <filter name="group_by_owner_id" string="Owner" domain="[]" context="{'group_by' : 'owner_id'}" groups="record_ownership.record_ownership_consultant"/>
                    </group>
 
                 </search>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data noupdate="0">
+
+        <record id="view_survey_survey_form" model="ir.ui.view">
+            <field name="name">Form view for survey</field>
+            <field name="model">survey.survey</field>
+            <field name="type">form</field>
+            <field name="mode">extension</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="inherit_id" ref="survey.survey_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']/*[1]" position="before">
+                    <button name="view_question_and_page" type="object" class="oe_stat_button oe_read_only"
+                        icon="fa-question-circle-o" help="View all sections and questions of this survey.">
+                        <field name="question_and_page_count" widget="statinfo" string="Items" />
+                    </button>
+                </xpath>
+
+                <xpath expr="//group[@name='options']" position="after">
+                    <group col="2" string="Custom CSS">
+                        <field name="custom_css" colspan="2" nolabel="1"
+                            class="oe_field_custom_css border w-100 px-3 py-2 text-monospace text-white bg-black"
+                            style="display: block!important; min-height: 120px; height: 120px; resize: vertical;" />
+                    </group>
+                </xpath>
+
+                <xpath expr="//group[@name='options']" position="after">
+                    <group col="2" string="Publish">
+                        <field name="website_id" class="oe_field_website_id" />
+                    </group>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</openerp>

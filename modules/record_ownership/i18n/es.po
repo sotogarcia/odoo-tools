@@ -99,7 +99,7 @@ msgstr "Desactivar seguimiento"
 #: model:ir.model.fields,field_description:record_ownership.field_ownership_mixin__display_name
 #: model:ir.model.fields,field_description:record_ownership.field_record_ownership_wizard__display_name
 msgid "Display Name"
-msgstr "Nombre para mostrar"
+msgstr "Nombre mostrado"
 
 #. module: record_ownership
 #: model_terms:ir.ui.view,arch_db:record_ownership.view_record_ownership_wizard

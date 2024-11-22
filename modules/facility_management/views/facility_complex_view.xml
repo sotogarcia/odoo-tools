@@ -109,7 +109,7 @@
                                     <field name="company_id" class="oe_field_company_id" groups="base.group_multi_company" />
                                     <separator colspan="2" />
                                 </group>
-                                <group col="4" string="Ownership">
+                                <group col="4" string="Ownership" groups="record_ownership.record_ownership_proxy">
                                     <field name="owner_id" class="oe_field_owner_id" />
                                     <field name="subrogate_id" class="oe_field_subrogate_id" />
                                     <field name="supervisor_ids" class="oe_field_supervisor_ids"

@@ -1069,7 +1069,7 @@ msgstr "Desactivar seguimiento"
 #: model:ir.model.fields,field_description:facility_management.field_report_facility_management_view_facility_qweb__display_name
 #: model:ir.model.fields,field_description:facility_management.field_time_span_report_mixin__display_name
 msgid "Display Name"
-msgstr "Nombre para mostrar"
+msgstr "Nombre mostrado"
 
 #. module: facility_management
 #: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__next_schedule
@@ -1683,7 +1683,7 @@ msgstr "Es estudiante"
 
 #. module: facility_management
 #: model:ir.model.fields,field_description:facility_management.field_facility_complex__function
-msgid "Job Position"
+msgid "Occupation"
 msgstr "Puesto de trabajo"
 
 #. module: facility_management
