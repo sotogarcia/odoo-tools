@@ -94,8 +94,8 @@
                                         placeholder="Enter new description" colspan="4" nolabel="1" />
                                 </group>
                             </page>
-                            <page string="Setup" class="oe_page_setup" accesskey="S">
-                                <group col="4">
+                            <page id="setup" string="Setup" class="oe_page_setup" accesskey="S">
+                                <group col="4" groups="record_ownership.record_ownership_proxy">
                                     <field name="owner_id" class="oe_field_owner_id" />
                                     <field name="subrogate_id" class="oe_field_subrogate_id" />
                                 </group>

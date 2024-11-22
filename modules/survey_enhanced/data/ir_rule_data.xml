@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data noupdate="0">
+
+        <!-- survey_label rules -->
+        <record id="survey.survey_label_rule_survey_user_read" model="ir.rule">
+            <field name="domain_force">['|', '|', ('survey_id.subrogate_id', '=', user.id), ('survey_id.owner_id', '=', user.id), '&amp;', ('survey_id.owner_id', '=', False), ('survey_id.create_uid', '=', user.id)]</field>
+        </record>
+
+        <record id="survey.survey_label_rule_survey_user_cw" model="ir.rule">
+            <field name="domain_force">['|', '|', ('survey_id.subrogate_id', '=', user.id), ('survey_id.owner_id', '=', user.id), '&amp;', ('survey_id.owner_id', '=', False), ('survey_id.create_uid', '=', user.id)]</field>
+        </record>
+
+        <!-- survey_question rules -->
+        <record id="survey.survey_question_rule_survey_user_read" model="ir.rule">
+            <field name="domain_force">['|', '|', ('survey_id.subrogate_id', '=', user.id), ('survey_id.owner_id', '=', user.id), '&amp;', ('survey_id.owner_id', '=', False), ('survey_id.create_uid', '=', user.id)]</field>
+        </record>
+
+        <record id="survey.survey_question_rule_survey_user_cw" model="ir.rule">
+            <field name="domain_force">['|', '|', ('survey_id.subrogate_id', '=', user.id), ('survey_id.owner_id', '=', user.id), '&amp;', ('survey_id.owner_id', '=', False), ('survey_id.create_uid', '=', user.id)]</field>
+        </record>
+
+        <!-- survey_survey rules -->
+        <record id="survey.survey_survey_rule_survey_user_read" model="ir.rule">
+            <field name="domain_force">['|', '|', ('subrogate_id', '=', user.id), ('owner_id', '=', user.id), '&amp;', ('owner_id', '=', False), ('create_uid', '=', user.id)]</field>
+        </record>
+
+        <record id="survey.survey_survey_rule_survey_user_cwu" model="ir.rule">
+            <field name="domain_force">['|', '|', ('subrogate_id', '=', user.id), ('owner_id', '=', user.id), '&amp;', ('owner_id', '=', False), ('create_uid', '=', user.id)]</field>
+        </record>
+
+        <!-- survey_user_input rules -->
+        <record id="survey.survey_user_input_rule_survey_user_read" model="ir.rule">
+            <field name="domain_force">['|', '|', ('survey_id.subrogate_id', '=', user.id), ('survey_id.owner_id', '=', user.id), '&amp;', ('survey_id.owner_id', '=', False), ('survey_id.create_uid', '=', user.id)]</field>
+        </record>
+
+        <record id="survey.survey_user_input_rule_survey_user_cw" model="ir.rule">
+            <field name="domain_force">['|', '|', ('survey_id.subrogate_id', '=', user.id), ('survey_id.owner_id', '=', user.id), '&amp;', ('survey_id.owner_id', '=', False), ('survey_id.create_uid', '=', user.id)]</field>
+        </record>
+
+        <!-- survey_user_input_line -->
+        <record id="survey.survey_user_input_line_rule_survey_user_read" model="ir.rule">
+            <field name="domain_force">['|', '|', ('user_input_id.survey_id.subrogate_id', '=', user.id), ('user_input_id.survey_id.owner_id', '=', user.id), , '&amp;', ('user_input_id.survey_id.owner_id', '=', False), ('user_input_id.survey_id.create_uid', '=', user.id)]</field>
+        </record>
+
+        <record id="survey.survey_user_input_line_rule_survey_user_cw" model="ir.rule">
+            <field name="domain_force">['|', '|', ('user_input_id.survey_id.subrogate_id', '=', user.id), ('user_input_id.survey_id.owner_id', '=', user.id), , '&amp;', ('user_input_id.survey_id.owner_id', '=', False), ('user_input_id.survey_id.create_uid', '=', user.id)]</field>
+        </record>
+
+    </data>
+</openerp>

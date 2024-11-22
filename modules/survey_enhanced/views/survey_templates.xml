@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="extend_survey_page_template" inherit_id="survey.page">
+        <xpath expr="//form" position="before">
+            <t t-if="survey.custom_css">
+                <style type="text/css" t-esc="survey.custom_css"/>
+            </t>
+        </xpath>
+        <xpath expr="//h2[@t-if='question.is_page']" position="attributes">
+            <attribute name="class">o_survey_title bg-light border-bottom py-2 px-3 mb-3 mt-4</attribute>
+        </xpath>
+        <xpath expr="//h2[@t-if='question.is_page']" position="after">
+            <div t-if="question.is_page and question.description"
+                 t-field="question.description"
+                 class="o_survey_description" />
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data noupdate="0">
+
+        <record id="view_survey_question_form" model="ir.ui.view">
+            <field name="name">Form view for survey question</field>
+            <field name="model">survey.question</field>
+            <field name="type">form</field>
+            <field name="mode">extension</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="inherit_id" ref="survey.survey_question_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/div[@class='oe_title'][1]" position="after">
+                    <group col="2" string="Description" attrs="{'invisible': [('is_page', '&lt;&gt;', True)]}">
+                        <field name="description" class="oe_field_description" colspan="2" nolabel="1" />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

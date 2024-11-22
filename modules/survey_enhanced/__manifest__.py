@@ -21,37 +21,52 @@
 #
 ###############################################################################
 {
-    'name': 'Materialized Views',
-    'summary': 'Models based on PostgreSQL materialized views',
-    'version': '13.0.1.3',
+    'name': 'Survey enhanced',
+    'version': '1.0',
 
-    'description': """
-This Odoo module streamlines the process of integrating PostgreSQL materialized
-views into the Odoo framework, enabling developers to efficiently create and
-manage models based on these views. Materialized views offer a powerful way to
-optimize complex queries by storing query results as a physical table which can
-be refreshed periodically. This approach significantly improves performance for
-read-heavy operations, making it ideal for reporting and analytics.
-    """,
+    'summary': '''Extended functionality for Odoo Surveys, enabling advanced
+    survey configurations, automation, and custom reporting.''',
+
+    'description': '''
+    Survey Enhanced extends Odoo's Survey module with additional functionality
+    for managing and automating surveys. This module includes:
+    - Advanced survey scheduling with options for repeat intervals, expiration,
+    and automated invites.
+    - Enhanced data export options, allowing CSV export with customized
+    delimiter, encoding, and date formatting.
+    - Integration with facilities and training records for targeted feedback
+    surveys.
+    - Configurable email templates for automated survey invites.
+
+    Ideal for organizations looking to leverage Odoo's survey tool for enhanced
+    feedback management and analytics.
+    ''',
 
     'author': 'Jorge Soto Garcia',
     'maintainer': 'Jorge Soto Garcia',
-    'contributors': ['Jorge Soto Garcia <sotogarica@gmail.com>'],
+    'contributors': ['Jorge Soto Garcia <sotogarcia@gmail.com>'],
 
     'website': 'http://www.gitlab.com/sotogarcia',
 
     'license': 'AGPL-3',
-    'category': 'Technical Settings',
+    'category': 'Marketing/Survey',
 
     'depends': [
-        'base'
+        'base',
+        'survey',
+        'website',
+        'record_ownership'
     ],
     'external_dependencies': {
         'python': [
         ],
     },
     'data': [
-        'data/ir_cron_data.xml'
+        'data/res_groups_data.xml',
+        'data/ir_rule_data.xml',
+        'views/survey_survey_view.xml',
+        'views/survey_question_view.xml',
+        'views/survey_templates.xml'
     ],
     'demo': [
     ],

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data noupdate="0">
+
+        <record id="survey.group_survey_user" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('record_ownership.record_ownership_consultant'))]"/>
+        </record>
+
+        <record id="survey.group_survey_manager" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('record_ownership.record_ownership_proxy'))]"/>
+        </record>
+
+    </data>
+</openerp>

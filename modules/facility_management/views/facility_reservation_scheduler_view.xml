@@ -144,7 +144,7 @@
                     </group>
 
                     <group col="4" states="finish" id="finish" string="Manager"
-                        groups="record_ownership.record_ownership_manager">
+                         groups="record_ownership.record_ownership_proxy">
                         <field name="owner_id" class="oe_field_owner_id"
                             options="{'no_quick_create': True, 'no_create': True, 'no_open': True}" />
                         <field name="subrogate_id" class="oe_field_subrogate_id"

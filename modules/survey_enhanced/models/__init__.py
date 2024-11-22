@@ -4,4 +4,4 @@
 #    __openerp__.py file at the root folder of this module.                   #
 ###############################################################################
 
-from . import materialized_view
+from . import survey_survey
