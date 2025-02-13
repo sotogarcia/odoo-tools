@@ -11,7 +11,7 @@
             <field name="interval_type">minutes</field>
             <field name="numbercall">-1</field>
             <field name="doall" eval="False"/>
-            <field name="model_id" ref="materialized_views.model_materialized_view"/>
+            <field name="model_id" ref="materialized_views.model_materialized_view_abstract"/>
             <field name="state">code</field>
             <field name="code">model.cron_task()</field>
             <field name="priority">5</field>
