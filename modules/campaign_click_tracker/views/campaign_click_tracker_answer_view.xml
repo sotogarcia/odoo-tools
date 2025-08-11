@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data noupdate="0">
+
+        <!-- VIEWS: "Available answer"
+        
+            - Model·········: campaign.click.tracker.answer
+            - _rec_name·····: name
+            - Domain········: []
+            - Context·······: {}
+            - Parent menu ··: campaign_click_tracker.menu_click_tracker
+            - View priority·: 16    Sequence····: 10
+            - Action help···: There is not available answers yet
+        - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        
+        <!-- Tree view for "campaign.click.tracker.answer" -->
+        <record id="view_campaign_click_tracker_answer_tree" model="ir.ui.view">
+            <field name="name">view.campaign.click.tracker.answer.tree</field>
+            <field name="model">campaign.click.tracker.answer</field>
+            <field name="type">tree</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <tree string="campaign_click_tracker_answer_tree" create="1" delete="1" edit="1">
+                    <field name="id" invisible="1" />
+                    <field name="active" invisible="1" />
+                    <field name="campaign_id" class="oe_field_campaign_id" />
+                    <field name="name" />
+                    <field name="token" />
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Form view for "campaign.click.tracker.answer" -->
+        <record id="view_campaign_click_tracker_answer_form" model="ir.ui.view">
+            <field name="name">view.campaign.click.tracker.answer.form</field>
+            <field name="model">campaign.click.tracker.answer</field>
+            <field name="type">form</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <form string="campaign_click_tracker_answer_form" create="1" delete="1" edit="1">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box" />
+
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                            attrs="{'invisible': [('active', '=', True)]}"/>
+
+                        <div class="oe_title">
+                            <field name="id" invisible="1" />
+                            <field name="active" invisible="1" />
+                            <label for="name" class="oe_edit_only" />
+                            <h1>
+                                <field name="name" class="oe_field_name"
+                                    placeholder="Name" />
+                            </h1>
+                        </div>
+                        
+                        <group col="2">
+                            <field name="campaign_id" class="oe_field_campaign_id"
+                                invisible="context.get('default_campaign_id', False)"
+                                options="{'no_quick_create': True, 'no_create': True, 'no_open': False}" />
+                            <field name="token" class="oe_field_token" />
+                        </group>
+
+                        <group col="2" string="Description">
+                            <field name="description" class="oe_field_description"
+                                placeholder="Enter new description" colspan="2" nolabel="1" />
+                        </group>
+                    </sheet>
+                    
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                    
+                </form>
+            </field>
+        </record>
+        
+        <!-- Search view for "campaign.click.tracker.answer" -->
+        <record id="view_campaign_click_tracker_answer_search" model="ir.ui.view">
+            <field name="name">view.campaign.click.tracker.answer.search</field>
+            <field name="model">campaign.click.tracker.answer</field>
+            <field name="type">search</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <search string="campaign_click_tracker_answer_search">
+                    <field name="name" />
+                    <field name="campaign_id" />
+                    <field name="token" />
+                    <field name="description" />
+                    <field name="id" string="Answer ID" />
+                    
+                    <filter name="inactive" string="Archived" domain="[('active','=',False)]" />
+
+                    <separator /> 
+                    <filter string="Group by campaign"
+                        name="group_by_campaign"
+                        domain="[]"
+                        context="{'group_by': 'campaign_id'}"
+                        help="Group by campaign" />
+
+                </search>
+            </field>
+        </record>
+        
+        <!-- Main window action for model.name -->
+        <record id="action_available_answer_act_window" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Available answer</field>
+            <field name="res_model">campaign.click.tracker.answer</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="view_campaign_click_tracker_answer_search" />
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add new available answer
+                </p><p>
+                    There is not available answers yet
+                </p>
+            </field>
+        </record>
+        
+        <!-- Main menu for model.name -->
+        <record id="menu_available_answer" model="ir.ui.menu" >
+            <field name="name">Available answer</field>
+            <field name="sequence" eval="15" />
+            <field name="action" ref="action_available_answer_act_window" />
+            <field name="parent_id" ref="campaign_click_tracker.menu_click_tracker" />
+        </record>
+
+    </data>
+</openerp>

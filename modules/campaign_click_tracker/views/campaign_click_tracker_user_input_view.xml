@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data noupdate="0">
+
+        <!-- VIEWS: "User input"
+        
+            - Model·········: campaign.click.tracker.user.input
+            - _rec_name·····: name
+            - Domain········: []
+            - Context·······: {}
+            - Parent menu ··: campaign_click_tracker.menu_click_tracker
+            - View priority·: 16    Sequence····: 10
+            - Action help···: There is not user inputs yet
+        - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        
+        <!-- Tree view for "campaign.click.tracker.user.input" -->
+        <record id="view_campaign_click_tracker_user_input_tree" model="ir.ui.view">
+            <field name="name">view.campaign.click.tracker.user.input.tree</field>
+            <field name="model">campaign.click.tracker.user.input</field>
+            <field name="type">tree</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <tree string="campaign_click_tracker_user_input_tree" create="1" delete="1" edit="1">
+                    <field name="id" invisible="1" />
+                    <field name="active" invisible="1" />
+                    <field name="campaign_id" />
+                    <field name="extra" class="oe_field_extra" />
+                    <field name="token" />
+                    <field name="name" />
+                    <field name="email" />
+                    <field name="answer_id" />
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Form view for "campaign.click.tracker.user.input" -->
+        <record id="view_campaign_click_tracker_user_input_form" model="ir.ui.view">
+            <field name="name">view.campaign.click.tracker.user.input.form</field>
+            <field name="model">campaign.click.tracker.user.input</field>
+            <field name="type">form</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <form string="campaign_click_tracker_user_input_form" create="1" delete="1" edit="1">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box" />
+
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                            attrs="{'invisible': [('active', '=', True)]}"/>
+
+                        <div class="oe_title">
+                            <field name="id" invisible="1" />
+                            <field name="active" invisible="1" />
+                            <label for="name" class="oe_edit_only" />
+                            <h1>
+                                <field name="partner_id" class="oe_field_partner_id oe_edit_only" />
+                                <field name="name" class="oe_field_partner_id oe_read_only" />
+                            </h1>
+                        </div>
+                        <group col="2">
+                            <field name="campaign_id" invisible="context.get('default_campaign_id', False)"
+                                options="{'no_quick_create': True, 'no_create': True, 'no_open': False}" />
+                            <field name="email" />
+                            <field name="token" />
+                            <field name="extra" class="oe_field_extra" />
+                            <field name="answer_id" domain="[('campaign_id', '=', campaign_id)]" />
+                            <field name="comment" class="oe_field_comment" />
+                        </group>
+
+                    </sheet>
+                    
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+
+                </form>
+            </field>
+        </record>
+        
+        <!-- Search view for "campaign.click.tracker.user.input" -->
+        <record id="view_campaign_click_tracker_user_input_search" model="ir.ui.view">
+            <field name="name">view.campaign.click.tracker.user.input.search</field>
+            <field name="model">campaign.click.tracker.user.input</field>
+            <field name="type">search</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <search string="campaign_click_tracker_user_input_search">
+                    <field name="name" />
+                    <field name="extra" />
+                    <field name="email" />
+                    <field name="campaign_id" />
+                    <field name="token" />
+                    <field name="answer_id" />
+                    <field name="id" string="Input ID" />
+
+                    <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
+                    
+                    <separator />
+                    <filter name="answered" string="Answered" domain="[('answer_id','!=',False)]"/>
+                    <filter name="unanswered" string="Unanswered" domain="[('answer_id','=',False)]"/>
+
+                    <separator />
+                    <filter string="Group by campaign"
+                        name="group_by_campaign"
+                        domain="[]"
+                        context="{'group_by': 'campaign_id'}"
+                        help="Group by campaign" />
+                    <filter string="Group by user"
+                        name="group_by_partner"
+                        domain="[]"
+                        context="{'group_by': 'partner_id'}"
+                        help="Group by user" />
+                    <filter string="Group by answer"
+                        name="group_by_answer"
+                        domain="[]"
+                        context="{'group_by': 'answer_id'}"
+                        help="Group by answer" />
+                    <filter string="Group by extra"
+                        name="group_by_extra"
+                        domain="[]"
+                        context="{'group_by': 'extra'}"
+                        help="Group by extra" />
+
+                </search>
+            </field>
+        </record>
+        
+        <!-- Main window action for model.name -->
+        <record id="action_user_input_act_window" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">User input</field>
+            <field name="res_model">campaign.click.tracker.user.input</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="view_campaign_click_tracker_user_input_search" />
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add new user input
+                </p><p>
+                    There is not user inputs yet
+                </p>
+            </field>
+        </record>
+        
+        <!-- Main menu for model.name -->
+        <record id="menu_user_input" model="ir.ui.menu" >
+            <field name="name">User input</field>
+            <field name="sequence" eval="20" />
+            <field name="action" ref="action_user_input_act_window" />
+            <field name="parent_id" ref="campaign_click_tracker.menu_click_tracker" />
+        </record>
+
+    </data>
+</openerp>

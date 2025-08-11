@@ -161,7 +161,7 @@ class OwnershipMixin(models.AbstractModel):
         """
         uid = self.env.context.get('uid', False)
         if not uid:
-            self.env['res.users'].browse('base.user_root')
+            uid = self.env.ref('base.user_root').id
 
         return uid
 

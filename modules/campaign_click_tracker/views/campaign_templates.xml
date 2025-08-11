@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <template id="response_recorded_template" name="Campaign Response Recorded">
+      <t t-call="website.layout">
+        <t t-set="title" t-value="page_title"/>
+        <div class="container mt-5 mb-5">
+          <div class="row justify-content-center">
+            <div class="col-md-8">
+              <div class="card shadow-sm border-success">
+                <div class="card-body">
+                  <h2 class="card-title text-success">
+                    Thank you, <t t-esc="user_input.partner_id.name"/>!
+                  </h2>
+                  <p class="card-text">
+                    Your response has been recorded successfully.
+                  </p>
+                  <hr/>
+                  <p><strong>Selected answer:</strong> <t t-esc="user_input.answer_id.name"/></p>
+                  <p><strong>Recorded at:</strong> <t t-esc="recorded_at"/></p>
+                  <t t-if="user_input.extra">
+                    <p><strong>Context:</strong> <t t-esc="user_input.extra"/></p>
+                  </t>
+                </div>
+              </div>
+
+              <t t-if="allow_comments">
+                <div class="card mt-4 shadow-sm border-primary">
+                  <div class="card-body">
+                    <form method="post" t-att-action="show_url">
+                      <div class="form-group">
+                        <label for="comment">Leave a comment (optional):</label>
+                        <textarea id="comment" name="comment" class="form-control" rows="4"
+                                  placeholder="Your comment here..."><t t-esc="user_input.comment or ''"/></textarea>
+                      </div>
+                      <button type="submit" class="btn btn-primary mt-2">Submit comment</button>
+                    </form>
+                  </div>
+                </div>
+              </t>
+              <t t-else="">
+                <t t-if="user_input.comment">
+                  <div class="card mt-4 shadow-sm border-secondary">
+                    <div class="card-body">
+                      <label><strong>User comment:</strong></label>
+                      <p class="form-control-plaintext" style="white-space: pre-wrap;"><t t-esc="user_input.comment"/></p>
+                    </div>
+                  </div>
+                </t>
+              </t>
+
+            </div>
+          </div>
+        </div>
+      </t>
+    </template>
+
+    <template id="error_template" name="Error">
+      <t t-call="website.layout">
+        <div class="container mt-5">
+          <div class="alert alert-danger shadow-sm" role="alert">
+            <h4 class="alert-heading"><t t-esc="title"/></h4>
+            <p><t t-esc="message"/></p>
+          </div>
+        </div>
+      </t>
+    </template>
+
+  </data>
+</odoo>

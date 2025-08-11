@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data noupdate="0">
+
+        <record id="menu_click_tracker" model="ir.ui.menu" >
+            <field name="name">Click tracker</field>
+            <field name="sequence" eval="10" />
+            <!-- <field name="action" ref="action_name" /> -->
+            <field name="parent_id" ref="mass_mailing.mass_mailing_menu_root" />
+        </record>
+
+    </data>
+</openerp>

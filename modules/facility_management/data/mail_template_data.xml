@@ -6,7 +6,7 @@
         <record id="mail_notify_reservation_requests" model="mail.template">
             <field name="name">Reservation requests awaiting confirmation</field>
             <field name="subject">${object.name} - Reservation requests awaiting confirmation</field>
-            <field name="email_from">${object.company_id.name} &lt;${(object.company_id.email_normalized or user.email_normalized)|safe}&gt;</field>
+            <field name="email_from">${object.company_id.name} &lt;${(object.company_id.email or user.email)|safe}&gt;</field>
             <field name="email_to">${object.manager_id.name} &lt;${(object.manager_id.email_normalized)|safe}&gt;</field>
             <field name="user_signature" eval="True" />
             <field name="auto_delete" eval="True" />

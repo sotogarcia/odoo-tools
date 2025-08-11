@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data noupdate="0">
+
+
+        <!-- Menus -->
+        <record id="menu_moodle_api_client_root" model="ir.ui.menu" >
+            <field name="name">Moodle API</field>
+            <field name="sequence" eval="10" />
+            <field name="web_icon">moodle_api_client,static/description/icon.png</field>
+            <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+            <!-- The action will be deffined in process event views file -->
+        </record>
+
+        <record id="menu_moodle_api_client_content" model="ir.ui.menu" >
+            <field name="name">Content</field>
+            <field name="sequence" eval="30" />
+            <field name="parent_id" ref="moodle_api_client.menu_moodle_api_client_root" />
+            <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+            <field name="action" eval="False" />
+        </record>
+
+        <record id="menu_moodle_api_client_configuration" model="ir.ui.menu" >
+            <field name="name">Configuration</field>
+            <field name="sequence" eval="30" />
+            <field name="parent_id" ref="moodle_api_client.menu_moodle_api_client_root" />
+            <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+            <field name="action" eval="False" />
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data noupdate="0">
+
+        <!-- VIEWS: "Moodle API Client Platform"
+        
+            - Model·········: moodle.api.client.platform
+            - _rec_name·····: name
+            - Domain········: []
+            - Context·······: {}
+            - Parent menu ··: moodle_api_client.menu_moodle_api_client_configuration
+            - View priority·: 16    Sequence····: 10
+            - Action help···: There is no any moodle platform defined yet
+        - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        
+        <!-- Tree view for "moodle.api.client.platform" -->
+        <record id="view_moodle_api_client_platform_tree" model="ir.ui.view">
+            <field name="name">view.moodle.api.client.platform.tree</field>
+            <field name="model">moodle.api.client.platform</field>
+            <field name="type">tree</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <tree string="moodle_api_client_platform_tree" create="1" delete="1" edit="1">
+                    <field name="name" class="oe_field_name" />
+                    <field name="url" class="oe_field_url" />
+                    <field name="driver_name" class="oe_field_driver_name" optional="show" />
+                    <field name="default_user_id" class="oe_field_default_user_id" optional="show" />
+                    <field name="moodle_user_id" class="oe_field_moodle_user_id" optional="hide" />
+                    <field name="moodle_api_token" class="oe_field_moodle_api_token" optional="hide" />
+                    <field name="description" class="oe_field_description" optional="show" />
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Form view for "moodle.api.client.platform" -->
+        <record id="view_moodle_api_client_platform_form" model="ir.ui.view">
+            <field name="name">view.moodle.api.client.platform.form</field>
+            <field name="model">moodle.api.client.platform</field>
+            <field name="type">form</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <form string="moodle_api_client_platform_form" create="1" delete="1" edit="1">
+                    <sheet>
+
+                        <div class="oe_button_box" name="button_box">
+                            <button name="view_courses" type="object" class="oe_stat_button oe_read_only" 
+                                icon="fa-icon" help="List all available platform courses">
+                                <field name="course_count" widget="statinfo" string="Courses" />
+                            </button>
+                        </div>
+
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only" />
+                            <h1>
+                                <field name="name" class="oe_field_name" />
+                            </h1>
+                        </div>
+                        
+                        <group col="4">
+                            <field name="driver_name" class="oe_field_driver_name" />
+                            <field name="default_user_id" class="oe_field_default_user_id" />
+                            <field name="moodle_user_id" class="oe_field_moodle_user_id" />
+                            <field name="moodle_api_token" class="oe_field_moodle_api_token" />
+                            <separator colspan="4" />
+                            <field name="url" class="oe_field_url" />
+                            <button name="check_connection"
+                                string="Check Connection"
+                                type="object"
+                                class="btn-primary"
+                                icon="fa-check" />
+                        </group>
+
+                        <group col="2" string="Description">
+                            <field name="description" class="oe_field_description" colspan="2" nolabel="1" />
+                        </group>
+
+                    </sheet>
+
+                    <!-- Chatter: begin -->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                    <!-- Chatter: end -->
+
+                </form>
+            </field>
+        </record>
+        
+        <!-- Search view for "moodle.api.client.platform" -->
+        <record id="view_moodle_api_client_platform_search" model="ir.ui.view">
+            <field name="name">view.moodle.api.client.platform.search</field>
+            <field name="model">moodle.api.client.platform</field>
+            <field name="type">search</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <search string="moodle_api_client_platform_search">
+                    <field name="name" />
+                    <field name="driver_name" />
+                    <field name="url" />
+                    <field name="default_user_id" />
+                    <field name="moodle_user_id" />
+                    <field name="moodle_api_token" />
+
+                    <filter string="Group by driver"
+                        name="group_by_driver_name"
+                        domain="[]"
+                        context="{'group_by': 'driver_name'}"
+                        help="Group records based on their related Moodle driver" />
+
+                    <filter string="Group by default user"
+                        name="group_by_default_user_id"
+                        domain="[]"
+                        context="{'group_by': 'default_user_id'}"
+                        help="Group records based on their related default user ID" />
+
+                    <separator />
+                    <filter name="inactive" string="Archived" 
+                        domain="[('active','=',False)]"
+                        help="Filter to show records marked as inactive."/>
+
+                </search>
+            </field>
+        </record>
+        
+        <!-- Main window action for model.name -->
+        <record id="action_moodle_api_client_platform_act_window" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Platforms</field>
+            <field name="res_model">moodle.api.client.platform</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="view_moodle_api_client_platform_search" />
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add new Moodle API Client Platform
+                </p><p>
+                    There is no any moodle platform defined yet
+                </p>
+            </field>
+        </record>
+        
+        <!-- Main menu for model.name -->
+        <record id="menu_moodle_api_client_platform" model="ir.ui.menu" >
+            <field name="name">Platform</field>
+            <field name="sequence" eval="10" />
+            <field name="action" ref="action_moodle_api_client_platform_act_window" />
+            <field name="parent_id" ref="moodle_api_client.menu_moodle_api_client_configuration" />
+        </record>
+
+    </data>
+</openerp>

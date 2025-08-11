@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data noupdate="0">
+
+        <!-- VIEWS: "Moodle Page"
+        
+            - Model·········: moodle.api.client.discussion.post
+            - _rec_name·····: name
+            - Domain········: []
+            - Context·······: {}
+            - Parent menu ··: moodle_api_client.menu_moodle_api_client_content
+            - View priority·: 16    Sequence····: 10
+            - Action help···: There is not any moodle discussion post yet
+        - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        
+        <!-- Tree view for "moodle.api.client.discussion.post" -->
+        <record id="view_moodle_api_client_discussion_post_tree" model="ir.ui.view">
+            <field name="name">view.moodle.api.client.discussion.post.tree</field>
+            <field name="model">moodle.api.client.discussion.post</field>
+            <field name="type">tree</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <tree string="moodle_api_client_discussion_post_tree" create="1" delete="1" edit="1">
+                    <field name="active" invisible="1" />
+                    <field name="name" class="oe_field_name" />
+                    <field name="discussion_id" class="oe_field_discussion_id" optional="show" />
+                    <field name="content_length" class="oe_field_content_length" optional="show" />
+                    <field name="content_format" class="oe_field_content_format" optional="hide" />
+                    <field name="platform_id" class="oe_field_platform_id" optional="show" />
+                    <field name="user_id" class="oe_field_user_id" optional="show" />
+                    <field name="moodleid" class="oe_field_moodleid" optional="hide" />
+                    <field name="description" class="oe_field_description" optional="hide" />
+                    <field name="last_sync_date" class="oe_field_last_sync_date" optional="hide" />
+                    <field name="last_sync_error" class="oe_field_last_sync_error" optional="hide" />
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Form view for "moodle.api.client.discussion.post" -->
+        <record id="view_moodle_api_client_discussion_post_form" model="ir.ui.view">
+            <field name="name">view.moodle.api.client.discussion.post.form</field>
+            <field name="model">moodle.api.client.discussion.post</field>
+            <field name="type">form</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <form string="moodle_api_client_discussion_post_form" create="1" delete="1" edit="1">
+                    <field name="active" invisible="1" />
+
+                    <header>
+                            <button name="moodle_create" string="Create" type="object" />
+                            <button name="moodle_write" string="Write" type="object" />
+                            <button name="moodle_unlink" string="Unlink" type="object" />
+                    </header>
+
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only" />
+                            <h1>
+                                <field name="name" class="oe_field_name" />
+                            </h1>
+                        </div>
+
+                        <group col="4">
+                            <field name="platform_id" class="oe_field_platform_id" />
+                            <field name="moodleid" class="oe_field_moodleid" />
+                            <field name="discussion_id" class="oe_field_discussion_id" />
+                            <field name="user_id" class="oe_field_user_id" />
+                        </group>
+
+                        <notebook>
+                            <page string="Content" class="oe_discussion_post_content" accesskey="C">
+                                <field name="content" class="oe_field_content" />
+                            </page>
+                            <page string="Setup" class="oe_discussion_post_setup" accesskey="S">
+                                <group col="4">
+                                    <field name="content_format" class="oe_field_content_format" />
+                                    <field name="content_length" class="oe_field_content_length" />
+                                    <field name="last_sync_date" class="oe_field_last_sync_date" />
+                                    <field name="last_sync_error" class="oe_field_last_sync_error" />
+                                </group>
+                                <group col="2" string="Description" class="w-100">
+                                    <field name="description" class="oe_field_description w-100" colspan="2" nolabel="1" />
+                                </group>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Search view for "moodle.api.client.discussion.post" -->
+        <record id="view_moodle_api_client_discussion_post_search" model="ir.ui.view">
+            <field name="name">view.moodle.api.client.discussion.post.search</field>
+            <field name="model">moodle.api.client.discussion.post</field>
+            <field name="type">search</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <search string="moodle_api_client_discussion_post_search">
+                    <field name="name" />
+                    <field name="discussion_id" />
+                    <field name="user_id" />
+                    <field name="platform_id" />
+                    <field name="moodleid" />
+                    <field name="description" />
+                    <field name="last_sync_date" />
+                    <field name="last_sync_error" />
+
+                    <filter string="Linked to Moodle"
+                        name="linked_to_moodle"
+                        domain="[('moodleid', '&lt;&gt;', False)]"
+                        context="{}"
+                        help="Show records already linked to a Moodle discussion post" />
+
+                    <filter string="Not linked to Moodle"
+                        name="not_linked_to_moodle"
+                        domain="[('moodleid', '=', False)]"
+                        context="{}"
+                        help="Show records not yet linked to any Moodle discussion post" />
+                        
+                    <separator />
+                    <filter string="Synchronization  errors"
+                        name="with_synchronization_errors"
+                        domain="[('last_sync_error', '&lt;&gt;', False)]"
+                        context="{}"
+                        help="Show records with synchronization errors" />
+
+                    <separator />
+                    <filter string="Group by course"
+                        name="group_by_discussion_id"
+                        domain="[]"
+                        context="{'group_by': 'discussion_id'}"
+                        help="Group records based on their related course ID" />
+
+                    <filter string="Group by user"
+                        name="group_by_user_id"
+                        domain="[]"
+                        context="{'group_by': 'user_id'}"
+                        help="Group records based on their related author ID" />
+
+                    <filter string="Group by platform"
+                        name="group_by_platform_id"
+                        domain="[]"
+                        context="{'group_by': 'platform_id'}"
+                        help="Group records based on their related Moodle platform ID" />
+
+                    <separator />
+                    <filter name="inactive" string="Archived" 
+                        domain="[('active','=',False)]"
+                        help="Filter to show records marked as inactive."/>
+                </search>
+
+            </field>
+        </record>
+        
+        <!-- Main window action for model.name -->
+        <record id="action_moodle_discussion_post_act_window" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Pages</field>
+            <field name="res_model">moodle.api.client.discussion.post</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="view_moodle_api_client_discussion_post_search" />
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add new Moodle Page
+                </p><p>
+                    There is not any moodle discussion post yet
+                </p>
+            </field>
+        </record>
+        
+        <!-- Main menu for model.name -->
+        <record id="menu_moodle_discussion_post" model="ir.ui.menu" >
+            <field name="name">Page</field>
+            <field name="sequence" eval="10" />
+            <field name="action" ref="action_moodle_discussion_post_act_window" />
+            <field name="parent_id" ref="moodle_api_client.menu_moodle_api_client_content" />
+        </record>
+
+    </data>
+</openerp>

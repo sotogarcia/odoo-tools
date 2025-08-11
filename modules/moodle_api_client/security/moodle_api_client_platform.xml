@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data noupdate="0">
+
+        <record id="access_moodle_api_client_platform_group_system" model="ir.model.access">
+            <field name="name">Moodle API Client - Platform / Settings</field>
+            <field name="model_id" ref="model_moodle_api_client_platform"/>
+            <field name="group_id" ref="base.group_system"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="active" eval="True"/>
+        </record>
+        
+    </data>
+</openerp>

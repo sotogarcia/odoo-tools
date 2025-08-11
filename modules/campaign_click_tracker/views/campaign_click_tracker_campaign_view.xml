@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data noupdate="0">
+
+        <!-- VIEWS: "Click tracker campaign"
+        
+            - Model·········: campaign.click.tracker.campaign
+            - _rec_name·····: name
+            - Domain········: []
+            - Context·······: {}
+            - Parent menu ··: campaign_click_tracker.menu_click_tracker
+            - View priority·: 16    Sequence····: 10
+            - Action help···: There is not campaigns yet
+        - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        
+        <!-- Tree view for "campaign.click.tracker.campaign" -->
+        <record id="view_campaign_click_tracker_campaign_tree" model="ir.ui.view">
+            <field name="name">view.campaign.click.tracker.campaign.tree</field>
+            <field name="model">campaign.click.tracker.campaign</field>
+            <field name="type">tree</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <tree string="campaign_click_tracker_campaign_tree" create="1" delete="1" edit="1">
+                    <field name="id" invisible="1" />
+                    <field name="active" invisible="1" />
+                    <field name="name" />
+                    <field name="description" />
+                    <field name="available_answer_count" />
+                    <field name="user_input_count" />
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Form view for "campaign.click.tracker.campaign" -->
+        <record id="view_campaign_click_tracker_campaign_form" model="ir.ui.view">
+            <field name="name">view.campaign.click.tracker.campaign.form</field>
+            <field name="model">campaign.click.tracker.campaign</field>
+            <field name="type">form</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <form string="campaign_click_tracker_campaign_form" create="1" delete="1" edit="1">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="view_user_inputs" type="object" class="oe_stat_button oe_read_only"
+                                icon="fa-check-square-o" string="Inputs" help="Show related user inputs">
+                                <field name="user_input_count" widget="statinfo" />
+                            </button>
+                        </div>
+
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                            attrs="{'invisible': [('active', '=', True)]}"/>
+
+                        <div class="oe_title">
+                            <field name="id" invisible="1" />
+                            <field name="active" invisible="1" />
+                            <label for="name" class="oe_edit_only" />
+                            <h1>
+                                <field name="name" class="oe_field_name"
+                                    placeholder="Name" />
+                            </h1>
+                        </div>
+
+                        <group col="4" string="Details">
+                            <field name="partner_count" class="oe_field_partner_count" />
+                            <field name="available_answer_count" class="oe_field_available_answer_count" />
+                        </group>
+
+                        <group col="4" string="Statistics">
+                            <field name="user_input_count" class="oe_field_user_input_count"/>
+                            <field name="answered_count" class="oe_field_answered_count" />
+                        </group>
+
+                        <notebook>
+                            <page string="Options" class="oe_page_answers" accesskey="O">
+                                <field name="available_answer_ids" class="oe_field_available_answer_ids"
+                                    context="{'default_campaign_id': id}">
+                                    <tree string="campaign_click_tracker_answer_tree" create="1" delete="1" edit="1" editable="bottom">
+                                        <field name="name" class="oe_field_name" />
+                                        <field name="description" class="oe_field_description" />
+                                        <field name="token" class="oe_field_token oe_read_only" />
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Setup" class="oe_page_setup" accesskey="S">
+                                <field name="description" class="oe_field_description"
+                                    placeholder="Enter new description" />
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                    
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="view_campaign_click_tracker_campaign_kanban" model="ir.ui.view">
+            <field name="name">view.campaign.click.tracker.campaign.kanban</field>
+            <field name="model">campaign.click.tracker.campaign</field>
+            <field name="type">kanban</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" group_create="0" group_delete="0" group_edit="0"
+                    archivable="1"  quick_create="0">
+
+                    <field name="id" />
+                    <field name="active" />
+                    <field name="name" />
+                    <field name="partner_count" />
+                    <field name="available_answer_count" />
+                    <field name="user_input_count" />
+                    <field name="answered_count" />
+
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="oe_kanban_details d-flex flex-column justify-content-between h-100">
+                                    <div class="d-flex justify-content-between">
+                                        <h4 class="text-truncate">
+                                            <field name="name" class="oe_field_name" />
+                                        </h4>
+                                    </div>
+
+                                    <table class="table table-sm table-borderless w-100">
+                                        <tbody>
+                                            <tr>
+                                                <th class="text-nowrap">Users:</th>
+                                                <td class="w-100 text-right pr-md-4">
+                                                    <field name="partner_count" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-nowrap">Options:</th>
+                                                <td class="w-100 text-right pr-md-4">
+                                                    <field name="available_answer_count" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-nowrap">Input count:</th>
+                                                <td class="w-100 text-right pr-md-4">
+                                                    <field name="user_input_count" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-nowrap">Answered count:</th>
+                                                <td class="w-100 text-right pr-md-4">
+                                                    <field name="answered_count" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+
+                </kanban>
+            </field>
+        </record>
+        
+        <!-- Search view for "campaign.click.tracker.campaign" -->
+        <record id="view_campaign_click_tracker_campaign_search" model="ir.ui.view">
+            <field name="name">view.campaign.click.tracker.campaign.search</field>
+            <field name="model">campaign.click.tracker.campaign</field>
+            <field name="type">search</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <search string="campaign_click_tracker_campaign_search">
+                    <field name="name" />
+                    <field name="description" />
+                    <field name="available_answer_ids" />
+                    <field name="user_input_ids" />
+                    <field name="available_answer_count" />
+                    <field name="user_input_count" />
+                    <field name="id" string="Campaign ID" />
+
+                    <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
+
+                    <separator />
+                    <filter name="answered" string="Answered" domain="[('user_input_count', '=', True)]"/>
+                    <filter name="unanswered" string="Unanswered" domain="[('user_input_count', '!=', True)]"/>
+                </search>
+            </field>
+        </record>
+        
+        <!-- Main window action for model.name -->
+        <record id="action_click_tracker_campaign_act_window" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Click tracker campaign</field>
+            <field name="res_model">campaign.click.tracker.campaign</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="target">current</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="view_campaign_click_tracker_campaign_search" />
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add new campaign
+                </p><p>
+                    There is not campaigns yet
+                </p>
+            </field>
+        </record>
+        
+        <!-- Main menu for model.name -->
+        <record id="menu_click_tracker_campaign" model="ir.ui.menu" >
+            <field name="name">Click tracker campaign</field>
+            <field name="sequence" eval="10" />
+            <field name="action" ref="action_click_tracker_campaign_act_window" />
+            <field name="parent_id" ref="campaign_click_tracker.menu_click_tracker" />
+        </record>
+
+    </data>
+</openerp>
