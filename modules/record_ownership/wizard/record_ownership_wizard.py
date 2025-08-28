@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
-#    License, author and contributors information in:                         #
-#    __openerp__.py file at the root folder of this module.                   #
+# License, author and contributors information in:                            #
+# __manifest__.py file at the root folder of this module.                     #
 ###############################################################################
 
-from odoo import models, fields, api
-from odoo.tools.translate import _
-from logging import getLogger
-from odoo.osv.expression import AND, FALSE_LEAF, FALSE_DOMAIN, TRUE_DOMAIN
+from odoo import _, api, fields, models
+# from odoo.tools.translate import _
+from odoo.osv.expression import AND, FALSE_DOMAIN, FALSE_LEAF
 from odoo.exceptions import UserError
+
+from logging import getLogger
 
 _logger = getLogger(__name__)
 
@@ -18,7 +19,7 @@ class RecordOwnershipWizard(models.TransientModel):
     """
 
     _name = 'record.ownership.wizard'
-    _description = u'Record ownership wizard'
+    _description = 'Record ownership wizard'
 
     _rec_name = 'id'
     _order = 'id DESC'
@@ -37,6 +38,7 @@ class RecordOwnershipWizard(models.TransientModel):
         auto_join=False
     )
 
+    @api.model
     def default_model_id(self):
         model_set = self.env['ir.model']
 
@@ -89,7 +91,7 @@ class RecordOwnershipWizard(models.TransientModel):
         comodel_name='res.users',
         domain=[],
         context={},
-        ondelete='cascade',
+        ondelete='no action',
         auto_join=False
     )
 
@@ -112,7 +114,7 @@ class RecordOwnershipWizard(models.TransientModel):
         comodel_name='res.users',
         domain=[],
         context={},
-        ondelete='cascade',
+        ondelete='no action',
         auto_join=False
     )
 
@@ -204,6 +206,8 @@ class RecordOwnershipWizard(models.TransientModel):
         return ['|', owner_leaf, subrogate_leaf]
 
     def build_target_domain(self):
+        self.ensure_one()
+
         records_domain = self._build_records_domain()
         property_domain = self._build_property_domain()
 
@@ -269,29 +273,24 @@ class RecordOwnershipWizard(models.TransientModel):
     def _perform_action(self):
         self.ensure_one()
 
+        wizard = self
         if self.tracking_disable:
-            tracking_disable_ctx = self.env.context.copy()
-            tracking_disable_ctx.update({'tracking_disable': True})
-            self = self.with_context(tracking_disable_ctx)
+            wizard = self.with_context(tracking_disable=True)
 
-        self._update_ownership()
-        self._fix_redundancy()
+        wizard._update_ownership()
+        wizard._fix_redundancy()
 
     def perform_action(self):
-        msg = _('The operation could not be completed. The system says: {}')
-
-        self.env.cr.autocommit(False)
+        uerror = _("The operation could not be completed. The system says: %s")
 
         try:
+            for wizard in self:
+                wizard._perform_action()
 
-            for record in self:
-                self._perform_action()
-
-            self.env.cr.commit()
+        except UserError:
+            # re-raise business errors as they are
+            raise
 
         except Exception as ex:
-            _logger.error(ex)
-            raise UserError(msg.format(ex))
-
-        finally:
-            self.env.cr.autocommit(True)
+            _logger.exception("Ownership wizard error")
+            raise UserError(uerror % ex)

@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
-""" OwnershipMixin
-"""
+###############################################################################
+# License, author and contributors information in:                            #
+# __manifest__.py file at the root folder of this module.                     #
+###############################################################################
+
+from odoo import models, fields, api
 
 from logging import getLogger
-from odoo import models, fields, api
 
 # pylint: disable=locally-disabled, C0103
 _logger = getLogger(__name__)
@@ -30,7 +33,7 @@ class OwnershipMixin(models.AbstractModel):
         comodel_name='res.users',
         domain=[],
         context={},
-        ondelete='cascade',
+        ondelete='restrict',
         auto_join=False,
         groups='record_ownership.record_ownership_consultant',
         tracking=True
@@ -46,7 +49,7 @@ class OwnershipMixin(models.AbstractModel):
         comodel_name='res.users',
         domain=[],
         context={},
-        ondelete='cascade',
+        ondelete='set null',
         auto_join=False,
         groups='record_ownership.record_ownership_consultant',
         tracking=True
@@ -62,7 +65,7 @@ class OwnershipMixin(models.AbstractModel):
         comodel_name='res.users',
         domain=[],
         context={},
-        ondelete='cascade',
+        ondelete='no action',
         auto_join=False,
         compute='_compute_manager_id',
         search='_search_manager_id',
@@ -195,7 +198,7 @@ class OwnershipMixin(models.AbstractModel):
             ('partner_id', '=', user_item.partner_id.id)
         ]
 
-        return len(followers_obj.search(domain)) > 0
+        return bool(followers_obj.search_count(domain))
 
     def _pick_owner(self, values):
         """ Appends current user as owner_id in given values dictionary
@@ -257,23 +260,26 @@ class OwnershipMixin(models.AbstractModel):
                     subscribe([record.owner_id.partner_id.id])
 
                 if 'subrogate_id' in values.keys() and record.subrogate_id:
-                    subscribe([record.subrogate_id.partner_id.id])
+                    subscribe(partner_ids=[record.subrogate_id.partner_id.id])
 
-    @api.model
-    def create(self, values):
-        """ Prevent unauthorized users from changing ownership for others other
-        than themselves.
-
-        Appends owner to mail.followers list.
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Create records in batch (Odoo 18).
+        - Enforce ownership rules per record prior to creation.
+        - Subscribe managers/followers after creation.
         """
+        # Pre-create: enforce owner/subrogate for each item
 
-        self._pick_owner(values)
+        for vals in vals_list:
+            self._pick_owner(vals)
 
-        result = super(OwnershipMixin, self).create(values)
+        records = super(OwnershipMixin, self).create(vals_list)
 
-        result._ensure_managers_as_followers(values)
+        # Post-create: ensure followers per created record
+        for rec, vals in zip(records, vals_list):
+            rec._ensure_managers_as_followers(vals)
 
-        return result
+        return records
 
     def write(self, values):
         """ Prevent unauthorized users from changing ownership for others other

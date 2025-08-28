@@ -1,76 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<openerp>
-    <data noupdate="0">
+<odoo>
+  <data noupdate="0">
 
-        <record id="view_record_ownership_wizard" model="ir.ui.view">
-            <field name="name">Change owner</field>
-            <field name="model">record.ownership.wizard</field>
-            <field name="type">form</field>
-            <field name="mode">primary</field>
-            <field name="priority" eval="16" />
-            <field name="active" eval="True" />
-            <field name="arch" type="xml">
-                <form string="Ownership wizard" create="1" delete="1" edit="1">
-                    <field name="model_id" invisible="1" />
+    <record id="view_record_ownership_wizard" model="ir.ui.view">
+      <field name="name">record.ownership.wizard.form</field>
+      <field name="model">record.ownership.wizard</field>
+      <field name="priority" eval="16"/>
+      <field name="active" eval="True"/>
+      <field name="arch" type="xml">
+        <form string="Ownership Wizard">
+          <sheet>
+            <field name="model_id" invisible="1"/>
 
-                    <header>
-                        <button name="perform_action"
-                                string="Change"
-                                type="object"
-                                default_focus="0"
-                                icon="fa-play"
-                                confirm="Are you sure to perform changes"
-                                help="Perform changes"
-                                class='btn btn-primary' />
-                    </header>
+            <header>
+              <button name="perform_action"
+                      string="Change"
+                      type="object"
+                      class="btn-primary">
+                <attribute name="confirm">Are you sure you want to apply the changes?</attribute>
+                <attribute name="help">Apply changes</attribute>
+              </button>
+            </header>
 
-                    <group col="6">
-                        <field name="change_owner" class="oe_field_change_owner" />
-                        <field name="owner_id" class="oe_field_owner_id" colspan="4"
-                            attrs="{'readonly': [('change_owner', '&lt;&gt;', True)]}"
-                            options="{'no_quick_create': True, 'no_create': True, 'no_open': True}" />
-                        <field name="change_subrogate" class="oe_field_change_subrogate" />
-                        <field name="subrogate_id" class="oe_field_subrogate_id" colspan="4"
-                            attrs="{'readonly': [('change_subrogate', '&lt;&gt;', True)]}"
-                            options="{'no_quick_create': True, 'no_create': True, 'no_open': True}" />
+            <group>
+              <field name="change_owner" class="oe_field_change_owner"/>
+              <field name="owner_id"
+                     class="oe_field_owner_id"
+                     colspan="4"
+                     options="{'no_quick_create': True, 'no_create': True, 'no_open': True}">
+                <attribute name="readonly">[('change_owner','!=', True)]</attribute>
+              </field>
 
-                        <separator colspan="6" />
-                        <field name="record_count" class="oe_field_record_count" />
-                        <field name="target_count" class="oe_field_target_count" />
-                        <separator colspan="2" />
+              <field name="change_subrogate" class="oe_field_change_subrogate"/>
+              <field name="subrogate_id"
+                     class="oe_field_subrogate_id"
+                     colspan="4"
+                     options="{'no_quick_create': True, 'no_create': True, 'no_open': True}">
+                <attribute name="readonly">[('change_subrogate','!=', True)]</attribute>
+              </field>
 
-                        <separator colspan="6" />
-                        <field name="tracking_disable" class="oe_field_tracking_disable" />
-                        <field name="fix_redundancy" class="oe_field_fix_redundancy" colspan="4" />
-                    </group>
+              <separator/>
+              <field name="record_count" class="oe_field_record_count"/>
+              <field name="target_count" class="oe_field_target_count"/>
+              <separator/>
 
+              <field name="tracking_disable" class="oe_field_tracking_disable"/>
+              <field name="fix_redundancy" class="oe_field_fix_redundancy" colspan="4"/>
+            </group>
 
-                    <footer />
+          </sheet>
+        </form>
+      </field>
+    </record>
 
-                </form>
-            </field>
-        </record>
-
-        <!-- <record id="action_record_ownership_wizard_wizard_act_window" model="ir.actions.act_window">
-            <field name="type">ir.actions.act_window</field>
-            <field name="name">Change owner</field>
-            <field name="res_model">record.ownership.wizard</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-            <field name="domain">[]</field>
-            <field name="context">{}</field>
-        </record> -->
-
-        <!-- Main menu for model.name -->
-        <!-- <record id="menu_record_ownership_wizard_wizard" model="ir.ui.menu" >
-            <field name="name">Change owner</field>
-            <field name="sequence" eval="20" />
-            <field name="action" ref="action_record_ownership_wizard_16_act_window" />
-            <field name="parent_id" ref="base.menu_custom" />
-            <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
-        </record>
- -->
-
-    </data>
-</openerp>
+  </data>
+</odoo>
