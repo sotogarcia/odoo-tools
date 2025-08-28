@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data noupdate="0">
+
+        <!-- Category: all the other module groups are child of this
+        ============================================================ -->
+        <record id="module_record_ownership" model="ir.module.category">
+            <field name="name">Ownership</field>
+            <field name="sequence" eval="10" />
+            <field name="visible" eval="True" />
+            <field name="description">Record ownership</field>
+        </record>
+
+        <!-- User who only can read data -->
+        <record id="record_ownership_consultant" model="res.groups">
+            <field name="name">Consultant</field>
+            <field name="comment">Users who can view record ownership</field>
+            <field name="category_id" ref="module_record_ownership"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="record_ownership_proxy" model="res.groups">
+            <field name="name">Proxy</field>
+            <field name="comment">Users who can subrogate records</field>
+            <field name="category_id" ref="module_record_ownership"/>
+            <field name="implied_ids" eval="[(4, ref('record_ownership.record_ownership_consultant'))]"/>
+        </record>
+
+        <record id="record_ownership_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="comment">Users who can change ownership of records</field>
+            <field name="category_id" ref="module_record_ownership"/>
+            <field name="implied_ids" eval="[(4, ref('record_ownership.record_ownership_proxy'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
+        </record>
+
+    </data>
+</openerp>
