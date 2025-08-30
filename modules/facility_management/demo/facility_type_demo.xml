@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<openerp>
-    <data noupdate="0">
+<odoo noupdate="1">
 
-        <record id="facility_type_regular_classroom" model="facility.type">
-            <field name="name">Regular classroom</field>
-            <field name="description"><![CDATA[Room, typically in a school, in which a class of students is taught]]></field>
-            <field name="active" eval="True" />
-        </record>
+    <record id="facility_type_regular_classroom" model="facility.type">
+        <field name="name">Regular classroom</field>
+        <field name="description"><![CDATA[Room, typically in a school, in which a class of students is taught]]></field>
+        <field name="active" eval="True" />
+    </record>
 
-        <record id="facility_type_computer_classroom" model="facility.type">
-            <field name="name">Computer classroom</field>
-            <field name="description"><![CDATA[Room that require regular use of computers as part of the learning process]]></field>
-            <field name="active" eval="True" />
-        </record>
+    <record id="facility_type_computer_classroom" model="facility.type">
+        <field name="name">Computer classroom</field>
+        <field name="description"><![CDATA[Room that require regular use of computers as part of the learning process]]></field>
+        <field name="active" eval="True" />
+    </record>
 
-        <record id="facility_type_regular_equipment" model="facility.type">
-            <field name="name">Equipment</field>
-            <field name="description"><![CDATA[Tool or set of tools needed for a particular activity]]></field>
-            <field name="active" eval="True" />
-        </record>
+    <record id="facility_type_regular_equipment" model="facility.type">
+        <field name="name">Equipment</field>
+        <field name="description"><![CDATA[Tool or set of tools needed for a particular activity]]></field>
+        <field name="active" eval="True" />
+    </record>
 
-        <record id="facility_type_test" model="facility.type">
-            <field name="name">Test type</field>
-            <field name="description"><![CDATA[Facilities to perform unity tests]]></field>
-            <field name="active" eval="True" />
-        </record>
+    <record id="facility_type_test" model="facility.type">
+        <field name="name">Test type</field>
+        <field name="description"><![CDATA[Facilities to perform unity tests]]></field>
+        <field name="active" eval="True" />
+    </record>
 
-    </data>
-</openerp>
+</odoo>

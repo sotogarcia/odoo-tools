@@ -1,37 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<openerp>
-    <data noupdate="1">
+<odoo noupdate="1">
 
-        <record id="facility_reservation_scheduler_demo_1" model="facility.reservation.scheduler">
-            <field name="name">Periodic reservation</field>
-            <field name="description"><![CDATA[This reservation is repeated a total of seven times, every two weeks, on Monday, Wednesday and Friday.]]></field>
-            <field name="date_base" eval="(DateTime.today() - timedelta(DateTime.today().weekday())).strftime('%Y-%m-%d')" />
-            <field name="time_start" eval="9.0" />
-            <field name="time_stop" eval="11.0" />
-            <field name="weekday_ids" eval="[
-                (4, ref('facility_management.facility_weekday_monday'), None),
-                (4, ref('facility_management.facility_weekday_wednesday'), None),
-                (4, ref('facility_management.facility_weekday_friday'), None)
-            ]" />
-            <field name="full_day" eval="False" />
-            <field name="repeat" eval="True" />
-            <field name="interval_number" eval="2" />
-            <field name="interval_type">week</field>
-            <field name="finish_type">number</field>
-            <field name="finish_number" eval="7" />
-            <field name="facility_id" ref="facility_management.facility_classroom_3" />
-            <field name="confirm" eval="True" />
-            <field name="validate" eval="True" />
-        </record>
+    <record id="facility_reservation_scheduler_demo_1" model="facility.reservation.scheduler">
+        <field name="name">Periodic reservation</field>
+        <field name="description"><![CDATA[This reservation is repeated a total of seven times, every two weeks, on Monday, Wednesday and Friday.]]></field>
+        <field name="date_base" eval="(DateTime.today() - timedelta(DateTime.today().weekday())).strftime('%Y-%m-%d')" />
+        <field name="time_start" eval="9.0" />
+        <field name="time_stop" eval="11.0" />
+        <field name="weekday_ids" eval="[
+            (4, ref('facility_management.facility_weekday_monday'), None),
+            (4, ref('facility_management.facility_weekday_wednesday'), None),
+            (4, ref('facility_management.facility_weekday_friday'), None)
+        ]" />
+        <field name="full_day" eval="False" />
+        <field name="repeat" eval="True" />
+        <field name="interval_number" eval="2" />
+        <field name="interval_type">week</field>
+        <field name="finish_type">number</field>
+        <field name="finish_number" eval="7" />
+        <field name="facility_id" ref="facility_management.facility_classroom_3" />
+        <field name="confirm" eval="True" />
+        <field name="validate" eval="True" />
+    </record>
 
-        <!-- this does not work
-        <function model="facility.reservation.scheduler" name="make_reservations">
-            <function model="facility.reservation.scheduler" name="browse"
-                eval="[ref('facility_management.facility_reservation_scheduler_demo_1')]"/>
-        </function>-->
+    <!-- this does not work
+    <function model="facility.reservation.scheduler" name="make_reservations">
+        <function model="facility.reservation.scheduler" name="browse"
+            eval="[ref('facility_management.facility_reservation_scheduler_demo_1')]"/>
+    </function>-->
 
-    </data>
-</openerp>
+</odoo>
 
 

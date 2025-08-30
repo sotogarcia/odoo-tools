@@ -26,7 +26,7 @@ class FacilityFacility(models.Model):
     """
 
     _name = 'facility.facility'
-    _description = u'Facility'
+    _description = 'Facility'
 
     _rec_name = 'name'
     _order = 'complex_id, name ASC'
@@ -48,7 +48,7 @@ class FacilityFacility(models.Model):
         help='Name of the facility',
         size=50,
         translate=True,
-        track_visibility='onchange'
+        tracking=True  # track_visibility deprecated; use tracking
     )
 
     code = fields.Char(
@@ -174,7 +174,6 @@ class FacilityFacility(models.Model):
         domain=[],
         context={},
         auto_join=False,
-        limit=None
     )
 
     reservation_count = fields.Integer(
@@ -477,7 +476,7 @@ class FacilityFacility(models.Model):
         ctx.update({'default_facility_id': self.id})
 
         # Required to be called from facility_search_available_wizard button
-        ctx.pop('tree_view_ref', False)
+        ctx.pop('list_view_ref', False)
 
         domain = [('facility_id', '=', self.id)]
         name = _('{} - Reservations').format(self.name)

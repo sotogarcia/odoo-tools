@@ -19,11 +19,13 @@ class FacilityComplexFacilityReservationRel(models.Model):
     """
 
     _name = 'facility.complex.facility.reservation.rel'
-    _description = u'Facility complex facility reservation'
+    _description = 'Facility complex facility reservation'
 
     _order = 'create_date DESC'
 
     _auto = False
+
+    _check_company_auto = True
 
     complex_id = fields.Many2one(
         string='Complex',
@@ -37,6 +39,12 @@ class FacilityComplexFacilityReservationRel(models.Model):
         context={},
         ondelete='cascade',
         auto_join=False
+    )
+
+    company_id = fields.Many2one(
+        string='Company',
+        related='complex_id.company_id',
+        store=True
     )
 
     reservation_id = fields.Many2one(

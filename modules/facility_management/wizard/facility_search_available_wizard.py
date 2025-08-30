@@ -38,7 +38,6 @@ class FacilitySearchAvailableWizard(models.TransientModel):
         column2='type_id',
         domain=[],
         context={},
-        limit=None
     )
 
     exclude_types = fields.Boolean(
@@ -63,7 +62,6 @@ class FacilitySearchAvailableWizard(models.TransientModel):
         column2='complex_id',
         domain=[],
         context={},
-        limit=None
     )
 
     exclude_complexes = fields.Boolean(

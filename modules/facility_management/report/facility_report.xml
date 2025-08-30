@@ -1,163 +1,161 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<openerp>
-    <data noupdate="0">
+<odoo noupdate="1">
 
-        <!-- REPORT: "Facility weekly timetable"
+    <!-- REPORT: "Facility weekly timetable"
 
-            - Module: facility_management    Model: facility
-            - Language field used to translate it: lang
-            - Report uses attachment: True
-            - Report paperformat: report.paperformat_euro
-            - View priority: 16    Active: True
-            - Action help: Weekly timetable for facility
-        - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        - Module: facility_management    Model: facility
+        - Language field used to translate it: lang
+        - Report uses attachment: True
+        - Report paperformat: report.paperformat_euro
+        - View priority: 16    Active: True
+        - Action help: Weekly timetable for facility
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <!-- Report "Facility" document template -->
-        <record id="view_facility_section_qweb" model="ir.ui.view">
-            <field name="name">Facility report document section</field>
-            <field name="model">facility.facility</field>
-            <field name="type">qweb</field>
-            <field name="mode">primary</field>
-            <field name="priority" eval="16" />
-            <field name="active" eval="True" />
-            <field name="arch" type="xml">
-                <t t-name="facility_management.view_facility_section_qweb">
-                    <t t-set="values" t-value="values[o.id]" />
+    <!-- Report "Facility" document template -->
+    <record id="view_facility_section_qweb" model="ir.ui.view">
+        <field name="name">Facility report document section</field>
+        <field name="model">facility.facility</field>
+        <field name="type">qweb</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="16" />
+        <field name="active" eval="True" />
+        <field name="arch" type="xml">
+            <t t-name="facility_management.view_facility_section_qweb">
+                <t t-set="values" t-value="values[o.id]" />
 
-                    <section class="report-facility-section col-12">
-                        <header>
-                            <h4 class="facility-name mb-3"><t t-esc="o.name" /></h4>
-                        </header>
+                <section class="report-facility-section col-12">
+                    <header>
+                        <h4 class="facility-name mb-3"><t t-esc="o.name" /></h4>
+                    </header>
 
-                        <t t-foreach="values['weeks']" t-as="week">
-                        <table class="table table-bordered w-100 week-timetable">
-                             <caption><t t-esc="week" /></caption>
-                            <thead>
-                                <tr>
-                                    <th style="width: 12%" class="th-date">DATE</th>
-                                    <th style="width: 12%" class="th-time">TIME</th>
-                                    <th style="width: 48%" class="th-subject">DESCRIPTION</th>
-                                    <th style="width: 14%" class="th-teacher">OWNER</th>
-                                    <th style="width: 14%" class="th-facility">FACILITY</th>
-                                </tr>
-                            </thead>
+                    <t t-foreach="values['weeks']" t-as="week">
+                    <table class="table table-bordered w-100 week-timetable">
+                         <caption><t t-esc="week" /></caption>
+                        <thead>
+                            <tr>
+                                <th style="width: 12%" class="th-date">DATE</th>
+                                <th style="width: 12%" class="th-time">TIME</th>
+                                <th style="width: 48%" class="th-subject">DESCRIPTION</th>
+                                <th style="width: 14%" class="th-teacher">OWNER</th>
+                                <th style="width: 14%" class="th-facility">FACILITY</th>
+                            </tr>
+                        </thead>
 
-                            <tbody>
-                                <t t-foreach="week_value" t-as="day">
-                                    <t t-set="daily_reservations" t-value='day_value' />
-                                    <t t-if="daily_reservations">
-                                        <t t-foreach="daily_reservations.values()" t-as="reservation">
-                                            <tr t-attf-class="td-time reservation {{ 'reservation-first' if (reservation_first) else '' }} {{ 'reservation-last' if (reservation_last) else '' }} {{ 'reservation-middle' if (not reservation_start and not reservation_last) else '' }} {{ 'day-even' if day_index % 2 == 0 else 'day-odd' }}">
-                                                <td style="width: 12%">
-                                                    <t t-if="reservation_first">
-                                                        <strong><t t-esc="reservation['date']" /></strong>
-                                                    </t>
-                                                    <t t-else="">
-                                                        &#160;
-                                                    </t>
-                                                </td>
-                                                <td style="width: 12%">
-                                                    <t t-esc="reservation['interval']" />
-                                                </td>
-                                                <td style="width: 50%">
-                                                    <strong class="d-block text-truncate font-weight-bold"><t t-esc="reservation['name']" /></strong>
-                                                    <small class="d-block"><t t-esc="reservation['description']" /></small>
-                                                </td>
-                                                <td style="width: 14%">
-                                                    <t t-esc="reservation['owner']" />
-                                                </td>
-                                                <td style="width: 12%">
-                                                    <t t-esc="reservation['facility']" />
-                                                </td>
-                                            </tr>
-                                        </t>
-                                    </t>
-
-                                    <t t-if="not daily_reservations">
-                                        <tr t-attf-class="reservation reservation-empty reservation-first reservation-last {{ 'day-even' if day_index % 2 == 0 else 'day-odd' }}">
+                        <tbody>
+                            <t t-foreach="week_value" t-as="day">
+                                <t t-set="daily_reservations" t-value='day_value' />
+                                <t t-if="daily_reservations">
+                                    <t t-foreach="daily_reservations.values()" t-as="reservation">
+                                        <tr t-attf-class="td-time reservation {{ 'reservation-first' if (reservation_first) else '' }} {{ 'reservation-last' if (reservation_last) else '' }} {{ 'reservation-middle' if (not reservation_start and not reservation_last) else '' }} {{ 'day-even' if day_index % 2 == 0 else 'day-odd' }}">
                                             <td style="width: 12%">
-                                                <strong><t t-esc="day" /></strong>
+                                                <t t-if="reservation_first">
+                                                    <strong><t t-esc="reservation['date']" /></strong>
+                                                </t>
+                                                <t t-else="">
+                                                    &#160;
+                                                </t>
                                             </td>
-                                            <td style="width: 12%">···</td>
-                                            <td style="width: 50%">···</td>
-                                            <td style="width: 14%">···</td>
-                                            <td style="width: 12%">···</td>
+                                            <td style="width: 12%">
+                                                <t t-esc="reservation['interval']" />
+                                            </td>
+                                            <td style="width: 50%">
+                                                <strong class="d-block text-truncate font-weight-bold"><t t-esc="reservation['name']" /></strong>
+                                                <small class="d-block"><t t-esc="reservation['description']" /></small>
+                                            </td>
+                                            <td style="width: 14%">
+                                                <t t-esc="reservation['owner']" />
+                                            </td>
+                                            <td style="width: 12%">
+                                                <t t-esc="reservation['facility']" />
+                                            </td>
                                         </tr>
                                     </t>
                                 </t>
-                            </tbody>
 
-                        </table>
-                        </t> <!-- weeh -->
-
-                    </section>
-                </t> <!-- t-name -->
-
-            </field>
-        </record>
-
-        <!-- Report "Facility" document template -->
-        <record id="view_facility_document_qweb" model="ir.ui.view">
-            <field name="name">Facility report document </field>
-            <field name="model">facility.facility</field>
-            <field name="type">qweb</field>
-            <field name="mode">primary</field>
-            <field name="priority" eval="16" />
-            <field name="active" eval="True" />
-            <field name="arch" type="xml">
-                <t t-name="facility_management.view_facility_document_qweb">
-
-                    <div class="page">
-                        <div class="oe_structure"/>
-
-                        <div class="clearfix"></div>
-
-                        <div class="row mt16 mb32">
-                            <t t-call="facility_management.view_facility_section_qweb" />
-                        </div>
-
-                        <div class="clearfix"></div>
-
-                    </div> <!-- page -->
-                </t>
-            </field>
-        </record>
-
-        <!-- Report "Fcility" translate_doc template -->
-        <record id="view_facility_qweb" model="ir.ui.view">
-            <field name="name">Facility report</field>
-            <field name="model">facility.facility</field>
-            <field name="type">qweb</field>
-            <field name="mode">primary</field>
-            <field name="priority" eval="16" />
-            <field name="active" eval="True" />
-            <field name="arch" type="xml">
-                <t t-name="facility_management.view_facility_qweb">
-                    <t t-call="web.html_container">
-                        <t t-foreach="docs" t-as="o">
-                            <t t-call="web.external_layout">
-                                <t t-call="facility_management.view_facility_document_qweb" />
+                                <t t-if="not daily_reservations">
+                                    <tr t-attf-class="reservation reservation-empty reservation-first reservation-last {{ 'day-even' if day_index % 2 == 0 else 'day-odd' }}">
+                                        <td style="width: 12%">
+                                            <strong><t t-esc="day" /></strong>
+                                        </td>
+                                        <td style="width: 12%">···</td>
+                                        <td style="width: 50%">···</td>
+                                        <td style="width: 14%">···</td>
+                                        <td style="width: 12%">···</td>
+                                    </tr>
+                                </t>
                             </t>
+                        </tbody>
+
+                    </table>
+                    </t> <!-- weeh -->
+
+                </section>
+            </t> <!-- t-name -->
+
+        </field>
+    </record>
+
+    <!-- Report "Facility" document template -->
+    <record id="view_facility_document_qweb" model="ir.ui.view">
+        <field name="name">Facility report document </field>
+        <field name="model">facility.facility</field>
+        <field name="type">qweb</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="16" />
+        <field name="active" eval="True" />
+        <field name="arch" type="xml">
+            <t t-name="facility_management.view_facility_document_qweb">
+
+                <div class="page">
+                    <div class="oe_structure"/>
+
+                    <div class="clearfix"></div>
+
+                    <div class="row mt16 mb32">
+                        <t t-call="facility_management.view_facility_section_qweb" />
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                </div> <!-- page -->
+            </t>
+        </field>
+    </record>
+
+    <!-- Report "Fcility" translate_doc template -->
+    <record id="view_facility_qweb" model="ir.ui.view">
+        <field name="name">Facility report</field>
+        <field name="model">facility.facility</field>
+        <field name="type">qweb</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="16" />
+        <field name="active" eval="True" />
+        <field name="arch" type="xml">
+            <t t-name="facility_management.view_facility_qweb">
+                <t t-call="web.html_container">
+                    <t t-foreach="docs" t-as="o">
+                        <t t-call="web.external_layout">
+                            <t t-call="facility_management.view_facility_document_qweb" />
                         </t>
-                    </t> <!-- t-html_container -->
-                </t>
-            </field>
-        </record>
+                    </t>
+                </t> <!-- t-html_container -->
+            </t>
+        </field>
+    </record>
 
-        <!-- Report action to show: "Facility" -->
-        <record id="action_report_facility_management_facility" model="ir.actions.report">
-            <field name="name">Facility weekly reservations</field>
-            <field name="model">facility.facility</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">facility_management.view_facility_qweb</field>
-            <field name="print_report_name">(object.name)</field>
-            <field name="attachment_use" eval="False" />
-            <field name="attachment">(object.name+'.pdf')</field>
-            <field name="paperformat_id" ref="base.paperformat_euro" />
-            <field name="help">Weekly timetable for facilities</field>
-            <field name="binding_model_id" ref="facility_management.model_facility_facility" />
-        </record>
+    <!-- Report action to show: "Facility" -->
+    <record id="action_report_facility_management_facility" model="ir.actions.report">
+        <field name="name">Facility weekly reservations</field>
+        <field name="model">facility.facility</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">facility_management.view_facility_qweb</field>
+        <field name="print_report_name">(object.name)</field>
+        <field name="attachment_use" eval="False" />
+        <field name="attachment">(object.name+'.pdf')</field>
+        <field name="paperformat_id" ref="base.paperformat_euro" />
+        <field name="help">Weekly timetable for facilities</field>
+        <field name="binding_model_id" ref="facility_management.model_facility_facility" />
+    </record>
 
-    </data>
-</openerp>
+</odoo>

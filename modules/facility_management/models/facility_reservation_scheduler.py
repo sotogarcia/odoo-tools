@@ -19,7 +19,7 @@ class FacilityReservationScheduler(models.Model):
     """
 
     _name = 'facility.reservation.scheduler'
-    _description = u'Facility reservation scheduler'
+    _description = 'Facility reservation scheduler'
 
     _inherit = ['ownership.mixin', 'facility.scheduler.mixin']
 
@@ -178,7 +178,6 @@ class FacilityReservationScheduler(models.Model):
         domain=[],
         context={},
         auto_join=False,
-        limit=None
     )
 
     reservation_count = fields.Integer(
@@ -251,9 +250,9 @@ class FacilityReservationScheduler(models.Model):
         WHERE
             ars.active
         GROUP BY
-                ars."id"
+            ars."id"
         HAVING
-            COUNT ( ar.facility_id ) {operator} {value}
+            COUNT ( ar.scheduler_id ) {operator} {value}
     '''
 
     def _uid_is_manager(self):

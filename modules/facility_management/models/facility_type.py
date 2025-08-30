@@ -17,7 +17,7 @@ class FacilityType(models.Model):
     """
 
     _name = 'facility.type'
-    _description = u'Facility type'
+    _description = 'Facility type'
 
     _rec_name = 'name'
     _order = 'name ASC'
@@ -56,6 +56,6 @@ class FacilityType(models.Model):
         (
             'unique_facility_type_name',
             'UNIQUE("name")',
-            _(u'Facility type already exists')
+            _('Facility type already exists')
         )
     ]

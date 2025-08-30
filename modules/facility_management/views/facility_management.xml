@@ -1,50 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<openerp>
-    <data noupdate="0">
+<odoo noupdate="0">
 
-        <record id="menu_facility_management" model="ir.ui.menu" >
-            <field name="name">Facilities</field>
-            <field name="sequence" eval="36" />
-            <field name="parent_id" />
-            <field name="groups_id" eval="[(4, ref('facility_management.facility_group_consultant'))]"/>
-            <field name="web_icon">facility_management,static/description/icon.png</field>
-        </record>
+    <record id="menu_facility_management" model="ir.ui.menu" >
+        <field name="name">Facilities</field>
+        <field name="sequence" eval="36" />
+        <field name="parent_id" />
+        <field name="groups_id" eval="[(4, ref('facility_management.facility_group_consultant'))]"/>
+        <field name="web_icon">facility_management,static/description/icon.png</field>
+    </record>
 
-        <record id="menu_facility_management_facilities" model="ir.ui.menu" >
-            <field name="name">Facilities</field>
-            <field name="sequence" eval="36" />
-            <field name="parent_id" ref="facility_management.menu_facility_management" />
-            <field name="groups_id" eval="[(4, ref('facility_management.facility_group_consultant'))]"/>
-        </record>
+    <record id="menu_facility_management_facilities" model="ir.ui.menu" >
+        <field name="name">Facilities</field>
+        <field name="sequence" eval="36" />
+        <field name="parent_id" ref="facility_management.menu_facility_management" />
+        <field name="groups_id" eval="[(4, ref('facility_management.facility_group_consultant'))]"/>
+    </record>
 
-        <record id="menu_facility_management_reservations" model="ir.ui.menu" >
-            <field name="name">Reservations</field>
-            <field name="sequence" eval="36" />
-            <field name="parent_id" ref="facility_management.menu_facility_management" />
-            <field name="groups_id" eval="[(4, ref('facility_management.facility_group_consultant'))]"/>
-        </record>
+    <record id="menu_facility_management_reservations" model="ir.ui.menu" >
+        <field name="name">Reservations</field>
+        <field name="sequence" eval="36" />
+        <field name="parent_id" ref="facility_management.menu_facility_management" />
+        <field name="groups_id" eval="[(4, ref('facility_management.facility_group_consultant'))]"/>
+    </record>
 
-        <record id="menu_facility_management_settings" model="ir.ui.menu" >
-            <field name="name">Advanced</field>
-            <field name="sequence" eval="36" />
-            <field name="parent_id" ref="facility_management.menu_facility_management" />
-            <field name="groups_id" eval="[(4, ref('facility_management.facility_group_monitor'))]"/>
-        </record>
+    <record id="menu_facility_management_settings" model="ir.ui.menu" >
+        <field name="name">Advanced</field>
+        <field name="sequence" eval="36" />
+        <field name="parent_id" ref="facility_management.menu_facility_management" />
+        <field name="groups_id" eval="[(4, ref('facility_management.facility_group_monitor'))]"/>
+    </record>
 
-        <template id="view_facility_management_assets" name="website assets for facility_management" inherit_id="web.assets_backend">
-            <xpath expr="." position="inside">
-                <link rel="stylesheet" href="/facility_management/static/src/css/facility_management.css"/>
-                <script type="text/javascript" src="/facility_management/static/src/js/header_view_buttons.js" />
-                <script type="text/javascript" src="/facility_management/static/src/js/facility_management_widgets.js" />
-            </xpath>
-        </template>
-
-        <template id="facility_management_report_assets_common" name="facility_management_report_assets_common" inherit_id="web.report_assets_common">
-            <xpath expr="." position="inside">
-                <link href="/facility_management/static/src/css/facility_management_report.css" rel="stylesheet" />
-            </xpath>
-        </template>
-
-    </data>
-</openerp>
+</odoo>

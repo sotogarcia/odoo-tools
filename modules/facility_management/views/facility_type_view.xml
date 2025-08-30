@@ -1,110 +1,100 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 
-<openerp>
-    <data noupdate="0">
+<odoo noupdate="0">
 
-        <!-- VIEWS: "Facility type"
+    <!-- VIEWS: "Facility type"
 
-            - Model·········: facility.type
-            - _rec_name·····: name
-            - Domain········: []
-            - Context·······: {}
-            - Parent menu ··: facility_management.menu_facilities
-            - View priority·: 16    Sequence····: 10
-            - Action help···: There are no facility types yet
-        - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        - Model·········: facility.type
+        - _rec_name·····: name
+        - Domain········: []
+        - Context·······: {}
+        - Parent menu ··: facility_management.menu_facilities
+        - View priority·: 16    Sequence····: 10
+        - Action help···: There are no facility types yet
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <!-- Tree view for "facility.type" -->
-        <record id="view_facility_type_tree" model="ir.ui.view">
-            <field name="name">view.facility.type.tree</field>
-            <field name="model">facility.type</field>
-            <field name="type">tree</field>
-            <field name="mode">primary</field>
-            <field name="priority" eval="16" />
-            <field name="active" eval="True" />
-            <field name="arch" type="xml">
-                <tree string="facility_type_tree" create="1" delete="1" edit="1">
-                    <field name="name" class="oe_field_name" />
-                    <field name="description" class="oe_field_description" />
-                </tree>
-            </field>
-        </record>
+    <!-- List view for "facility.type" -->
+    <record id="view_facility_type_tree" model="ir.ui.view">
+        <field name="name">view.facility.type.tree</field>
+        <field name="model">facility.type</field>
+        <field name="priority" eval="16"/>
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <list string="facility_type_tree">
+                <field name="name" class="oe_field_name"/>
+                <field name="description" class="oe_field_description"/>
+            </list>
+        </field>
+    </record>
 
-        <!-- Form view for "facility.type" -->
-        <record id="view_facility_type_form" model="ir.ui.view">
-            <field name="name">view.facility.type.form</field>
-            <field name="model">facility.type</field>
-            <field name="type">form</field>
-            <field name="mode">primary</field>
-            <field name="priority" eval="16" />
-            <field name="active" eval="True" />
-            <field name="arch" type="xml">
-                <form string="facility_type_form" create="1" delete="1" edit="1">
-                    <sheet>
-                        <div class="oe_button_box" name="button_box"/>
-                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+    <!-- Form view for "facility.type" -->
+    <record id="view_facility_type_form" model="ir.ui.view">
+        <field name="name">view.facility.type.form</field>
+        <field name="model">facility.type</field>
+        <field name="priority" eval="16"/>
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <form string="facility_type_form">
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
+                    
+                    <div class="oe_title">
+                        <field name="active" invisible="1"/>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" class="oe_field_name" placeholder="Enter new name"/>
+                        </h1>
+                    </div>
 
-                        <div class="oe_title">
-                            <field name="active" invisible="1"/>
-                            <label for="name" class="oe_edit_only" />
-                            <h1>
-                                <field name="name" class="oe_field_name"
-                                    placeholder="Enter new name" />
-                            </h1>
-                        </div>
+                    <group col="2">
+                        <field name="description" class="oe_field_description" placeholder="Enter new description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-                        <group col="2">
-                            <field name="description" class="oe_field_description"
-                                placeholder="Enter new description" />
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+    <!-- Search view for "facility.type" -->
+    <record id="view_facility_type_search" model="ir.ui.view">
+        <field name="name">view.facility.type.search</field>
+        <field name="model">facility.type</field>
+        <field name="priority" eval="16"/>
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <search string="facility_type_search">
+                <field name="name"/>
+                <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
+            </search>
+        </field>
+    </record>
 
-        <!-- Search view for "facility.type" -->
-        <record id="view_facility_type_search" model="ir.ui.view">
-            <field name="name">view.facility.type.search</field>
-            <field name="model">facility.type</field>
-            <field name="type">search</field>
-            <field name="mode">primary</field>
-            <field name="priority" eval="16" />
-            <field name="active" eval="True" />
-            <field name="arch" type="xml">
-                <search string="facility_type_search">
-                    <field name="name" />
-                    <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
-                </search>
-            </field>
-        </record>
+    <!-- Main window action for model.name -->
+    <record id="action_facility_type_act_window" model="ir.actions.act_window">
+        <field name="type">ir.actions.act_window</field>
+        <field name="name">Facility type</field>
+        <field name="res_model">facility.type</field>
+        <field name="view_mode">list,form</field>
+        <field name="target">current</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" ref="view_facility_type_search"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add new facility type
+            </p><p>
+                There are no facility types yet
+            </p>
+        </field>
+    </record>
 
-        <!-- Main window action for model.name -->
-        <record id="action_facility_type_act_window" model="ir.actions.act_window">
-            <field name="type">ir.actions.act_window</field>
-            <field name="name">Facility type</field>
-            <field name="res_model">facility.type</field>
-            <field name="view_mode">tree,form</field>
-            <field name="target">current</field>
-            <field name="domain">[]</field>
-            <field name="context">{}</field>
-            <field name="search_view_id" ref="view_facility_type_search" />
-            <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click to add new facility type
-                </p><p>
-                    There are no facility types yet
-                </p>
-            </field>
-        </record>
+    <!-- Main menu for model.name -->
+    <record id="menu_facility_type" model="ir.ui.menu">
+        <field name="name">Types</field>
+        <field name="sequence" eval="10"/>
+        <field name="action" ref="action_facility_type_act_window"/>
+        <field name="parent_id" ref="facility_management.menu_facility_management_settings"/>
+        <field name="groups_id" eval="[(4, ref('facility_management.facility_group_monitor'))]"/>
+    </record>
 
-        <!-- Main menu for model.name -->
-        <record id="menu_facility_type" model="ir.ui.menu" >
-            <field name="name">Types</field>
-            <field name="sequence" eval="10" />
-            <field name="action" ref="action_facility_type_act_window" />
-            <field name="parent_id" ref="facility_management.menu_facility_management_settings" />
-            <field name="groups_id" eval="[(4, ref('facility_management.facility_group_monitor'))]"/>
-        </record>
-
-    </data>
-</openerp>
+</odoo>

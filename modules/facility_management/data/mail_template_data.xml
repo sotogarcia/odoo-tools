@@ -1,139 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<openerp>
-    <data noupdate="0">
+<odoo noupdate="0">
 
-        <record id="mail_notify_reservation_requests" model="mail.template">
-            <field name="name">Reservation requests awaiting confirmation</field>
-            <field name="subject">${object.name} - Reservation requests awaiting confirmation</field>
-            <field name="email_from">${object.company_id.name} &lt;${(object.company_id.email or user.email)|safe}&gt;</field>
-            <field name="email_to">${object.manager_id.name} &lt;${(object.manager_id.email_normalized)|safe}&gt;</field>
-            <field name="user_signature" eval="True" />
-            <field name="auto_delete" eval="True" />
-            <field name="model_id" ref="facility_management.model_facility_complex" />
-            <field name="body_html"><![CDATA[
-        <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
-          <tr>
-            <td align="center">
-              <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
-                <tbody>
-                  <!-- HEADER -->
-                  <tr>
-                    <td align="center" style="min-width: 590px;">
-                      <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
-                        <tr>
-                          <td valign="middle">
-                            <span style="font-size: 10px;">Reservation requests awaiting confirmation</span>
-                            <br />
-                            <span style="font-size: 20px; font-weight: bold;"></span>
-                          </td>
-                          <td valign="middle" align="right">
-                            <img src="/logo.png?company=" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="" />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td colspan="2" style="text-align:center;">
-                            <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                  <!-- CONTENT -->
-                  <tr>
-                    <td align="center" style="min-width: 590px;">
-                      <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
-                        <tr>
-                          <td valign="top" style="font-size: 13px; text-align: justify;">
-<p style="margin: 0.5em 0 1em 0;">Hello,</p>
-<p style="margin: 0.5em 0;">You have several reservation requests awaiting confirmation for the complex <a href="${ object.get_form_view_url() }" target="_blank;" style="font-weight: bold;">${ object.name }</a>.</p>
-<p style="margin: 0.5em 0;">Please confirm these reservations as soon as possible, as they are crucial for the proper performance of those who request them.</p>
-<table style="border: 1px solid #CCCCCC; border-collapse: collapse; width: 100%;">
-    <thead>
-        <tr>
-            <th style="padding: 3px 6px; border: 1px solid #CCCCCC;">Facility</th>
-            <th style="padding: 3px 6px; border: 1px solid #CCCCCC;">Time slot</th>
-            <th style="padding: 3px 6px; border: 1px solid #CCCCCC;">Applicant</th>
-            <th style="padding: 3px 6px; border: 1px solid #CCCCCC; text-align: center;">Go</th>
-        </tr>
-    </thead>
-    <tbody>
-        % for row in ctx['rows']:
-        <tr>
-            <td style="padding: 3px 6px; border: 1px solid #CCCCCC; vertical-align: top; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                <a href="${ row['facility_url'] }" target="_blank" style="text-decoration: none; color: inherit; display: block;" title="${ row['facility'] }">
-                    ${ row['facility'] }
-                </a>
-                <span style="font-size: smaller; display: block; color: #999999;">(${ row['create_date'] })</span>
-            </td>
-            <td style="padding: 3px 6px; border: 1px solid #CCCCCC; vertical-align: top;">
-                <span style="display: block;">${ row['date_start'] }</span>
-                <span style="display: block;">${ row['date_stop'] }</span>
-            </td>
-            <td style="padding: 3px 6px; border: 1px solid #CCCCCC; vertical-align: top;">
-                % if row['manager_email']:
-                <a href="mailto:${ row['manager_email'] }" target="_self" style="text-decoration: none; color: inherit; display: block;" title="Send an email">
-                    ${ row['manager'] }
-                </a>
-                % else:
-                    ${ row['manager'] }
-                % endif
-                % if row['manager_phone']:
-                <a href="tel:${ row['manager_phone'] }" target="_self" style="font-size: smaller; text-decoration: none; color: #999999; display: block;" title="Call by phone">
-                    ${ row['manager_phone'] }
-                </a>
-                % endif
-            </td>
-            <td style="padding: 3px 6px; border: 1px solid #CCCCCC; vertical-align: top; text-align: center;" title="View reservation">
-                <a href="${ row['url'] }" target="_blank" style="text-decoration: none; color: inherit;">#${ row['id'] }</a>
-            </td>
-        </tr>
-        % endfor
-    </tbody>
-</table>
-<p style="margin: 1em 0 0.5em 0;">Thanks, </p>
-<p style="margin: 0.5em 0;"><a href="mailto:${user.email}" tile="Send mail to ${user.name}">${user.name}</a></p>
-                            </div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td style="text-align:center;">
-                            <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                  <!-- FOOTER -->
-                  <tr>
-                    <td align="center" style="min-width: 590px;">
-                      <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
-                        <tr>
-                          <td valign="middle" align="left">  </td>
-                        </tr>
-                        <tr>
-                          <td valign="middle" align="left" style="opacity: 0.7;">
-                    ${user.company_id.phone}
-                    % if user.company_id.email
-                        | <a href="'mailto:%s' % ${user.company_id.email}" style="text-decoration:none; color: #454748;">${user.company_id.email}</a>
-                    % endif
-                    % if user.company_id.website
-                        | <a href="'%s' % ${user.company_id.website}" style="text-decoration:none; color: #454748;">
-                        ${user.company_id.website}
-                    </a>
-                    % endif
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          </tr>
-        </table>
-        ]]></field>
-        </record>
+    <record id="mail_notify_reservation_requests" model="mail.template">
+        <field name="name">Reservation requests awaiting confirmation</field>
+        <field name="subject">${object.name} - Reservation requests awaiting confirmation</field>
+        <field name="email_from">${object.company_id.name} &lt;${(object.company_id.email or user.email)|safe}&gt;</field>
+        <field name="email_to">${object.manager_id.name} &lt;${(object.manager_id.email_normalized)|safe}&gt;</field>
+        <!-- <field name="user_signature" eval="True" /> -->
+        <field name="auto_delete" eval="True" />
+        <field name="model_id" ref="facility_management.model_facility_complex" />
+        <field name="body_html"><![CDATA[
+        <t t-call="facility_management.email_layout">
 
-    </data>
-</openerp>
+          <!-- Set header variables -->
+          <t t-set="title"> </t>
+          <t t-set="subtitle">Reservation requests awaiting confirmation</t>
+          <t t-set="logo_src">/logo.png?company=</t>
+
+          <!-- Build the inner body by calling the content template -->
+          <t t-set="body_html">
+            <t t-call="facility_management.email_body_reservation_requests"/>
+          </t>
+
+        </t>
+      ]]></field>
+    </record>
+
+</odoo>

@@ -72,7 +72,6 @@ class FacilityReportingWizard(models.TransientModel):
         column2='facility_id',
         domain=[],
         context={},
-        limit=None
     )
 
     def _default_facility_ids(self):

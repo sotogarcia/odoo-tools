@@ -26,7 +26,7 @@ class FacilityReservation(models.Model):
     """
 
     _name = 'facility.reservation'
-    _description = u'Facility reservation'
+    _description = 'Facility reservation'
 
     _inherit = [
         'ownership.mixin',
@@ -47,7 +47,7 @@ class FacilityReservation(models.Model):
         help='A short description to this reservation',
         size=255,
         translate=True,
-        track_visibility='onchange'
+        tracking=True  # v18: reemplaza track_visibility
     )
 
     description = fields.Text(
@@ -67,7 +67,7 @@ class FacilityReservation(models.Model):
         index=False,
         default=True,
         help='Enables/disables this reservation',
-        track_visibility='onchange'
+        tracking=True  # v18
     )
 
     state = fields.Selection(
@@ -83,7 +83,7 @@ class FacilityReservation(models.Model):
             ('rejected', 'Rejected')
         ],
         groups="facility_management.facility_group_monitor",
-        track_visibility='onchange'
+        tracking=True  # v18
     )
 
     def default_state(self):
@@ -101,7 +101,7 @@ class FacilityReservation(models.Model):
         context={},
         ondelete='cascade',
         auto_join=False,
-        track_visibility='onchange'
+        tracking=True  # v18
     )
 
     @api.onchange('facility_id')
@@ -139,7 +139,7 @@ class FacilityReservation(models.Model):
         index=True,
         default=lambda self: self.now_o_clock(round_up=True),
         help='Date/time of reservation start',
-        track_visibility='onchange'
+        tracking=True  # v18
     )
 
     @api.onchange('date_start')
@@ -159,7 +159,7 @@ class FacilityReservation(models.Model):
         index=True,
         default=lambda self: self.now_o_clock(offset_hours=1, round_up=True),
         help='Date/time of reservation end',
-        track_visibility='onchange'
+        tracking=True  # v18
     )
 
     @api.onchange('date_stop')
@@ -459,13 +459,14 @@ class FacilityReservation(models.Model):
     # def _where_calc(self, domain, active_test=True):
     #     if not any(item[0] == 'state' for item in domain):
     #         domain = [('state', '=', 'confirmed')] + domain
-
+    #
     #     _super = super(FacilityReservation, self)
     #     return _super._where_calc(domain, active_test)
 
     @staticmethod
     def now_o_clock(offset_hours=0, round_up=False):
-        present = fields.datetime.now()
+        # v18: usar fields.Datetime en lugar de fields.datetime
+        present = fields.Datetime.now()
         oclock = present.replace(minute=0, second=0, microsecond=0)
 
         if round_up and (oclock < present):  # almost always
@@ -554,7 +555,7 @@ class FacilityReservation(models.Model):
         ctx.update({'default_facility_id': self.id})
 
         # Required to be called from facility_search_available_wizard button
-        ctx.pop('tree_view_ref', False)
+        ctx.pop('list_view_ref', False)
 
         serialized = {
             'type': 'ir.actions.act_window',
@@ -574,23 +575,23 @@ class FacilityReservation(models.Model):
 
     # def date_delay_str(self, span=None):
     #     self.ensure_one()
-
+    #
     #     if span is None:
     #         span = (self.date_delay or 0)
-
+    #
     #     hours = int(span)
     #     pattern = '{h:02d} h'
-
+    #
     #     span = (span % 1)
     #     minutes = int(span * 60)
     #     if minutes:
     #         pattern += ' {m:02d}\''
-
+    #
     #     span = ((span * 60) % 1)
     #     seconds = int(span * 60)
     #     if seconds:
     #         pattern += ' {s:02d}\"'
-
+    #
     #     return pattern.format(h=hours, m=minutes, s=seconds)
 
     def check_authorization_to_confirm(self, values):
@@ -621,20 +622,18 @@ class FacilityReservation(models.Model):
 
         return True
 
-    @api.model
-    def create(self, values):
-        """ Overridden method 'create'
-        """
+    @api.model_create_multi
+    def create(self, vals_list):
+        err = _("You lack permission to confirm reservations in this complex")
 
-        if not self.check_authorization_to_confirm(values):
-            msg = \
-                'You lack permission to confirm reservations in this complex'
-            raise ValidationError(msg)
+        for vals in vals_list:
+            if not self.check_authorization_to_confirm(vals):
+                raise ValidationError(err)
 
         parent = super(FacilityReservation, self)
-        result = parent.create(values)
+        records = parent.create(vals_list)
 
-        return result
+        return records
 
     def write(self, values):
         """ Overridden method 'write'
@@ -753,7 +752,7 @@ class FacilityReservation(models.Model):
 
                 values = {
                     'id': partner.id,
-                    'active': target.active,
+                    'active': partner.active,
                     'share': True,
                     'groups': [],
                     'notif': notif,

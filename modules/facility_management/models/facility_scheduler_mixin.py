@@ -20,12 +20,12 @@ from math import ceil, floor
 _logger = getLogger(__name__)
 
 
-class FaicilitySchedulerMixin(models.AbstractModel):
+class FacilitySchedulerMixin(models.AbstractModel):
     """ Provides the necessary functionality to schedule dates
     """
 
     _name = 'facility.scheduler.mixin'
-    _description = u'Provides the necessary functionality to schedule dates'
+    _description = 'Provides the necessary functionality to schedule dates'
 
     date_base = fields.Date(
         string='Date',
@@ -92,7 +92,7 @@ class FaicilitySchedulerMixin(models.AbstractModel):
                 return self._warn(out_msg)
 
     def default_time_start(self):
-        now = datetime.now()
+        now = datetime.utcnow()
 
         tz = self.env.user.tz or utc.zone
         tz = timezone(tz)
@@ -306,7 +306,6 @@ class FaicilitySchedulerMixin(models.AbstractModel):
         column2='weekday_id',
         domain=[],
         context={},
-        limit=None
     )
 
     def default_weekday_ids(self):
@@ -452,17 +451,17 @@ class FaicilitySchedulerMixin(models.AbstractModel):
         (
             'positive_interval_number',
             'CHECK(repeat <> True or interval_number > 0)',
-            _(u'Interval number must be greater than zero')
+            _('Interval number must be greater than zero')
         ),
         (
             'positive_finish_number',
             'CHECK(finish_type <> \'total\' or finish_number > 0)',
-            _(u'The total number of repetitions must be greater than zero')
+            _('The total number of repetitions must be greater than zero')
         ),
         (
             'finish_after_begins',
             'CHECK(finish_date >= date_base)',
-            _(u'The end date must be after the start date')
+            _('The end date must be after the start date')
         ),
     ]
 

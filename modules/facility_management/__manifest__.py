@@ -13,7 +13,7 @@
     'website': 'https://github.com/sotogarcia',
 
     'category': 'Tools',
-    'version': '13.0.1.0.0',
+    "version": "18.0.1.0.0",
 
     'depends': [
         'base',
@@ -28,9 +28,12 @@
         'data/facility_weekday_data.xml',
         'data/ir_actions_server_data.xml',
         'data/ir_cron_data.xml',
-        'data/mail_template_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_notification_email_data.xml',
+
+        'data/mail_templates/mail_layout.xml',
+        'data/mail_templates/reservation_requests.xml',
+        'data/mail_template_data.xml',
 
         'views/facility_management.xml',
 
@@ -66,21 +69,20 @@
         'demo/facility_reservation_scheduler_demo.xml'
     ],
 
-    'js': [
-        'static/src/js/header_view_buttons.js',
-        'static/src/js/facility_management_widgets.js'
-    ],
-
-    'css': [
-        'static/src/css/facility_management.css',
-        'static/src/css/facility_management_report.css'
-    ],
-
-    'qweb': [
-        "static/src/xml/header_view_buttons.xml",
-        "static/src/xml/facility_management_widgets.xml"
-    ],
-
+    "assets": {
+        "web.assets_backend": [
+        #"facility_management/static/src/css/facility_management.css",
+        # "facility_management/static/src/js/header_view_buttons.js",
+        # "facility_management/static/src/js/facility_management_widgets.js",
+        ],
+        "web.report_assets_common": [
+            "facility_management/static/src/css/facility_management_report.css",
+        ],
+        "web.assets_qweb": [
+        # "facility_management/static/src/xml/header_view_buttons.xml",
+        # "facility_management/static/src/xml/facility_management_widgets.xml"
+        ],
+    },
 
     "external_dependencies": {
         "python": [

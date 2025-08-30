@@ -80,7 +80,7 @@ class FacilityComplex(models.Model):
         translate=False
     )
 
-    description = fields.Text(
+    description = fields.Html(
         string='Description',
         help='Enter new description',
         related='partner_id.comment'
@@ -98,7 +98,6 @@ class FacilityComplex(models.Model):
         domain=[],
         context={},
         auto_join=False,
-        limit=None
     )
 
     facility_count = fields.Integer(
@@ -149,14 +148,14 @@ class FacilityComplex(models.Model):
                 "id" AS facility_id,
                 complex_id
             FROM
-                facility
+                facility_facility
             WHERE
                 active
         )
         SELECT
             aec."id" AS complex_id
         FROM
-            complex AS aec
+            facility_complex AS aec
             LEFT JOIN active_facilities AS af ON aec."id" = af.complex_id
         WHERE
             aec.active
@@ -181,7 +180,6 @@ class FacilityComplex(models.Model):
         column2='user_id',
         domain=lambda self: self._build_supervisor_ids_domain(),
         context={},
-        limit=None
     )
 
     reservation_ids = fields.Many2manyView(
@@ -197,7 +195,6 @@ class FacilityComplex(models.Model):
         column2='reservation_id',
         domain=[('state', '=', 'requested')],
         context={},
-        limit=None
     )
 
     reservation_count = fields.Integer(
@@ -228,7 +225,6 @@ class FacilityComplex(models.Model):
         column2='reservation_id',
         domain=[('state', '=', 'requested')],
         context={},
-        limit=None
     )
 
     unconfirmed_reservation_count = fields.Integer(
@@ -262,10 +258,9 @@ class FacilityComplex(models.Model):
         leafs = ['("id", "!=", owner_id)', '("id", "!=", subrogate_id)']
 
         xmlid = 'facility_management.facility_group_monitor'
-        imd_obj = self.env['ir.model.data']
-        group_id = imd_obj.xmlid_to_res_id(xmlid, raise_if_not_found=False)
-        if group_id:
-            group_leaf = '("groups_id", "=", {})'.format(group_id)
+        group = self.env.ref(xmlid, raise_if_not_found=False)
+        if group:
+            group_leaf = '("groups_id", "=", {})'.format(group.id)
             leafs.append(group_leaf)
 
         return '[ {leafs} ]'.format(leafs=', '.join(leafs))
@@ -274,14 +269,13 @@ class FacilityComplex(models.Model):
         self.ensure_one()
 
         xmlid = 'facility_management.facility_group_monitor'
-        imd_obj = self.env['ir.model.data']
-        group_id = imd_obj.xmlid_to_res_id(xmlid, raise_if_not_found=True)
+        group = self.env.ref(xmlid, raise_if_not_found=True)
 
         user_set = self.supervisor_ids
         user_set |= self.owner_id
         user_set |= self.subrogate_id
 
-        return user_set.filtered(lambda r: group_id in r.groups_id.ids)
+        return user_set.filtered(lambda r: group.id in r.groups_id.ids)
 
     def is_an_allowed_supervisor(self, user=None):
         """
@@ -323,11 +317,10 @@ class FacilityComplex(models.Model):
             raise ValueError(_('There is no user to check'))
 
         xmlid = 'facility_management.facility_group_manager'
-        imd_obj = self.env['ir.model.data']
-        group_id = imd_obj.xmlid_to_res_id(xmlid, raise_if_not_found=True)
+        group = self.env.ref(xmlid, raise_if_not_found=True)
 
         # Efficient way to verify user's group without loading all IDs
-        domain = [('id', '=', user.id), ('groups_id', '=', group_id)]
+        domain = [('id', '=', user.id), ('groups_id', '=', group.id)]
         if user_obj.search_count(domain) > 0:
             return True
 
@@ -427,7 +420,11 @@ class FacilityComplex(models.Model):
 
         company = self.env.company or self.env.ref('base.main_company')
         values['company_id'] = company.id
-        values['employee'] = False
+
+        # Keep compatibility across versions: only set if field exists
+        if 'employee' in self.env['res.partner']._fields:
+            values['employee'] = False
+
         values['type'] = 'other'
         values['is_company'] = False
         # values['company_type'] = 'company'
@@ -499,8 +496,7 @@ class FacilityComplex(models.Model):
         """
 
         xmlid = 'facility_management.ir_cron_notify_reservation_requests'
-        imd_obj = self.env['ir.model.data']
-        cron_task = imd_obj.xmlid_to_object(xmlid)
+        cron_task = self.env.ref(xmlid, raise_if_not_found=False)
         lastcall = cron_task and cron_task.lastcall or datetime.min
 
         cron_domain = [

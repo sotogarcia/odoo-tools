@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #    License, author and contributors information in:                         #
 #    __openerp__.py file at the root folder of this module.                   #
@@ -6,10 +5,6 @@
 
 from odoo import models, fields, api
 from odoo.tools.translate import _
-
-from odoo.addons.academy_base.utils.record_utils import get_active_records
-from odoo.addons.academy_base.utils.record_utils import single_or_default
-from odoo.addons.academy_base.utils.datetime_utils import now_o_clock
 
 from logging import getLogger
 from datetime import datetime
@@ -41,12 +36,11 @@ class FacilityReservationMassiveActionsWizard(models.TransientModel):
         column2='reservation_id',
         domain=[],
         context={},
-        limit=None
     )
 
     def default_reservation_ids(self):
         expected = ('facility.reservation')
-        reservation_set = get_active_records(self.env, expected=expected)
+        reservation_set = self._get_active_records(self.env, expected=expected)
         return [(6, 0, reservation_set.ids)] if reservation_set else [(5,)]
 
     @api.onchange('reservation_ids')
@@ -55,10 +49,10 @@ class FacilityReservationMassiveActionsWizard(models.TransientModel):
         if self.reservation_ids:
 
             state_list = self.reservation_ids.mapped('state')
-            self.state = single_or_default(state_list)
+            self.state = self._single_or_default(state_list)
 
             validate_list = self.reservation_ids.mapped('validate')
-            self.validate = single_or_default(validate_list)
+            self.validate = self._single_or_default(validate_list)
 
     reservation_count = fields.Integer(
         string='Reservation count',
@@ -88,7 +82,6 @@ class FacilityReservationMassiveActionsWizard(models.TransientModel):
         column2='reservation_id',
         domain=[],
         context={},
-        limit=None,
         compute='_compute_target_reservation_ids'
     )
 
@@ -213,7 +206,7 @@ class FacilityReservationMassiveActionsWizard(models.TransientModel):
     )
 
     def default_date_start(self):
-        return now_o_clock(round_up=True)
+        return self._now_o_clock(round_up=True)
 
     update_date_stop = fields.Boolean(
         string='Update date stop',
@@ -234,7 +227,7 @@ class FacilityReservationMassiveActionsWizard(models.TransientModel):
     )
 
     def default_date_stop(self):
-        return now_o_clock(offset_hours=1, round_up=True)
+        return self._now_o_clock(offset_hours=1, round_up=True)
 
     tracking_disable = fields.Boolean(
         string='Tracking disable',
@@ -295,3 +288,68 @@ class FacilityReservationMassiveActionsWizard(models.TransientModel):
                 continue
 
             record.target_reservation_ids.unbind()
+
+    @api.model
+    def _get_active_records(self, expected=None):
+        """
+        Retrieves active records based on the active model and IDs from the
+        provided Odoo environment context.
+
+        Args:
+            expected (tuple): List of expected model names. It also supports 
+                              either the name of the model itself or a set of 
+                              records for that model as long as the model is 
+                              unique.
+
+        Returns:
+            recordset or None: A recordset of active records based on the
+            context's active model, or None if no active model found.
+        """
+
+        env = self.env
+        _logger.debug(f'get_active_records({env}, {expected})')
+
+        context = env.context
+        active_model = context.get('active_model', False)
+
+        if isinstance(expected, str):
+            expected = [expected]
+        elif isinstance(expected, models.Model):
+            expected = [expected._name]
+
+        if active_model and (expected is None or active_model in expected):
+            record_set = env[active_model]
+
+            active_ids = context.get('active_ids', [])
+
+            if not active_ids:
+                active_id = context.get('active_id', None)
+                if active_id:
+                    active_ids = [active_id]
+
+            if active_ids:
+                record_set = record_set.browse(active_ids)
+
+        else:
+            record_set = None
+
+        _logger.debug(f'get_active_records > {record_set}')
+
+        return record_set
+
+    @staticmethod
+    def _single_or_default(items, default=None):
+        if (items and len(items) == 1 and items[0]):
+            return items[0]
+        else:
+            return default
+
+    @staticmethod
+    def _now_o_clock(offset_hours=0, round_up=False):
+        present = fields.datetime.now()
+        oclock = present.replace(minute=0, second=0, microsecond=0)
+
+        if round_up and (oclock < present):  # almost always
+            oclock += timedelta(hours=1)
+
+        return oclock + timedelta(hours=offset_hours)
