@@ -11,7 +11,7 @@ from odoo.osv.expression import NEGATIVE_TERM_OPERATORS
 from odoo.exceptions import UserError, ValidationError
 
 from datetime import timedelta
-from odoo.tools import safe_eval
+from odoo.tools.safe_eval import safe_eval
 import pytz
 from datetime import datetime, date, time
 

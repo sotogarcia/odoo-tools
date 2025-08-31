@@ -6,7 +6,7 @@
 
 from odoo import models, fields, api
 from odoo.tools.translate import _
-from odoo.tools import safe_eval
+from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import TRUE_DOMAIN, FALSE_DOMAIN
 from odoo.exceptions import UserError
 
@@ -33,8 +33,8 @@ class FacilityFacility(models.Model):
 
     _inherit = [
         'image.mixin',
-        'mail.thread',
-        'ownership.mixin'
+        'ownership.mixin',
+        'mail.thread'
     ]
 
     _check_company_auto = True

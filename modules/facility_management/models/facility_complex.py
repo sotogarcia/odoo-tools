@@ -6,9 +6,10 @@
 
 from odoo import models, fields, api
 from odoo.tools.translate import _
-from odoo.tools import safe_eval
+from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import AND, TRUE_DOMAIN, FALSE_DOMAIN
 from odoo.exceptions import ValidationError
+from ..utils.helpers import OPERATOR_MAP, one2many_count, many2many_count
 
 from logging import getLogger
 from math import trunc, pow
@@ -32,8 +33,8 @@ class FacilityComplex(models.Model):
 
     _inherit = [
         'image.mixin',
-        'mail.thread',
-        'ownership.mixin'
+        'ownership.mixin',
+        'mail.thread'
     ]
 
     _inherits = {'res.partner': 'partner_id'}
@@ -106,64 +107,38 @@ class FacilityComplex(models.Model):
         readonly=True,
         index=False,
         default=0,
-        help='Number of facilities in this complex',
+        help='Number of active facilities in this complex',
         compute='_compute_facility_count',
-        search='_search_facility_count'
+        search='_search_facility_count',
     )
 
-    @api.depends('facility_ids')
+    @api.depends('facility_ids', 'facility_ids.active')
     def _compute_facility_count(self):
+        """Compute count of *active* facilities per complex (batch)."""
+        counts = one2many_count(self, 'facility_ids')
+
         for record in self:
-            record.facility_count = len(record.facility_ids)
+            record.facility_count = counts.get(record.id, 0)
 
     @api.model
     def _search_facility_count(self, operator, value):
-        domain = FALSE_DOMAIN
+        """Search comparing the number of *active* facilities per complex.
+        Does not exclude archived complexes.
+        """
+        # Handle boolean-like searches Odoo may pass for required fields
+        if value is True:
+            return TRUE_DOMAIN if operator == '=' else FALSE_DOMAIN
+        if value is False:
+            return TRUE_DOMAIN if operator != '=' else FALSE_DOMAIN
 
-        if value is True:  # Field is mandatory
-            domain = TRUE_DOMAIN if operator == '=' else FALSE_DOMAIN
+        cmp_func = OPERATOR_MAP.get(operator)
+        if not cmp_func:
+            return FALSE_DOMAIN  # unsupported operator
 
-        elif value is False:  # Field is mandatory
-            domain = TRUE_DOMAIN if operator != '=' else FALSE_DOMAIN
-
-        else:
-
-            sql = self._search_facility_count_sql
-
-            self.env.cr.execute(sql.format(operator=operator, value=value))
-            rows = self.env.cr.dictfetchall()
-
-            if not rows:
-                return FALSE_DOMAIN
-
-            facility_ids = [row['complex_id'] for row in (rows or [])]
-
-            domain = [('id', 'in', facility_ids)]
-
-        return domain
-
-    _search_facility_count_sql = '''
-        WITH active_facilities AS (
-            SELECT
-                "id" AS facility_id,
-                complex_id
-            FROM
-                facility_facility
-            WHERE
-                active
-        )
-        SELECT
-            aec."id" AS complex_id
-        FROM
-            facility_complex AS aec
-            LEFT JOIN active_facilities AS af ON aec."id" = af.complex_id
-        WHERE
-            aec.active
-        GROUP BY
-            aec."id"
-        HAVING
-            COUNT ( af.complex_id ) {operator} {value}
-    '''
+        counts = one2many_count(self.search([]), 'facility_ids')
+        matched = [cid for cid, cnt in counts.items() if cmp_func(cnt, value)]
+        
+        return [('id', 'in', matched)] if matched else FALSE_DOMAIN
 
     supervisor_ids = fields.Many2many(
         string='Supervisors',
@@ -209,8 +184,10 @@ class FacilityComplex(models.Model):
 
     @api.depends('reservation_ids')
     def _compute_reservation_count(self):
+        counts = many2many_count(self, 'reservation_ids')
+
         for record in self:
-            record.reservation_count = len(record.reservation_ids)
+            record.reservation_count = counts.get(record.id, 0)
 
     unconfirmed_reservation_ids = fields.Many2manyView(
         string='Unconfirmed reservations',
@@ -240,9 +217,10 @@ class FacilityComplex(models.Model):
 
     @api.depends('unconfirmed_reservation_ids')
     def _compute_unconfirmed_reservation_count(self):
+        counts = many2many_count(self, 'unconfirmed_reservation_ids')
+
         for record in self:
-            record.unconfirmed_reservation_count = \
-                len(record.unconfirmed_reservation_ids)
+            record.unconfirmed_reservation_count = counts.get(record.id, 0)
 
     def _build_supervisor_ids_domain(self):
         """

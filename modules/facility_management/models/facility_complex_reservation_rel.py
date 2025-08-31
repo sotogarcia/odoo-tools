@@ -99,7 +99,8 @@ class FacilityComplexFacilityReservationRel(models.Model):
 
     # Raw sentence used to create new model based on SQL VIEW
     _view_sql = '''
-        SELECT
+        SELECT DISTINCT ON (fr."id")
+            fr."id" AS id,
             fc."id" AS complex_id,
             fr."id" AS reservation_id,
             fr.create_date,

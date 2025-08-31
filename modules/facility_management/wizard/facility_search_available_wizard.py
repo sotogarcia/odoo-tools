@@ -7,7 +7,7 @@
 from odoo import models, fields, api
 from odoo.tools.translate import _
 from odoo.osv.expression import AND
-from odoo.tools import safe_eval
+from odoo.tools.safe_eval import safe_eval
 
 from logging import getLogger
 
