@@ -13,7 +13,7 @@
     'website': 'https://github.com/sotogarcia',
 
     'category': 'Tools',
-    "version": "18.0.1.0.0",
+    'version': '18.0.1.0.0',
 
     'depends': [
         'base',
@@ -69,23 +69,20 @@
         'demo/facility_reservation_scheduler_demo.xml'
     ],
 
-    "assets": {
-        "web.assets_backend": [
-        #"facility_management/static/src/css/facility_management.css",
-        # "facility_management/static/src/js/header_view_buttons.js",
-        # "facility_management/static/src/js/facility_management_widgets.js",
+    'assets': {
+        'web.assets_backend': [
+            'facility_management/static/src/js/facility_widgets.esm.js',
+            'facility_management/static/src/xml/facility_widgets.xml',
+            'facility_management/static/src/js/cog_menu.esm.js',
+            'facility_management/static/src/xml/cog_menu.xml',
         ],
-        "web.report_assets_common": [
-            "facility_management/static/src/css/facility_management_report.css",
-        ],
-        "web.assets_qweb": [
-        # "facility_management/static/src/xml/header_view_buttons.xml",
-        # "facility_management/static/src/xml/facility_management_widgets.xml"
+        'web.report_assets_common': [
+            'facility_management/static/src/css/facility_management_report.css'
         ],
     },
 
-    "external_dependencies": {
-        "python": [
+    'external_dependencies': {
+        'python': [
             'num2words'
         ]
     },

@@ -17,13 +17,14 @@
     <record id="view_facility_weekday_tree" model="ir.ui.view">
         <field name="name">view.facility.weekday.tree</field>
         <field name="model">facility.weekday</field>
-        <field name="priority" eval="16" />
-        <field name="active" eval="True" />
+        <field name="type">list</field>
+        <field name="priority" eval="16"/>
+        <field name="active" eval="True"/>
         <field name="arch" type="xml">
             <list string="facility_weekday_tree" editable="bottom">
-                <field name="sequence" class="oe_field_sequence" widget="handle" />
-                <field name="name" class="oe_field_name" />
-                <field name="workday" class="oe_field_workday" />
+                <field name="sequence" class="oe_field_sequence" widget="handle"/>
+                <field name="name" class="oe_field_name"/>
+                <field name="workday" class="oe_field_workday"/>
             </list>
         </field>
     </record>
@@ -32,19 +33,20 @@
     <record id="view_facility_weekday_form" model="ir.ui.view">
         <field name="name">view.facility.weekday.form</field>
         <field name="model">facility.weekday</field>
-        <field name="priority" eval="16" />
-        <field name="active" eval="True" />
+        <field name="type">form</field>
+        <field name="priority" eval="16"/>
+        <field name="active" eval="True"/>
         <field name="arch" type="xml">
             <form string="facility_weekday_form">
                 <sheet>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" />
+                        <label for="name" class="oe_edit_only"/>
                         <h1>
-                            <field name="name" class="oe_field_name" />
+                            <field name="name" class="oe_field_name"/>
                         </h1>
                     </div>
                     <group col="2">
-                        <field name="workday" class="oe_field_workday" />
+                        <field name="workday" class="oe_field_workday"/>
                     </group>
                 </sheet>
             </form>
@@ -55,21 +57,17 @@
     <record id="view_facility_weekday_search" model="ir.ui.view">
         <field name="name">view.facility.weekday.search</field>
         <field name="model">facility.weekday</field>
-        <field name="priority" eval="16" />
-        <field name="active" eval="True" />
+        <field name="type">search</field>
+        <field name="priority" eval="16"/>
+        <field name="active" eval="True"/>
         <field name="arch" type="xml">
             <search string="facility_weekday_search">
-                <field name="name" />
-                <filter string="Working days"
-                    name="workdays"
-                    domain="[('workday', '=', True)]"
-                    context="{}"
-                    help="Show weekdays only" />
-                <filter string="Non working days"
-                    name="non_workdays"
-                    domain="[('workday', '&lt;&gt;', True)]"
-                    context="{}"
-                    help="Show non working days" />
+                <field name="name"/>
+                <filter string="Working days" name="workdays" domain="[('workday', '=', True)]"
+                    context="{}" help="Show weekdays only"/>
+                <filter string="Non working days" name="non_workdays"
+                    domain="[('workday', '&lt;&gt;', True)]" context="{}"
+                    help="Show non working days"/>
             </search>
         </field>
     </record>
@@ -83,13 +81,10 @@
         <field name="target">current</field>
         <field name="domain">[]</field>
         <field name="context">{}</field>
-        <field name="search_view_id" ref="view_facility_weekday_search" />
+        <field name="search_view_id" ref="view_facility_weekday_search"/>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to add new Weekdays
-            </p><p>
-                There are no weekdays
-            </p>
+            <p class="oe_view_nocontent_create"> Click to add new Weekdays </p>
+            <p> There are no weekdays </p>
         </field>
     </record>
 

@@ -6,8 +6,8 @@
     ============================================================ -->
     <record id="module_category_facility_management" model="ir.module.category">
         <field name="name">Facility management</field>
-        <field name="sequence" eval="10" />
-        <field name="visible" eval="True" />
+        <field name="sequence" eval="10"/>
+        <field name="visible" eval="True"/>
         <field name="description">Facility management security groups</field>
     </record>
 
@@ -15,7 +15,9 @@
         <field name="name">Consultant</field>
         <field name="comment">Users who can only consult facilities and reservations</field>
         <field name="category_id" ref="module_category_facility_management"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('record_ownership.record_ownership_consultant'))]" />
+        <field name="implied_ids"
+            eval="[(4, ref('base.group_user')), (4, ref('record_ownership.record_ownership_consultant'))]"
+        />
     </record>
 
     <record id="facility_group_applicant" model="res.groups">
@@ -37,7 +39,7 @@
         <field name="comment">Users who can create/edit information in all models</field>
         <field name="category_id" ref="module_category_facility_management"/>
         <field name="implied_ids" eval="[(4, ref('facility_group_monitor'))]"/>
-        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
     </record>
 
 </odoo>

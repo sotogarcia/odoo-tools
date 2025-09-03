@@ -382,17 +382,17 @@ class FacilityReservation(models.Model):
             'positive_interval',
             'CHECK(date_start < date_stop)',
             _('Reservation cannot finish before it starts')
-        ),
-        (
-            'minimum_name_length',
-            '''CHECK(
-                char_length(name) IS NULL OR
-                char_length(name) < 1 OR
-                char_length(name) >= 5
-            )''',
-            _('The minimum allowed name length is five characters')
         )
     ]
+
+    @api.constrains('name')
+    def _check_name_length(self):
+        for rec in self:
+            n = (rec.name or '').strip()  # valor en el idioma activo
+            if n and len(n) < 5:
+                raise ValidationError(
+                    _("The name must be at least 5 characters long.")
+                )
 
     def _name_get(self):
         """ Computes a single facility display name

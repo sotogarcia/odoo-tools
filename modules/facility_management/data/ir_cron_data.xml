@@ -13,5 +13,5 @@
         <field name="code">model.notify_reservation_requests(is_cron=True)</field>
         <field name="priority">5</field>
     </record>
-    
+
 </odoo>

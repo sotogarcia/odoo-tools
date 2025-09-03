@@ -16,9 +16,12 @@
                         <field name="date_stop" class="oe_field_date_stop" widget="date"/>
 
                         <separator colspan="4" string="Facilities"/>
-                        <field name="facility_ids" class="oe_field_facility_ids" nolabel="1" colspan="4" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                        <field name="facility_ids" class="oe_field_facility_ids" nolabel="1"
+                            colspan="4"
+                            options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
 
-                        <button name="reporting" string="Print schedules" type="object" help="Print report" class="btn-primary" colspan="2"/>
+                        <button name="reporting" string="Print schedules" type="object"
+                            help="Print report" class="btn-primary" colspan="2"/>
 
                         <field name="full_weeks" class="oe_field_full_weeks"/>
                     </group>
