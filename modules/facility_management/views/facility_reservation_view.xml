@@ -1,0 +1,311 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<odoo noupdate="0">
+
+    <!-- VIEWS: "Sessions"
+
+        - Model·········: facility.reservation
+        - _rec_name·····: name
+        - Domain········: []
+        - Context·······: {}
+        - Parent menu ··: timesheets.menu_timesheets
+        - View priority·: 16    Sequence····: 10
+        - Action help···: There are no reservations
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <!-- List view for "facility.reservation" -->
+    <record id="view_facility_reservation_tree" model="ir.ui.view">
+        <field name="name">view.facility.reservation.tree</field>
+        <field name="model">facility.reservation</field>
+        <field name="type">list</field>
+        <field name="priority" eval="16"/>
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <list string="facility_reservation_tree" decoration-success="color == 10"
+                decoration-danger="color == 1" decoration-info="color == 4"
+                decoration-warning="color == 3">
+                <field name="company_id" column_invisible="1"/>
+                <field name="color" class="oe_field_color" column_invisible="1"/>
+
+                <field name="display_name" class="oe_field_display_name" string="Name"/>
+                <field name="facility_id" class="oe_field_facility_id"
+                    context="{'facility_name_with_complex': True}"/>
+                <field name="owner_id" class="oe_field_owner_id" optional="show"
+                    groups="record_ownership.record_ownership_consultant"/>
+                <field name="date_start" class="oe_field_date_start"/>
+                <field name="date_stop" class="oe_field_date_stop" optional="show"/>
+                <field name="date_delay" class="oe_field_date_delay" optional="show"
+                    widget="float_time"/>
+                <field name="state" class="oe_field_state" optional="show"/>
+                <field name="has_scheduler" class="oe_field_has_scheduler" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form view for "facility.reservation" -->
+    <record id="view_facility_reservation_form" model="ir.ui.view">
+        <field name="name">view.facility.reservation.form</field>
+        <field name="model">facility.reservation</field>
+        <field name="type">form</field>
+        <field name="priority" eval="16"/>
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <form string="facility_reservation_form">
+                <header>
+                    <field name="state" widget="statusbar" clickable="1"
+                        groups="facility_management.facility_group_monitor"/>
+                    <button name="unbind" class="btn btn-danger" string="Unbind" type="object"
+                        icon="fa-unlink"
+                        confirm="Are you sure you want to unbind this reservation from the scheduler?"
+                        help="Unbind from scheduler" invisible="not scheduler_id"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="view_scheduler" type="object"
+                            class="oe_stat_button oe_read_only" icon="fa-calendar" help="Scheduler"
+                            invisible="not scheduler_id">
+                            <field name="reservation_count" widget="statinfo"/>
+                        </button>
+                    </div>
+
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                        invisible="active"/>
+
+                    <div class="oe_title">
+                        <field name="company_id" invisible="1"/>
+                        <field name="id" invisible="1"/>
+                        <field name="active" invisible="1"/>
+                        <field name="scheduler_id" invisible="1"/>
+                        <field name="available_facility_ids" invisible="1"/>
+
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" class="oe_field_name oe_edit_only"/>
+                            <field name="display_name" class="oe_field_display_name oe_read_only"/>
+                        </h1>
+                    </div>
+
+                    <group col="4" class="mt-2">
+                        <field name="facility_id" colspan="4" class="oe_field_facility_id"
+                            domain="[('id', 'in', available_facility_ids)]"
+                            context="{'facility_name_with_complex': True}"
+                            options="{'no_quick_create': True, 'no_create': True}"
+                            readonly="context.get('default_facility_id', 0)"/>
+
+                        <separator colspan="4"/>
+
+                        <field name="date_start" class="oe_field_date_start"/>
+                        <field name="date_stop" class="oe_field_date_stop"/>
+                        <field name="date_delay" class="oe_field_date_delay" widget="float_time"/>
+                        <field name="validate" class="oe_field_validate oe_edit_only"
+                            groups="facility_management.facility_group_monitor"/>
+
+                    </group>
+                    <notebook>
+                        <page id="description" string="Description" class="oe_page_description"
+                            accesskey="D">
+                            <field name="description" colspan="4" nolabel="1"
+                                class="oe_field_description w-100"/>
+                        </page>
+                        <page id="setup" string="Setup" class="oe_page_setup" accesskey="S">
+                            <group col="4" groups="record_ownership.record_ownership_proxy">
+                                <field name="owner_id" class="oe_field_owner_id"
+                                    options="{'no_quick_create': True, 'no_create': True}"
+                                    readonly="context.get('default_owner_id', 0)"
+                                    groups="facility_management.facility_group_monitor"/>
+                                <field name="subrogate_id" class="oe_field_subrogate_id"
+                                    options="{'no_quick_create': True, 'no_create': True}"
+                                    readonly="context.get('default_subrogate_id', 0)"
+                                    groups="facility_management.facility_group_monitor"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <chatter/>
+
+            </form>
+        </field>
+    </record>
+
+    <record id="view_facility_reservation_kanban" model="ir.ui.view">
+        <field name="name">view.facility.reservation.kanban</field>
+        <field name="model">facility.reservation</field>
+        <field name="type">kanban</field>
+        <field name="priority" eval="16"/>
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" group_create="1" group_delete="1" group_edit="1"
+                archivable="1" quick_create="1" quick_create_view="view_facility_reservation_form">
+
+                <field name="id"/>
+                <field name="active"/>
+                <field name="display_name"/>
+                <field name="date_start"/>
+                <field name="date_stop"/>
+                <field name="date_delay"/>
+                <field name="facility_id"/>
+                <field name="color"/>
+                <field name="company_id"/>
+
+                <templates>
+                    <t t-name="card">
+                        <div
+                            t-attf-class="{{'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) }} oe_kanban_global_click">
+                            <div
+                                class="oe_kanban_details d-flex flex-column justify-content-between h-100">
+
+                                <h4>
+                                    <field name="display_name" class="oe_field_display_name"/>
+                                </h4>
+
+                                <dl class="d-flex flex-wrap align-content-stretch mt-2">
+                                    <dt class="w-25 text-truncate font-weight-bold">Owner:</dt>
+                                    <dd class="w-75">
+                                        <field name="owner_id" class="oe_field_owner_id"
+                                            groups="facility_management.facility_group_monitor"/>
+                                    </dd>
+                                    <dt class="w-25 text-truncate font-weight-bold">Beginning:</dt>
+                                    <dd class="w-75">
+                                        <field name="date_start" class="oe_field_date_start"/>
+                                    </dd>
+                                    <dt class="w-25 text-truncate font-weight-bold">Ending:</dt>
+                                    <dd class="w-75">
+                                        <field name="date_stop" class="oe_field_date_stop"/>
+                                    </dd>
+                                    <dt class="w-25 text-truncate font-weight-bold">Interval:</dt>
+                                    <dd class="w-25">
+                                        <field name="date_delay" class="oe_field_date_delay"
+                                            widget="float_time"/>
+                                    </dd>
+                                    <dt class="w-25 text-truncate font-weight-bold">State:</dt>
+                                    <dd class="w-25">
+                                        <field name="state" class="oe_field_state text-truncate"/>
+                                    </dd>
+                                </dl>
+
+                            </div>
+
+                        </div>
+                    </t>
+                </templates>
+
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_facility_reservation_calendar" model="ir.ui.view">
+        <field name="name">view.facility.reservation.calendar</field>
+        <field name="model">facility.reservation</field>
+        <field name="priority" eval="16"/>
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <calendar mode="week" date_start="date_start" date_stop="date_stop"
+                date_delay="date_delay" color="facility_id">
+                <field name="facility_id" colspan="4" class="oe_field_facility_id" filters="1"/>
+                <field name="complex_id" class="oe_field_complex_id"/>
+                <field name="company_id" class="oe_field_company_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Search view for "facility.reservation" -->
+    <record id="view_facility_reservation_search" model="ir.ui.view">
+        <field name="name">view.facility.reservation.search</field>
+        <field name="model">facility.reservation</field>
+        <field name="type">search</field>
+        <field name="priority" eval="16"/>
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <search string="facility_reservation_search">
+
+                <field name="facility_id"/>
+                <field name="complex_id"/>
+
+                <separator/>
+                <field name="owner_id"/>
+
+                <separator/>
+                <field name="date_start"/>
+                <field name="date_stop"/>
+                <field name="date_delay"/>
+
+                <separator/>
+                <field name="state"/>
+
+                <separator/>
+                <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
+
+                <separator/>
+                <filter string="Current week" name="current_week"
+                    domain="[                     ('date_start', '&lt;=', ((context_today() + relativedelta(weeks=0, weekday=-1)).strftime('%Y-%m-%d'))),                     ('date_stop', '&gt;=', ((context_today() - relativedelta(weeks=1, weekday=0)).strftime('%Y-%m-%d')))                 ]"/>
+
+                <filter string="Current month" name="current_month"
+                    domain="[                     ('date_start', '&lt;', (context_today()+relativedelta(months=1)).strftime('%Y-%m-01')),                     ('date_stop','&gt;=', context_today().strftime('%Y-%m-01'))                 ]"/>
+
+                <separator/>
+                <filter string="My own" name="my_own" domain="[('manager_id', '=', uid)]"
+                    context="{}" help="Reservations that I am responsible for"/>
+
+                <separator/>
+                <filter string="Not confirmed" name="unconfirmed_reservation"
+                    domain="[('state', '!=', 'confirmed')]"
+                    groups="facility_management.facility_group_monitor"/>
+                <filter string="Not validated" name="unvalidated_reservation"
+                    domain="[('validate', '=', False)]"
+                    groups="facility_management.facility_group_monitor"/>
+                <filter string="Show all" name="all_reservations"
+                    domain="['|', ('state', '=', 'confirmed'), ('state', '!=', 'confirmed')]"
+                    groups="facility_management.facility_group_monitor"/>
+
+                <separator/>
+                <filter string="With scheduler" name="with_scheduler"
+                    domain="[('scheduler_id', '&lt;&gt;', False)]" context="{}"
+                    help="See only facility reservations created with a scheduler"/>
+
+                <filter string="Without scheduler" name="without_scheduler"
+                    domain="[('scheduler_id', '=', False)]" context="{}"
+                    help="View only facility reservations not created with a scheduler"/>
+
+
+                <group expand="0" name="group_by" string="Group By">
+                    <filter name="group_by_facility_id" string="Facility" domain="[]"
+                        context="{'group_by' : 'facility_id'}"/>
+                    <filter name="group_by_complex_id" string="Complex" domain="[]"
+                        context="{'group_by' : 'complex_id'}"/>
+                    <filter name="group_by_owner_id" string="Owner" domain="[]"
+                        context="{'group_by' : 'owner_id'}"
+                        groups="record_ownership.record_ownership_consultant"/>
+                </group>
+
+            </search>
+        </field>
+    </record>
+
+    <!-- Main window action for model.name -->
+    <record id="action_reservations_act_window" model="ir.actions.act_window">
+        <field name="type">ir.actions.act_window</field>
+        <field name="name">Reservations</field>
+        <field name="res_model">facility.reservation</field>
+        <field name="view_mode">calendar,kanban,list,form</field>
+        <field name="target">current</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" ref="view_facility_reservation_search"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create"> Click to add new reservations </p>
+            <p> There are no reservations </p>
+        </field>
+    </record>
+
+    <!-- Main menu for model.name -->
+    <record id="menu_reservations" model="ir.ui.menu">
+        <field name="name">Reservations</field>
+        <field name="sequence" eval="10"/>
+        <field name="action" ref="action_reservations_act_window"/>
+        <field name="parent_id" ref="facility_management.menu_facility_management_reservations"/>
+        <field name="groups_id" eval="[(4, ref('facility_management.facility_group_consultant'))]"/>
+    </record>
+
+</odoo>

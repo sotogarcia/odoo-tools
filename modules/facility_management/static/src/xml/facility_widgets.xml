@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="facility_management_widgets" xml:space="preserve">
+
+  <t t-name="facility_management.FacilityNextTime">
+    <div class="o_facility_next_time d-flex flex-row align-items-center"
+         t-att-class="props.className">
+      <i t-attf-class="fa #{computed.icon}" aria-hidden="true"/>
+      <span class="ml-2" t-if="computed.label"
+            t-attf-title="Current or next reservation (#{computed.title})">
+        <t t-esc="computed.label"/>
+      </span>
+    </div>
+  </t>
+
+  <t t-name="facility_management.FacilityUsers">
+    <div class="o_facility_users d-flex flex-row align-items-center"
+         t-att-class="props.className" t-if="users.label">
+      <i t-attf-class="fa #{users.icon}" aria-hidden="true"/>
+      <span class="ml-2"><t t-esc="users.label"/></span>
+    </div>
+  </t>
+
+</templates>

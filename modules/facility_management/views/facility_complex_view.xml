@@ -1,0 +1,189 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<odoo noupdate="0">
+
+    <!-- VIEWS: "Facility complex"
+
+        - Model·········: facility.complex
+        - _rec_name·····: name
+        - Domain········: []
+        - Context·······: {}
+        - Parent menu ··: facility_management.menu_facilities
+        - View priority·: 16    Sequence····: 10
+        - Action help···: There are no facility complex yet
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <!-- List view for "facility complex" -->
+    <record id="view_facility_complex_tree" model="ir.ui.view">
+        <field name="name">view.complex.tree</field>
+        <field name="model">facility.complex</field>
+        <field name="type">list</field>
+        <field name="priority" eval="16"/>
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <list string="facility_complex_tree">
+                <field name="name" class="oe_field_name"/>
+                <field name="code" class="oe_field_code"/>
+                <field name="company_id" class="oe_field_company_id"/>
+                <field name="manager_id" class="oe_field_manager_id"/>
+                <field name="facility_count" class="oe_field_facility_count"/>
+                <field name="unconfirmed_reservation_count"
+                    class="oe_field_unconfirmed_reservation_count" string="Awaiting"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form view for "complex" -->
+    <record id="view_facility_complex_form" model="ir.ui.view">
+        <field name="name">view.complex.form</field>
+        <field name="model">facility.complex</field>
+        <field name="type">form</field>
+        <field name="priority" eval="16"/>
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <form string="facility_complex_form">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="view_reservations" type="object"
+                            class="oe_stat_button oe_read_only" icon="fa-spinner"
+                            help="Show related reservations">
+                            <field name="unconfirmed_reservation_count" widget="statinfo"
+                                string="Awaiting"/>
+                        </button>
+                        <button name="view_facilities" type="object"
+                            class="oe_stat_button oe_read_only" icon="fa-building-o"
+                            help="Show related facilities">
+                            <field name="facility_count" widget="statinfo" string="Facilities"/>
+                        </button>
+                    </div>
+
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                        invisible="active"/>
+
+                    <field name="image_1920" widget="image" class="oe_avatar"
+                        options="{'preview_image': 'image_128'}"/>
+
+                    <div class="oe_title">
+                        <field name="id" class="oe_field_id" invisible="1"/>
+                        <field name="active" invisible="1"/>
+
+                        <field name="company_id" invisible="1"/>
+                        <field name="employee" invisible="1"/>
+                        <field name="type" invisible="1"/>
+                        <field name="is_company" invisible="1"/>
+                        <field name="company_type" invisible="1"/>
+
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" class="oe_field_name" placeholder="Enter new name"
+                                required="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group col="2">
+                            <field name="code" class="oe_field_code" placeholder="Code..."/>
+                            <field name="phone" class="oe_field_phone"/>
+                            <field name="mobile" class="oe_field_mobile"/>
+                            <field name="email" class="oe_field_email"/>
+                        </group>
+                        <group>
+                            <label for="street" string="Address"/>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street..."
+                                    class="o_address_street"/>
+                                <field name="street2" placeholder="Street 2..."
+                                    class="o_address_street"/>
+                                <field name="city" placeholder="City" class="o_address_city"/>
+                                <field name="state_id" class="o_address_state" placeholder="State"
+                                    options="{'no_open': True}"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                <field name="country_id" placeholder="Country"
+                                    class="o_address_country"
+                                    options="{'no_open': True, 'no_create': True}"/>
+                            </div>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Description" class="oe_page_description" accesskey="D">
+                            <group col="2">
+                                <field name="description" class="oe_field_description"
+                                    placeholder="Enter new description" colspan="4" nolabel="1"/>
+                            </group>
+                        </page>
+                        <page string="Setup" class="oe_page_setup" accesskey="S">
+                            <group col="4" groups="base.group_multi_company">
+                                <field name="company_id" class="oe_field_company_id"
+                                    groups="base.group_multi_company"/>
+                                <separator colspan="2"/>
+                            </group>
+                            <group col="4" string="Ownership"
+                                groups="record_ownership.record_ownership_proxy">
+                                <field name="owner_id" class="oe_field_owner_id"/>
+                                <field name="subrogate_id" class="oe_field_subrogate_id"/>
+                                <field name="supervisor_ids" class="oe_field_supervisor_ids"
+                                    widget="many2many_tags" colspan="4"/>
+                            </group>
+                            <group col="4" string="Others">
+                                <field name="tz" class="oe_field_tz"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <chatter/>
+
+            </form>
+        </field>
+    </record>
+
+    <!-- Search view for "complex" -->
+    <record id="view_facility_complex_search" model="ir.ui.view">
+        <field name="name">view.complex.search</field>
+        <field name="model">facility.complex</field>
+        <field name="type">search</field>
+        <field name="priority" eval="16"/>
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <search string="facility_complex_search">
+                <field name="name" class="oe_field_name"/>
+                <field name="code" class="oe_field_code"/>
+                <field name="company_id" class="oe_field_company_id"/>
+
+                <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
+
+                <group expand="0" name="group_by" string="Group By">
+                    <filter name="group_by_company_id" string="Company" domain="[]"
+                        context="{'group_by' : 'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Main window action for model.name -->
+    <record id="action_facility_complex_act_window" model="ir.actions.act_window">
+        <field name="type">ir.actions.act_window</field>
+        <field name="name">Facility complex</field>
+        <field name="res_model">facility.complex</field>
+        <field name="view_mode">list,form</field>
+        <field name="target">current</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" ref="view_facility_complex_search"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create"> Click to add new complex </p>
+            <p> There are no complexes yet </p>
+        </field>
+    </record>
+
+    <!-- Main menu for model.name -->
+    <record id="menu_facility_complex" model="ir.ui.menu">
+        <field name="name">Complexes</field>
+        <field name="sequence" eval="10"/>
+        <field name="action" ref="action_facility_complex_act_window"/>
+        <field name="parent_id" ref="facility_management.menu_facility_management_settings"/>
+        <field name="groups_id" eval="[(4, ref('facility_management.facility_group_monitor'))]"/>
+    </record>
+
+</odoo>

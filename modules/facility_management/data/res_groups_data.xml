@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo noupdate="1">
+
+    <!-- Category: all the other module groups are child of this
+    ============================================================ -->
+    <record id="module_category_facility_management" model="ir.module.category">
+        <field name="name">Facility management</field>
+        <field name="sequence" eval="10"/>
+        <field name="visible" eval="True"/>
+        <field name="description">Facility management security groups</field>
+    </record>
+
+    <record id="facility_group_consultant" model="res.groups">
+        <field name="name">Consultant</field>
+        <field name="comment">Users who can only consult facilities and reservations</field>
+        <field name="category_id" ref="module_category_facility_management"/>
+        <field name="implied_ids"
+            eval="[(4, ref('base.group_user')), (4, ref('record_ownership.record_ownership_consultant'))]"
+        />
+    </record>
+
+    <record id="facility_group_applicant" model="res.groups">
+        <field name="name">Applicant</field>
+        <field name="comment">Users who can request a facility reservation</field>
+        <field name="category_id" ref="module_category_facility_management"/>
+        <field name="implied_ids" eval="[(4, ref('facility_group_consultant'))]"/>
+    </record>
+
+    <record id="facility_group_monitor" model="res.groups">
+        <field name="name">Monitor</field>
+        <field name="comment">Users who can authorize the requested facility reservations</field>
+        <field name="category_id" ref="module_category_facility_management"/>
+        <field name="implied_ids" eval="[(4, ref('facility_group_applicant'))]"/>
+    </record>
+
+    <record id="facility_group_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="comment">Users who can create/edit information in all models</field>
+        <field name="category_id" ref="module_category_facility_management"/>
+        <field name="implied_ids" eval="[(4, ref('facility_group_monitor'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+</odoo>

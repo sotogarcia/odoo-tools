@@ -1,0 +1,3026 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#   * facility_management
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-03 18:14+0000\n"
+"PO-Revision-Date: 2025-09-03 20:32+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: es_ES\n"
+"X-Generator: Poedit 2.3\n"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__meeting_count
+msgid "# Meetings"
+msgstr "# Reuniones"
+
+#. module: facility_management
+#: model:mail.template,subject:facility_management.mail_notify_reservation_requests
+msgid "${object.name} - Reservation requests awaiting confirmation"
+msgstr "${object.name} - Solicitudes de reserva pendientes de confirmación"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/report/time_span_report_mixin.py:0
+msgid "%B, %d"
+msgstr "%d de %B"
+
+#. module: facility_management
+#: model:ir.actions.report,print_report_name:facility_management.action_report_facility_management_facility
+msgid "(object.name)"
+msgstr "(object.name)"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.facility_reservation_state_changed_email
+msgid ""
+") you previously requested has\n"
+"                    undergone a change. I kindly ask you to review the details to ensure you're\n"
+"                    fully aware of the current situation and any implications it might have for your\n"
+"                    plans."
+msgstr ""
+") que solicitaste anteriormente ha\n"
+"                    sufrido un cambio. Te ruego revises los detalles para asegurarte de que estés\n"
+"                    plenamente al tanto de la situación actual y de cualquier implicación que esto pueda tener para "
+"tus\n"
+"                    planes."
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_kanban
+msgid "<i class=\"fa fa-building-o\" title=\"Complex\"/>"
+msgstr "<i class=\"fa fa-building-o\" title=\"Complejo\"/>"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_kanban
+msgid "<i class=\"fa fa-calendar d-inline-block mr-1\" aria-hidden=\"false\" title=\"Scheduled\"/> Scheduled"
+msgstr "<i class=\"fa fa-calendar d-inline-block mr-1\" aria-hidden=\"false\" title=\"Programado\"/> Programado"
+
+#. module: facility_management
+#: model:mail.template,body_html:facility_management.mail_notify_reservation_requests
+msgid ""
+"<t t-call=\"facility_management.email_layout\">\n"
+"\n"
+"          <!-- Set header variables -->\n"
+"          <t t-set=\"title\"> </t>\n"
+"          <t t-set=\"subtitle\">Reservation requests awaiting confirmation</t>\n"
+"          <t t-set=\"logo_src\">/logo.png?company=</t>\n"
+"\n"
+"          <!-- Build the inner body by calling the content template -->\n"
+"          <t t-set=\"body_html\">\n"
+"            <t t-call=\"facility_management.email_body_reservation_requests\"/>\n"
+"          </t>\n"
+"\n"
+"        </t>\n"
+"      "
+msgstr ""
+"<t t-call=\"facility_management.email_layout\">\n"
+"\n"
+"          <!-- Set header variables -->\n"
+"          <t t-set=\"title\"> </t>\n"
+"          <t t-set=\"subtitle\">Solicitudes de reserva pendientes de confirmación</t>\n"
+"          <t t-set=\"logo_src\">/logo.png?company=</t>\n"
+"\n"
+"          <!-- Build the inner body by calling the content template -->\n"
+"          <t t-set=\"body_html\">\n"
+"            <t t-call=\"facility_management.email_body_reservation_requests\"/>\n"
+"          </t>\n"
+"\n"
+"        </t>\n"
+"      "
+
+#. module: facility_management
+#: model:ir.model.constraint,message:facility_management.constraint_facility_complex_unique_complex_code
+msgid "A complex with that code already exists"
+msgstr "Ya existe un complejo con ese código"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_complex.py:0
+#: model:ir.model.constraint,message:facility_management.constraint_facility_complex_unique_partner_id
+msgid "A complex with the same data already exists"
+msgstr "Ya existe un complejo con los mismos datos"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_complex.py:0
+msgid "A complex with this code already exists"
+msgstr "Ya existe un complejo con este código"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_facility.py:0
+#: model:ir.model.constraint,message:facility_management.constraint_facility_facility_UNIQUE_CODE
+msgid "A facility with that code already exists"
+msgstr "Ya existe una instalación con ese código"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_facility.py:0
+#: model:ir.model.constraint,message:facility_management.constraint_facility_facility_UNIQUE_NAME_BY_COMPLEX
+msgid "A facility with that name already exists in that complex"
+msgstr "Ya existe una instalación con ese nombre en este complejo"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex_facility_reservation_rel__complex_id
+msgid "A group of facilities, usually in the same location address"
+msgstr "Un grupo de instalaciones, generalmente en la misma dirección de ubicación"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__description
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__description
+msgid "A long description to this reservation"
+msgstr "Descripción larga para esta reserva"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__name
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__name
+msgid "A short description to this reservation"
+msgstr "Descripción corta para esta reserva"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/report/time_span_report_mixin.py:0
+msgid "Abstract method «{}» not implemented in «{}» has been called"
+msgstr "Se ha llamado al método abstracto «{}» no implementado en «{}»"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_massive_actions_wizard__action
+msgid "Action"
+msgstr "Acción"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__message_needaction
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__message_needaction
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__message_needaction
+msgid "Action Needed"
+msgstr "Accion necesaria"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_massive_actions_wizard__action
+msgid "Action will be performed over chosen reservation records"
+msgstr "La acción se realizará sobre los registros de las reservas elegidas"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__active
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__active
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__active
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__active
+#: model:ir.model.fields,field_description:facility_management.field_facility_type__active
+#: model:ir.model.fields,field_description:facility_management.field_facility_weekday__active
+msgid "Active"
+msgstr "Activo"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__active_lang_count
+msgid "Active Lang Count"
+msgstr "Nº de idiomas activos"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__activity_ids
+msgid "Activities"
+msgstr "Actividades"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Decoración de excepción de actividad"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__activity_state
+msgid "Activity State"
+msgstr "Estado de actividad"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icono del tipo de actividad"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_search_available_wizard__complex_ids
+msgid "Adding complexes will restrict the results to matching ones"
+msgstr "Agregar complejos restringirá los resultados a los que coincidan"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_search_available_wizard__type_ids
+msgid "Adding types will restrict the results to matching ones"
+msgstr "Agregar tipos restringirá los resultados a los que coincidan"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_form
+msgid "Address"
+msgstr "Dirección"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__type
+msgid "Address Type"
+msgstr "Tipo de dirección"
+
+#. module: facility_management
+#: model:ir.ui.menu,name:facility_management.menu_facility_management_settings
+msgid "Advanced"
+msgstr "Avanzado"
+
+#. module: facility_management
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_reservation_scheduler__finish_type__number
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_scheduler_mixin__finish_type__number
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_search_available_wizard__finish_type__number
+msgid "After repeating"
+msgstr "Después de repetir"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__lang
+msgid "All the emails and documents sent to this contact will be translated in this language."
+msgstr "Todos los correos electrónicos y documentos enviados a este contacto se enviarán en este idioma."
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reporting_wizard__full_weeks
+msgid "Always show full weeks"
+msgstr "Mostrar siempre semanas completas"
+
+#. module: facility_management
+#: model:res.groups,name:facility_management.facility_group_applicant
+#: model_terms:ir.ui.view,arch_db:facility_management.email_body_reservation_requests
+msgid "Applicant"
+msgstr "Solicitante"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_search
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_search
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_search
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_search
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_type_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_type_search
+msgid "Archived"
+msgstr "Archivado"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_massive_actions_wizard_form
+msgid "Are you sure you want to execute the action on the selected records?"
+msgstr "¿Estás seguro de que quieres ejecutar la acción en los registros seleccionados?"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_form
+msgid "Are you sure you want to remove all scheduled reservations?"
+msgstr "¿Estás seguro de que quieres eliminar todas las reservas programadas?"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_form
+msgid "Are you sure you want to unbind this reservation from the scheduler?"
+msgstr "¿Estás seguro de que quieres desvincular esta reserva del planificador?"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__message_attachment_count
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__message_attachment_count
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__message_attachment_count
+msgid "Attachment Count"
+msgstr "Nº de adjuntos"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_res_config_settings__auto_archive_on_rejection
+msgid "Auto archive"
+msgstr "Archivar automáticamente"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.res_config_settings_view_form
+msgid "Auto-archive reservation requests when they are rejected"
+msgstr "Archivar automáticamente solicitudes de reserva cuando sean rechazadas"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_search
+msgid "Available"
+msgstr "Disponibles"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__available_facility_ids
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__available_facility_ids
+msgid "Available facilities"
+msgstr "Instalaciones disponibles"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__avatar_1920
+msgid "Avatar"
+msgstr ""
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__avatar_1024
+msgid "Avatar 1024"
+msgstr ""
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__avatar_128
+msgid "Avatar 128"
+msgstr ""
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__avatar_256
+msgid "Avatar 256"
+msgstr ""
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__avatar_512
+msgid "Avatar 512"
+msgstr ""
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_tree
+msgid "Awaiting"
+msgstr "Pendientes"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__unconfirmed_reservation_count
+msgid "Awaiting count"
+msgstr "Nº pendientes"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__bank_ids
+msgid "Banks"
+msgstr "Bancos"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__barcode
+msgid "Barcode"
+msgstr "Código de barras"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reporting_wizard__date_start
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__date_start
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_massive_actions_wizard__date_start
+msgid "Beginning"
+msgstr "Comienzo"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_kanban
+msgid "Beginning:"
+msgstr "Comienzo:"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__is_blacklisted
+msgid "Blacklist"
+msgstr "Lista negra"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__message_bounce
+msgid "Bounce"
+msgstr "Rebotar"
+
+#. module: facility_management
+#: model:ir.actions.act_window,name:facility_management.action_facility_reservation_massive_actions_wizard_wizard_act_window
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_massive_actions_wizard_form
+msgid "Bulk reservation update"
+msgstr "Actualización masiva de reservas"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.email_body_reservation_requests
+msgid "Call by phone"
+msgstr "Llamar por teléfono"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__channel_ids
+msgid "Channels"
+msgstr "Canales"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__is_company
+msgid "Check if the contact is a company, otherwise it is a person"
+msgstr "Verificar si el contacto es una empresa, de lo contrario es una persona"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_weekday__workday
+msgid "Check if this weekday is considered a working day"
+msgstr "Si está marcado, entonces este es un día hábil"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_massive_actions_wizard__update_state
+msgid "Check it to update state"
+msgstr "Marcar para actualizar el estado"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_massive_actions_wizard__update_validate
+msgid "Check it to update validate"
+msgstr "Marcar para actualizar la validación"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__has_scheduler
+msgid "Check it when the reservation has a related scheduler"
+msgstr "Marcar cuando la reserva tenga un planificador vinculado"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__employee
+msgid "Check this box if this contact is an Employee."
+msgstr "Marcar esta casilla si este contacto es un empleado."
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_search_available_wizard__exclude_complexes
+msgid "Check to exclude chosen complexes"
+msgstr "Marcar para excluir los complejos elegidos"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_search_available_wizard__exclude_types
+msgid "Check to exclude chosen types"
+msgstr "Marcar para excluir los tipos elegidos"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_massive_actions_wizard__update_date_start
+msgid "Checkit to update start date/time"
+msgstr "Marcar para actualizar la fecha/hora de inicio"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_massive_actions_wizard__update_date_stop
+msgid "Checkit to update stop date/time"
+msgstr "Marcar para actualizar la fecha/hora de finalización"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_massive_actions_wizard__reservation_ids
+msgid "Chosen reservations"
+msgstr "Reservas seleccionadas"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__city
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_form
+msgid "City"
+msgstr "Ciudad"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_search
+msgid "Classrooms"
+msgstr "Aulas"
+
+#. module: facility_management
+#: model_terms:ir.actions.act_window,help:facility_management.action_weekdays_act_window
+msgid "Click to add new Weekdays"
+msgstr "Haga clic para agregar nuevos días de la semana"
+
+#. module: facility_management
+#: model_terms:ir.actions.act_window,help:facility_management.action_facility_complex_act_window
+msgid "Click to add new complex"
+msgstr "Haga clic para agregar un nuevo complejo"
+
+#. module: facility_management
+#: model_terms:ir.actions.act_window,help:facility_management.action_facilities_act_window
+msgid "Click to add new facilities"
+msgstr "Haga clic para agregar nuevas instalaciones"
+
+#. module: facility_management
+#: model_terms:ir.actions.act_window,help:facility_management.action_facility_type_act_window
+msgid "Click to add new facility type"
+msgstr "Haga clic para agregar un nuevo tipo de instalación"
+
+#. module: facility_management
+#: model_terms:ir.actions.act_window,help:facility_management.action_reservations_act_window
+msgid "Click to add new reservations"
+msgstr "Haga clic para agregar nuevas reservas"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_form
+msgid "Code..."
+msgstr "Código..."
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__color
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__color
+msgid "Color"
+msgstr ""
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__color
+msgid "Color Index"
+msgstr "Indice de color"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_facility__color
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__color
+msgid "Color will be used in kanban view"
+msgstr "El color se usará en la vista kanban"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__commercial_partner_id
+msgid "Commercial Entity"
+msgstr "Entidad comercial"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__company_id
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex_facility_reservation_rel__company_id
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__company_id
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__company_id
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__company_id
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_search
+msgid "Company"
+msgstr "Compañía"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__company_registry
+msgid "Company ID"
+msgstr "ID de la empresa"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__company_registry_label
+msgid "Company ID Label"
+msgstr "Etiqueta del ID de la empresa"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__company_name
+msgid "Company Name"
+msgstr "Nombre de companía"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__commercial_company_name
+msgid "Company Name Entity"
+msgstr "Razón social"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__company_type
+msgid "Company Type"
+msgstr "Tipo de compañía"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__contact_address
+msgid "Complete Address"
+msgstr "Dirección completa"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__complete_name
+msgid "Complete Name"
+msgstr "Nombre completo"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex_facility_reservation_rel__complex_id
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__complex_id
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__complex_id
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__complex_id
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_search
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_search
+msgid "Complex"
+msgstr "Complejo"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_complex.py:0
+msgid "Complex must have a name"
+msgstr "El complejo debe tener un nombre"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_facility__complex_id
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__complex_id
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__complex_id
+msgid "Complex to which the facility belongs"
+msgstr "Complejo al que pertenece la instalación"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__complex_ids
+#: model:ir.ui.menu,name:facility_management.menu_facility_complex
+msgid "Complexes"
+msgstr "Complejos"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__prerogative
+#: model:ir.model.fields,help:facility_management.field_facility_facility__prerogative
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__prerogative
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__prerogative
+msgid "Compute current user access rights to change authorship"
+msgstr "Calcular los derechos de acceso del usuario actual para cambiar la autoría"
+
+#. module: facility_management
+#: model:ir.model,name:facility_management.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__confirm
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: facility_management
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_complex_facility_reservation_rel__state__confirmed
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_reservation__state__confirmed
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_reservation_massive_actions_wizard__state__confirmed
+msgid "Confirmed"
+msgstr "Confirmada"
+
+#. module: facility_management
+#: model:res.groups,name:facility_management.facility_group_consultant
+msgid "Consultant"
+msgstr "Consultor"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__child_ids
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__partner_id
+msgid "Contact information"
+msgstr "Información del contacto"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__message_bounce
+msgid "Counter of the number of bounced emails for this contact"
+msgstr "Recuento de correos electrónicos rebotados para este contacto"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__country_id
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_form
+msgid "Country"
+msgstr "País"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__country_code
+msgid "Country Code"
+msgstr "Código de país"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__create_uid
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__create_uid
+#: model:ir.model.fields,field_description:facility_management.field_facility_reporting_wizard__create_uid
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__create_uid
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_massive_actions_wizard__create_uid
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__create_uid
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__create_uid
+#: model:ir.model.fields,field_description:facility_management.field_facility_type__create_uid
+#: model:ir.model.fields,field_description:facility_management.field_facility_weekday__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__create_date
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__create_date
+#: model:ir.model.fields,field_description:facility_management.field_facility_reporting_wizard__create_date
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__create_date
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_massive_actions_wizard__create_date
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__create_date
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__create_date
+#: model:ir.model.fields,field_description:facility_management.field_facility_type__create_date
+#: model:ir.model.fields,field_description:facility_management.field_facility_weekday__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__state
+msgid "Current group status"
+msgstr "Estado actual del grupo"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_search
+msgid "Current month"
+msgstr "Mes actual"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__owner_id
+#: model:ir.model.fields,help:facility_management.field_facility_facility__owner_id
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__owner_id
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__owner_id
+msgid "Current record owner"
+msgstr "Titular del registro actual"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex_facility_reservation_rel__state
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__state
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_massive_actions_wizard__state
+msgid "Current reservation status"
+msgstr "Estado actual de la reserva"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_search
+msgid "Current week"
+msgstr "Semana actual"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_section_qweb
+msgid "DATE"
+msgstr "FECHA"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_section_qweb
+msgid "DESCRIPTION"
+msgstr "DESCRIPCIÓN"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__date_base
+#: model:ir.model.fields,field_description:facility_management.field_facility_scheduler_mixin__date_base
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__date_base
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_search
+msgid "Date"
+msgstr "Fecha"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__date_base
+#: model:ir.model.fields,help:facility_management.field_facility_scheduler_mixin__date_base
+#: model:ir.model.fields,help:facility_management.field_facility_search_available_wizard__date_base
+msgid "Date of reservation start"
+msgstr "Fecha de inicio de la reserva"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__finish_date
+#: model:ir.model.fields,help:facility_management.field_facility_scheduler_mixin__finish_date
+#: model:ir.model.fields,help:facility_management.field_facility_search_available_wizard__finish_date
+msgid "Date of the last repetition"
+msgstr "Fecha de la última repetición"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__date_stop
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_massive_actions_wizard__date_stop
+msgid "Date/time of reservation end"
+msgstr "Fecha y hora de finalización de la reserva"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__date_start
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_massive_actions_wizard__date_start
+msgid "Date/time of reservation start"
+msgstr "Fecha y hora de inicio de la reserva"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reporting_wizard__date_stop
+msgid "Date/time of session end"
+msgstr "Fecha y hora de finalización de la sesión"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reporting_wizard__date_start
+msgid "Date/time of session start"
+msgstr "Fecha y hora de inicio de sesión"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_scheduler_mixin.py:0
+msgid "Day of the week corresponding to the start date is not among the selected days of the week"
+msgstr "El día de la semana correspondiente a la fecha de inicio no está entre los días de la semana seleccionados"
+
+#. module: facility_management
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_reservation_scheduler__interval_type__day
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_scheduler_mixin__interval_type__day
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_search_available_wizard__interval_type__day
+msgid "Days"
+msgstr "Días"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__weekday_ids
+#: model:ir.model.fields,help:facility_management.field_facility_scheduler_mixin__weekday_ids
+#: model:ir.model.fields,help:facility_management.field_facility_search_available_wizard__weekday_ids
+msgid "Days of the week on which it is repeated"
+msgstr "Días de la semana en que se repite"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__description
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__description
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__description
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__description
+#: model:ir.model.fields,field_description:facility_management.field_facility_type__description
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_form
+msgid "Description"
+msgstr "Descripcion"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_form
+msgid "Details"
+msgstr "Detalles"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__tracking_disable
+msgid "Disable the e-mail notification"
+msgstr "Desactivar la notificación por correo electrónico"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_massive_actions_wizard__tracking_disable
+msgid "Disable tracking"
+msgstr "Desactivar seguimiento"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__display_name
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex_facility_reservation_rel__display_name
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__display_name
+#: model:ir.model.fields,field_description:facility_management.field_facility_reporting_wizard__display_name
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__display_name
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_massive_actions_wizard__display_name
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__display_name
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__display_name
+#: model:ir.model.fields,field_description:facility_management.field_facility_type__display_name
+#: model:ir.model.fields,field_description:facility_management.field_facility_weekday__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__next_schedule
+#: model:ir.model.fields,help:facility_management.field_facility_scheduler_mixin__next_schedule
+#: model:ir.model.fields,help:facility_management.field_facility_search_available_wizard__next_schedule
+msgid "Display next schedule date/time"
+msgstr "Mostrar la próxima fecha/hora programada"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__date_delay
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__date_delay
+#: model:ir.model.fields,field_description:facility_management.field_facility_scheduler_mixin__date_delay
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__date_delay
+msgid "Duration"
+msgstr "Duración"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__partner_share
+msgid ""
+"Either customer (not a user), either shared user. Indicated the current partner is a customer without access or with a "
+"limited access created for sharing data."
+msgstr ""
+"Ya sea cliente (no un usuario), ya sea usuario compartido. Indicado que el socio actual es un cliente sin acceso o con "
+"un acceso limitado creado para compartir datos."
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__email
+msgid "Email"
+msgstr "Correo electrónico"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__employee
+msgid "Employee"
+msgstr "Empleado"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_facility__active
+#: model:ir.model.fields,help:facility_management.field_facility_type__active
+#: model:ir.model.fields,help:facility_management.field_facility_weekday__active
+msgid "Enables/disables the record"
+msgstr "Habilita/deshabilita el registro"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__active
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__active
+msgid "Enables/disables this reservation"
+msgstr "Habilita o deshabilita esta reserva"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reporting_wizard__date_stop
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__date_stop
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_massive_actions_wizard__date_stop
+msgid "Ending"
+msgstr "Finalización"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_kanban
+msgid "Ending:"
+msgstr "Finalización:"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__description
+#: model:ir.model.fields,help:facility_management.field_facility_facility__description
+#: model:ir.model.fields,help:facility_management.field_facility_type__description
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_type_form
+msgid "Enter new description"
+msgstr "Introduce una nueva descripción"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__code
+msgid "Enter new internal code"
+msgstr "Ingrese el nuevo código interno"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_type_form
+msgid "Enter new name"
+msgstr "Introduce un nuevo nombre"
+
+#. module: facility_management
+#. odoo-javascript
+#: code:addons/facility_management/static/src/js/facility_widgets.esm.js:0
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_search
+msgid "Equipment"
+msgstr "Material"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.res_config_settings_view_form
+msgid "Establish the order for the days of the week and determine which are working days."
+msgstr "Establecer el orden de los días de la semana y determinar cuáles son laborables."
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__excess
+msgid "Excess"
+msgstr "Rebase"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_search_available_wizard_form
+msgid "Exclude"
+msgstr "Excluir"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__exclude_complexes
+msgid "Exclude complexes"
+msgstr "Excluir complejos"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__exclude_types
+msgid "Exclude types"
+msgstr "Excluir tipos"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_massive_actions_wizard_form
+msgid "Execute"
+msgstr "Ejecutar"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_massive_actions_wizard_form
+msgid "Execute chosen action"
+msgstr "Ejecutar la acción elegida"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_section_qweb
+msgid "FACILITY"
+msgstr "INSTALACIÓN"
+
+#. module: facility_management
+#: model:ir.actions.act_window,name:facility_management.action_facilities_act_window
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__facility_ids
+#: model:ir.model.fields,field_description:facility_management.field_facility_reporting_wizard__facility_ids
+#: model:ir.ui.menu,name:facility_management.menu_facilities
+#: model:ir.ui.menu,name:facility_management.menu_facility_management
+#: model:ir.ui.menu,name:facility_management.menu_facility_management_facilities
+#: model_terms:ir.ui.view,arch_db:facility_management.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reporting_wizard_form
+msgid "Facilities"
+msgstr "Instalaciones"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__available_facility_ids
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__available_facility_ids
+msgid "Facilities available for the current date range. Used to filter 'facility_id' in the UI"
+msgstr "Instalaciones disponibles para el intervalo de fechas actual. Se usa para filtrar 'facility_id' en la interfaz"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__facility_ids
+msgid "Facilities in this complex"
+msgstr "Instalaciones en este complejo"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/wizard/facility_search_available_wizard.py:0
+msgid "Facilities that match the criteria"
+msgstr "Instalaciones que coinciden con los criterios"
+
+#. module: facility_management
+#: model:ir.model,name:facility_management.model_facility_facility
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__facility_id
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__facility_id
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_reservation_scheduler__state__facility
+#: model_terms:ir.ui.view,arch_db:facility_management.email_body_reservation_requests
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_search
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_search
+msgid "Facility"
+msgstr "Instalación"
+
+#. module: facility_management
+#: model:ir.actions.act_window,name:facility_management.action_facility_complex_act_window
+#: model:ir.model,name:facility_management.model_facility_complex
+msgid "Facility complex"
+msgstr "Complejo de instalaciones"
+
+#. module: facility_management
+#: model:ir.model,name:facility_management.model_facility_complex_facility_reservation_rel
+msgid "Facility complex facility reservation"
+msgstr "Reserva de instalaciones del complejo"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__facility_count
+msgid "Facility count"
+msgstr "Nº de instalaciones"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_facility__code
+msgid "Facility internal code"
+msgstr "Código interno de la instalación"
+
+#. module: facility_management
+#: model:ir.module.category,name:facility_management.module_category_facility_management
+msgid "Facility management"
+msgstr "Instalaciones"
+
+#. module: facility_management
+#: model:ir.module.category,description:facility_management.module_category_facility_management
+msgid "Facility management security groups"
+msgstr "Grupos de seguridad para la gestión de instalaciones"
+
+#. module: facility_management
+#: model:ir.actions.act_window,name:facility_management.action_facility_reporting_act_window
+msgid "Facility reporting"
+msgstr "Informe de instalaciones"
+
+#. module: facility_management
+#: model:ir.model,name:facility_management.model_facility_reporting_wizard
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reporting_wizard_form
+msgid "Facility reporting wizard"
+msgstr "Asistente para informes de instalaciones"
+
+#. module: facility_management
+#: model:ir.actions.act_window,name:facility_management.action_facility_reservation_scheduler_as_wizard_act_window
+#: model:ir.model,name:facility_management.model_facility_reservation
+#: model:ir.ui.menu,name:facility_management.menu_facility_reservation_scheduler_as_wizard
+msgid "Facility reservation"
+msgstr "Reserva de instalaciones"
+
+#. module: facility_management
+#: model:ir.model,name:facility_management.model_facility_reservation_massive_actions_wizard
+msgid "Facility reservation massive actions wizard"
+msgstr "Asistente de acciones masivas sobre las reservas de instalaciones"
+
+#. module: facility_management
+#: model:ir.model,name:facility_management.model_report_facility_management_view_facility_qweb
+msgid "Facility reservation report"
+msgstr "Informe de reserva de instalaciones"
+
+#. module: facility_management
+#: model:ir.model,name:facility_management.model_facility_reservation_scheduler
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_tree
+msgid "Facility reservation scheduler"
+msgstr "Planificador de reservas de instalaciones"
+
+#. module: facility_management
+#: model:ir.model,name:facility_management.model_facility_search_available_wizard
+msgid "Facility search available wizard"
+msgstr "Asistente para la búsqueda de instalaciones disponibles"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__facility_id
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__facility_id
+msgid "Facility to be reserved"
+msgstr "Establecimiento a reservar"
+
+#. module: facility_management
+#: model:ir.actions.act_window,name:facility_management.action_facility_type_act_window
+#: model:ir.model,name:facility_management.model_facility_type
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_search
+msgid "Facility type"
+msgstr "Tipo de instalación"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_type.py:0
+#: model:ir.model.constraint,message:facility_management.constraint_facility_type_unique_facility_type_name
+msgid "Facility type already exists"
+msgstr "El tipo de instalación ya existe"
+
+#. module: facility_management
+#: model:ir.model,name:facility_management.model_facility_weekday
+msgid "Facility weekday"
+msgstr "Días de la semana"
+
+#. module: facility_management
+#: model:ir.actions.report,name:facility_management.action_report_facility_management_facility
+msgid "Facility weekly reservations"
+msgstr "Reservas semanales de instalaciones"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__finish_type
+#: model:ir.model.fields,field_description:facility_management.field_facility_scheduler_mixin__finish_type
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__finish_type
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_reservation_scheduler__state__finish
+msgid "Finish"
+msgstr "Finalización"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__finish_date
+#: model:ir.model.fields,field_description:facility_management.field_facility_scheduler_mixin__finish_date
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__finish_date
+msgid "Finish date"
+msgstr "Fecha de finalización"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_scheduler_mixin.py:0
+msgid "Finish date cannot be less than start date"
+msgstr "La fecha de fin no puede ser anterior a la fecha de inicio"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_scheduler_mixin.py:0
+msgid "Finish number must be greater than or equal to one"
+msgstr "El número final debe ser mayor o igual que uno"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_search
+msgid "Finish type"
+msgstr "Tipo de final"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__message_follower_ids
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__message_follower_ids
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__message_follower_ids
+msgid "Followers"
+msgstr "Seguidores"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__message_partner_ids
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__message_partner_ids
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seguidores (Socios)"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icono de Font Awesome, por ejemplo fa-tasks"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__email_formatted
+msgid "Format email address \"Name <email@domain>\""
+msgstr "Formatea la dirección de correo electrónico \"Nombre <correo@dominio>\""
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__email_formatted
+msgid "Formatted Email"
+msgstr "Correo electrónico formateado"
+
+#. module: facility_management
+#: model:facility.weekday,name:facility_management.facility_weekday_friday
+msgid "Friday"
+msgstr "Viernes"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__full_day
+#: model:ir.model.fields,field_description:facility_management.field_facility_scheduler_mixin__full_day
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__full_day
+msgid "Full day"
+msgstr "Todo el día"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reporting_wizard__full_weeks
+msgid "Full weeks"
+msgstr "Semanas completas"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__partner_latitude
+msgid "Geo Latitude"
+msgstr "Latitud geográfica"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__partner_longitude
+msgid "Geo Longitude"
+msgstr "Longitud geográfica"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/utils/helpers.py:0
+msgid "Given context expression %r is not a valid context mapping"
+msgstr "La expresión de contexto %r no es un mapeo de contexto válido"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/utils/helpers.py:0
+msgid "Given domain expression %r is not a valid ORM domain"
+msgstr "La expresión de dominio %r no es un dominio ORM válido"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.email_body_reservation_requests
+msgid "Go"
+msgstr "Ir"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_search
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_search
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_search
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_search
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__has_message
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__has_message
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__has_message
+msgid "Has Message"
+msgstr "Tiene mensaje"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__has_scheduler
+msgid "Has scheduler"
+msgstr "Tiene planificador"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.email_body_reservation_requests
+msgid "Hello,"
+msgstr "Hola,"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.facility_reservation_has_changed_email
+#: model_terms:ir.ui.view,arch_db:facility_management.facility_reservation_state_changed_email
+msgid "Hello."
+msgstr "Hola."
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.res_config_settings_view_form
+msgid "Hidden resources"
+msgstr "Recursos ocultos"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.facility_reservation_has_changed_email
+msgid ""
+"I would like to\n"
+"                    inform you that changes have been made to one of your facility reservations.\n"
+"                    Please review the updated details when you can, and let me know if you have any\n"
+"                    questions or concerns."
+msgstr ""
+"Me gustaría\n"
+"                    informarte de que se han realizado cambios en una de tus reservas de instalaciones.\n"
+"                    Por favor, revisa los detalles actualizados cuando puedas y avísame si tienes\n"
+"                    alguna pregunta o inquietud."
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__id
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex_facility_reservation_rel__id
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__id
+#: model:ir.model.fields,field_description:facility_management.field_facility_reporting_wizard__id
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__id
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_massive_actions_wizard__id
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__id
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__id
+#: model:ir.model.fields,field_description:facility_management.field_facility_type__id
+#: model:ir.model.fields,field_description:facility_management.field_facility_weekday__id
+msgid "ID"
+msgstr ""
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__im_status
+msgid "IM Status"
+msgstr "Estado de MI"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_weekday__sequence
+msgid "ISO weekday number: 1=Monday ... 7=Sunday"
+msgstr "Posición ocupada por el día en la semana"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__activity_exception_icon
+msgid "Icon"
+msgstr "Icono"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Icono para indicar una actividad de excepción."
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__full_day
+#: model:ir.model.fields,help:facility_management.field_facility_scheduler_mixin__full_day
+#: model:ir.model.fields,help:facility_management.field_facility_search_available_wizard__full_day
+msgid "If checked, facility will be reserved for the entire day"
+msgstr "Si está marcado, la instalación se reservará para todo el día"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__message_needaction
+#: model:ir.model.fields,help:facility_management.field_facility_facility__message_needaction
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Si está marcado, los nuevos mensajes requieren su atención."
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__repeat
+#: model:ir.model.fields,help:facility_management.field_facility_scheduler_mixin__repeat
+#: model:ir.model.fields,help:facility_management.field_facility_search_available_wizard__repeat
+msgid "If checked, reservation will be repeated over time"
+msgstr "Si está marcado, la reserva se repetirá a lo largo del tiempo"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__message_has_error
+#: model:ir.model.fields,help:facility_management.field_facility_facility__message_has_error
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Si está marcada, algunos mensajes tienen un error de entrega."
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__validate
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_massive_actions_wizard__validate
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__validate
+msgid "If checked, the event date range will be checked before saving"
+msgstr "Si está marcado, el intervalo de fechas de la reserva será comprobado antes de guardar"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__confirm
+msgid "If checked, the reservation will be confirmed"
+msgstr "Si se marca, la reserva será confirmada"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_res_config_settings__auto_archive_on_rejection
+msgid "If enabled, records will be automatically archived when they are rejected"
+msgstr "Si está habilitado, los registros se archivarán automáticamente cuando sean rechazados"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__is_blacklisted
+msgid "If the email address is on the blacklist, the contact won't receive mass mailing anymore, from any list"
+msgstr ""
+"Si la dirección de correo electrónico está en la lista negra, el contacto ya no recibirá correos masivos, de ninguna "
+"lista"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.facility_reservation_state_changed_email
+msgid ""
+"If you encounter any\n"
+"                    issues or have questions, please don't hesitate to contact the complex\n"
+"                    administrator. This person will be available to assist you."
+msgstr ""
+"Si encuentras algún\n"
+"                    problema o tienes preguntas, no dudes en ponerte en contacto con el administrador\n"
+"                    del complejo. Esta persona estará disponible para ayudarte."
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__image_1920
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__image_1920
+msgid "Image"
+msgstr "Imagen"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__image_1024
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__image_1024
+msgid "Image 1024"
+msgstr "Imagen 1024"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__image_128
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__image_128
+msgid "Image 128"
+msgstr "Imagen 128"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__image_256
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__image_256
+msgid "Image 256"
+msgstr "Imagen 256"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__image_512
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__image_512
+msgid "Image 512"
+msgstr "Imagen 512"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__scheduler_id
+msgid "In scheduler"
+msgstr "En la matriz"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__industry_id
+msgid "Industry"
+msgstr "Industria"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__contact_address_inline
+msgid "Inlined Complete Address"
+msgstr "Dirección completa en línea"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__code
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__code
+msgid "Internal code"
+msgstr "Codigo interno"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_scheduler_mixin.py:0
+msgid "Interval number must be greater than or equal to one"
+msgstr "El número de intervalos debe ser mayor o igual que uno"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_scheduler_mixin.py:0
+#: model:ir.model.constraint,message:facility_management.constraint_facility_reservation_scheduler_positive_interval_number
+#: model:ir.model.constraint,message:facility_management.constraint_facility_scheduler_mixin_positive_interval_number
+#: model:ir.model.constraint,message:facility_management.constraint_facility_search_available_wizard_positive_interval_number
+msgid "Interval number must be greater than zero"
+msgstr "El número de intervalos debe ser mayor que cero"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__interval_type
+#: model:ir.model.fields,field_description:facility_management.field_facility_scheduler_mixin__interval_type
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__interval_type
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_search
+msgid "Interval type"
+msgstr "Tipo de intervalo"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_kanban
+msgid "Interval:"
+msgstr "Intervalo:"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__message_is_follower
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__message_is_follower
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__message_is_follower
+msgid "Is Follower"
+msgstr "Es seguidor"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__is_public
+msgid "Is Public"
+msgstr "Es público"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__is_company
+msgid "Is a Company"
+msgstr "Es una empresa"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_search
+msgid "Is a room"
+msgstr "Es una estancia"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_search
+msgid "Is equipment"
+msgstr "Es equipamiento"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__function
+msgid "Job Position"
+msgstr "Puesto de trabajo"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__lang
+msgid "Language"
+msgstr "Idioma"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__write_uid
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__write_uid
+#: model:ir.model.fields,field_description:facility_management.field_facility_reporting_wizard__write_uid
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__write_uid
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_massive_actions_wizard__write_uid
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__write_uid
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__write_uid
+#: model:ir.model.fields,field_description:facility_management.field_facility_type__write_uid
+#: model:ir.model.fields,field_description:facility_management.field_facility_weekday__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__write_date
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__write_date
+#: model:ir.model.fields,field_description:facility_management.field_facility_reporting_wizard__write_date
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__write_date
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_massive_actions_wizard__write_date
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__write_date
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__write_date
+#: model:ir.model.fields,field_description:facility_management.field_facility_type__write_date
+#: model:ir.model.fields,field_description:facility_management.field_facility_weekday__write_date
+msgid "Last Updated on"
+msgstr "Ultima actualización en"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__calendar_last_notif_ack
+msgid "Last notification marked as read from base Calendar"
+msgstr "Última notificación marcada como leída desde el calendario base"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.res_config_settings_view_form
+msgid "List and/or modify the schedulers."
+msgstr "Enumerar y / o modificar los programadores."
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__reservation_ids
+msgid "List with all the reservations created with this scheduler"
+msgstr "Lista con todas las reservas creadas con este planificador"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_form
+msgid "Make reservations"
+msgstr "Crear las reservas"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_kanban
+msgid "Management"
+msgstr "Gestión"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__manager_id
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__manager_id
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__manager_id
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__manager_id
+#: model:res.groups,name:facility_management.facility_group_manager
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_search
+msgid "Manager"
+msgstr "Administrador"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_facility.py:0
+#: model:ir.model.fields,help:facility_management.field_facility_facility__excess
+msgid "Maximum number of students who can be invited to use this feature at the same time"
+msgstr "Número máximo de estudiantes que pueden ser invitados a usar esta función al mismo tiempo"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_facility.py:0
+#: code:addons/facility_management/models/facility_reservation_scheduler.py:0
+#: model:ir.model.fields,help:facility_management.field_facility_facility__users
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__users
+msgid "Maximum number of students who can use this facility at the same time"
+msgstr "Número máximo de alumnos que pueden usar esta instalación al mismo tiempo"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_facility__users_str
+msgid "Maximum users/maximum excess users"
+msgstr "Usuarios máximos/usuarios máximos permitidos rebasando el número plazas"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__meeting_ids
+msgid "Meetings"
+msgstr "Reuniones"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__message_has_error
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__message_has_error
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__message_has_error
+msgid "Message Delivery error"
+msgstr "Error de entrega de mensajes"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__message_ids
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__message_ids
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__message_ids
+msgid "Messages"
+msgstr "Mensajes"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_reservation_scheduler.py:0
+msgid "Missing facility"
+msgstr "Falta la instalación"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__mobile
+msgid "Mobile"
+msgstr "Móvil"
+
+#. module: facility_management
+#: model:facility.weekday,name:facility_management.facility_weekday_monday
+msgid "Monday"
+msgstr "Lunes"
+
+#. module: facility_management
+#: model:res.groups,name:facility_management.facility_group_monitor
+msgid "Monitor"
+msgstr ""
+
+#. module: facility_management
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_reservation_scheduler__month_type__month
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_scheduler_mixin__month_type__month
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_search_available_wizard__month_type__month
+msgid "Month day"
+msgstr "Día de mes"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__month_type
+#: model:ir.model.fields,field_description:facility_management.field_facility_scheduler_mixin__month_type
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__month_type
+msgid "Month type"
+msgstr "Modalidad"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__month_type
+#: model:ir.model.fields,help:facility_management.field_facility_scheduler_mixin__month_type
+#: model:ir.model.fields,help:facility_management.field_facility_search_available_wizard__month_type
+msgid "Monthly recurrence type"
+msgstr "Tipo de recurrencia mensual"
+
+#. module: facility_management
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_reservation_scheduler__interval_type__month
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_scheduler_mixin__interval_type__month
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_search_available_wizard__interval_type__month
+msgid "Months"
+msgstr "Meses"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Fecha límite de mi actividad"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_search
+msgid "My own"
+msgstr "Mis reservas"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__name
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__name
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__name
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__name
+#: model:ir.model.fields,field_description:facility_management.field_facility_type__name
+#: model:ir.model.fields,field_description:facility_management.field_facility_weekday__name
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_tree
+msgid "Name"
+msgstr "Nombre"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__week_day_str
+#: model:ir.model.fields,help:facility_management.field_facility_scheduler_mixin__week_day_str
+#: model:ir.model.fields,help:facility_management.field_facility_search_available_wizard__week_day_str
+msgid "Name of the current weekday and repeat order in month"
+msgstr "Nombre del día de la semana actual y orden de repetición en el mes"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_facility__name
+msgid "Name of the facility"
+msgstr "Nombre de la instalación"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_reservation.py:0
+msgid "New facility"
+msgstr "Nueva instalación"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Próximo evento en el calendario de actividad"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Fecha límite de la próxima actividad"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__activity_summary
+msgid "Next Activity Summary"
+msgstr "Resumen de la siguiente actividad"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__activity_type_id
+msgid "Next Activity Type"
+msgstr "Tipo de la siguiente actividad"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__next_schedule
+#: model:ir.model.fields,field_description:facility_management.field_facility_scheduler_mixin__next_schedule
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__next_schedule
+msgid "Next schedule"
+msgstr "Próximo horario"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_facility__next_use
+msgid "Next time this facility will be used"
+msgstr "La próxima vez que será empleada esta instalación"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__next_use
+msgid "Next use"
+msgstr "Próxima ocupación"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_form
+msgid "No track"
+msgstr "Sin seguimiento"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_weekday_search
+msgid "Non working days"
+msgstr "Días no laborables"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__email_normalized
+msgid "Normalized Email"
+msgstr "Correo electrónico normalizado"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_search
+msgid "Not confirmed"
+msgstr "No confirmadas"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_search
+msgid "Not validated"
+msgstr "No validadas"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__comment
+msgid "Notes"
+msgstr "Notas"
+
+#. module: facility_management
+#: model:ir.actions.server,name:facility_management.ir_cron_notify_reservation_requests_ir_actions_server
+msgid "Notify pending reservation requests"
+msgstr "Notificar solicitudes de reserva pendientes"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__message_needaction_counter
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__message_needaction_counter
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Número de acciones"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__facility_count
+msgid "Number of active facilities in this complex"
+msgstr "Número de instalaciones en este complejo"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_massive_actions_wizard__reservation_count
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_massive_actions_wizard__target_reservation_count
+msgid "Number of chosen reservations"
+msgstr "Nº de reservas seleccionadas"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__message_has_error_counter
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__message_has_error_counter
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__message_has_error_counter
+msgid "Number of errors"
+msgstr "Número de errores"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__message_needaction_counter
+#: model:ir.model.fields,help:facility_management.field_facility_facility__message_needaction_counter
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Número de mensajes que requieren una acción"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__message_has_error_counter
+#: model:ir.model.fields,help:facility_management.field_facility_facility__message_has_error_counter
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Número de mensajes con error de entrega"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_facility__reservation_count
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__reservation_count
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__reservation_count
+msgid "Number of reservations for this facility"
+msgstr "Número de reservas para esta instalación"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__interval_number
+#: model:ir.model.fields,help:facility_management.field_facility_scheduler_mixin__interval_number
+#: model:ir.model.fields,help:facility_management.field_facility_search_available_wizard__interval_number
+msgid "Numeric value for repeat interval"
+msgstr "Intervalo numérico para intervalo de repetición"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_section_qweb
+msgid "OWNER"
+msgstr "RESPONSABLE"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_massive_actions_wizard_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_form
+msgid "Options"
+msgstr "Opciones"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_form
+msgid "Others"
+msgstr "Otros"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__owner_id
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__owner_id
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__owner_id
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__owner_id
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_search
+msgid "Owner"
+msgstr "Titular"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_kanban
+msgid "Owner:"
+msgstr "Titular:"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_form
+msgid "Ownership"
+msgstr "Propiedad"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__parent_name
+msgid "Parent name"
+msgstr "Nombre del padre"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__partner_id
+msgid "Partner"
+msgstr "Socio"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__same_company_registry_partner_id
+msgid "Partner with same Company Registry"
+msgstr "Contacto con el mismo registro de empresa"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__same_vat_partner_id
+msgid "Partner with same Tax ID"
+msgstr "Socio con el mismo NIF"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__manager_id
+#: model:ir.model.fields,help:facility_management.field_facility_facility__manager_id
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__manager_id
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__manager_id
+msgid "Person in charge of this record"
+msgstr "Responsable de este registro"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__subrogate_id
+#: model:ir.model.fields,help:facility_management.field_facility_facility__subrogate_id
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__subrogate_id
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__subrogate_id
+msgid "Person who assumes the obligations of the owner"
+msgstr "Persona que asume las obligaciones del titular"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__phone
+msgid "Phone"
+msgstr "Teléfono"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.email_body_reservation_requests
+msgid ""
+"Please confirm these reservations as soon as possible, as they\n"
+"          are crucial for the proper performance of those who request them."
+msgstr ""
+"Por favor, confirma estas reservas lo antes posible, ya que son\n"
+"          fundamentales para el correcto desempeño de quienes las solicitan."
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__supervisor_ids
+msgid ""
+"Preferred supervisors are primarily designated to approve room reservations within this complex. Keep in mind users "
+"should have the appropriate permissions"
+msgstr ""
+"Los supervisores preferidos están designados principalmente para aprobar las reservas de instalaciones dentro de este "
+"complejo. Tenga en cuenta que estos usuarios deben tener los permisos adecuados"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__prerogative
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__prerogative
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__prerogative
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__prerogative
+msgid "Prerogative"
+msgstr "Prerrogativa"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reporting_wizard_form
+msgid "Print report"
+msgstr "Imprimir informe"
+
+#. module: facility_management
+#: model:ir.ui.menu,name:facility_management.menu_facility_reporting_wizard
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reporting_wizard_form
+msgid "Print schedules"
+msgstr "Imprimir horarios"
+
+#. module: facility_management
+#: model:ir.model,name:facility_management.model_facility_scheduler_mixin
+msgid "Provides the necessary functionality to schedule dates"
+msgstr "Proporciona la funcionalidad necesaria para planificar fechas"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__ref
+msgid "Reference"
+msgstr "Referencia"
+
+#. module: facility_management
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_complex_facility_reservation_rel__state__rejected
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_reservation__state__rejected
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_reservation_massive_actions_wizard__state__rejected
+msgid "Rejected"
+msgstr "Rechazada"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.res_config_settings_view_form
+msgid "Rejection"
+msgstr "Rechazo"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__parent_id
+msgid "Related Company"
+msgstr "Compañía vinculada"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_form
+msgid "Remove"
+msgstr "Eliminar"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__repeat
+#: model:ir.model.fields,field_description:facility_management.field_facility_scheduler_mixin__repeat
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__repeat
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_search_available_wizard_form
+msgid "Repeat"
+msgstr "Repetir"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__interval_number
+#: model:ir.model.fields,field_description:facility_management.field_facility_scheduler_mixin__interval_number
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__interval_number
+msgid "Repeat every"
+msgstr "Repetir cada"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__finish_number
+#: model:ir.model.fields,field_description:facility_management.field_facility_scheduler_mixin__finish_number
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__finish_number
+msgid "Repetitions"
+msgstr "Repeticiones"
+
+#. module: facility_management
+#: model:ir.model,name:facility_management.model_ir_actions_report
+msgid "Report Action"
+msgstr "Acción de informe"
+
+#. module: facility_management
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_complex_facility_reservation_rel__state__requested
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_reservation__state__requested
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_reservation_massive_actions_wizard__state__requested
+msgid "Requested"
+msgstr "Solicitada"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex_facility_reservation_rel__reservation_id
+msgid "Reservation"
+msgstr "Reserva"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_reservation.py:0
+#: code:addons/facility_management/models/facility_scheduler_mixin.py:0
+#: model:ir.model.constraint,message:facility_management.constraint_facility_reservation_positive_interval
+#: model:ir.model.constraint,message:facility_management.constraint_facility_reservation_scheduler_positive_interval
+#: model:ir.model.constraint,message:facility_management.constraint_facility_scheduler_mixin_positive_interval
+#: model:ir.model.constraint,message:facility_management.constraint_facility_search_available_wizard_positive_interval
+msgid "Reservation cannot finish before it starts"
+msgstr "La reserva no puede terminar antes de comenzar"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__reservation_count
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__reservation_count
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__reservation_count
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_massive_actions_wizard__reservation_count
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__reservation_count
+msgid "Reservation count"
+msgstr "Nº de reservas"
+
+#. module: facility_management
+#: model:mail.message.subtype,name:facility_management.message_subtype_facility_reservation_state_confirmed
+msgid "Reservation has been confirmed"
+msgstr "La reserva ha sido confirmada"
+
+#. module: facility_management
+#: model:mail.message.subtype,name:facility_management.message_subtype_facility_reservation_state_pending
+msgid "Reservation has been pending"
+msgstr "La reserva ha pasado a pendiente"
+
+#. module: facility_management
+#: model:mail.message.subtype,name:facility_management.message_subtype_facility_reservation_state_rejected
+msgid "Reservation has been rejected"
+msgstr "La reserva ha sido rechazada"
+
+#. module: facility_management
+#: model:mail.message.subtype,name:facility_management.message_subtype_facility_reservation_has_updated
+msgid "Reservation has been updated"
+msgstr "La reserva ha sido actualizada"
+
+#. module: facility_management
+#: model:mail.template,name:facility_management.mail_notify_reservation_requests
+msgid "Reservation requests awaiting confirmation"
+msgstr "Solicitudes de reserva pendientes de confirmación"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_search
+msgid "Reservation scheduler search view"
+msgstr "Vista de búsqueda del planificador de reservas"
+
+#. module: facility_management
+#: model:ir.actions.act_window,name:facility_management.action_facility_reservation_scheduler_act_window
+msgid "Reservation schedulers"
+msgstr "Planificadores de reservas"
+
+#. module: facility_management
+#: model:ir.actions.act_window,name:facility_management.action_reservations_act_window
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__reservation_ids
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__reservation_ids
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_massive_actions_wizard__reservation_ids
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__reservation_ids
+#: model:ir.ui.menu,name:facility_management.menu_facility_management_reservations
+#: model:ir.ui.menu,name:facility_management.menu_reservations
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_form
+msgid "Reservations"
+msgstr "Reservas"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_search
+msgid "Reservations that I am responsible for"
+msgstr "Mostrar las reservas de las cuales soy responsable"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_massive_actions_wizard__target_reservation_ids
+msgid "Reservations will be affected by chosen action"
+msgstr "Las reservas se verán afectadas por la acción elegida"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_form
+msgid "Reserve"
+msgstr "Reservar"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__activity_user_id
+msgid "Responsible User"
+msgstr "Usuario responsable"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_search_available_wizard_form
+msgid "Restrictions"
+msgstr "Restricciones"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__user_id
+msgid "Salesperson"
+msgstr "Vendedor"
+
+#. module: facility_management
+#: model:facility.weekday,name:facility_management.facility_weekday_saturday
+msgid "Saturday"
+msgstr "Sábado"
+
+#. module: facility_management
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_reservation_scheduler__state__schedule
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_search_available_wizard_form
+msgid "Schedule"
+msgstr "Progamación"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_scheduler_mixin.py:0
+msgid "Schedule time out of training action timespan"
+msgstr "Horario fuera del intervalo de la acción formativa"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_tree
+msgid "Scheduled"
+msgstr "Reservas"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_form
+msgid "Scheduler"
+msgstr "Programador"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__scheduler_id
+msgid "Scheduler to which the reservation belongs"
+msgstr "Matriz a la que pertenece la reserva"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.res_config_settings_view_form
+msgid "Schedulers"
+msgstr "Programadores"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_search_available_wizard_form
+msgid "Search"
+msgstr "Buscar"
+
+#. module: facility_management
+#. odoo-javascript
+#: code:addons/facility_management/static/src/js/cog_menu.esm.js:0
+#: code:addons/facility_management/static/src/xml/cog_menu.xml:0
+#: model:ir.actions.server,name:facility_management.action_facility_search_available_wizard
+#: model:ir.ui.menu,name:facility_management.menu_search_available_facilities
+msgid "Search available"
+msgstr "Buscar disponibles"
+
+#. module: facility_management
+#: model:ir.actions.act_window,name:facility_management.action_search_available_facilities_act_window
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_search_available_wizard_form
+msgid "Search available facilities"
+msgstr "Buscar instalaciones disponibles"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_tree
+msgid "Seats"
+msgstr "Puestos"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_scheduler_mixin.py:0
+msgid "Security loop limit for reservations ({}) exceeded"
+msgstr "Se superó el límite de bucle de seguridad para reservas ({})"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_search
+msgid "See only facility reservations created with a scheduler"
+msgstr "Visualizar solo las reservas de instalaciones creadas con un planificador"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex_facility_reservation_rel__reservation_id
+msgid "Selected time slot indicating when the facility is reserved"
+msgstr "Franja horaria seleccionada que indica cuándo está reservada la instalación"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__self
+msgid "Self"
+msgstr "Propio"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.email_body_reservation_requests
+msgid "Send an email"
+msgstr "Enviar un correo electrónico"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_scheduler_mixin.py:0
+msgid "Session must last at least one minute"
+msgstr "La sesión debe durar al menos un minuto"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_form
+msgid "Setup"
+msgstr "Configuración"
+
+#. module: facility_management
+#: model:ir.actions.server,name:facility_management.action_facility_setup_scheduler_server
+msgid "Setup scheduler"
+msgstr "Configurar planificador"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.res_config_settings_view_form
+msgid "Setup schedulers"
+msgstr "Configurar planificadores"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.res_config_settings_view_form
+msgid "Setup weekdays"
+msgstr "Configurar días de la semana"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__partner_share
+msgid "Share Partner"
+msgstr "Compartir partner"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_search
+msgid "Show all"
+msgstr "Mostrar todas"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_search_available_wizard_form
+msgid "Show found facilities using all the window"
+msgstr "Mostrar las instalaciones encontradas usando toda la ventana"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_weekday_search
+msgid "Show non working days"
+msgstr "Mostrar días no laborables"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_form
+msgid "Show related facilities"
+msgstr "Mostrar instalaciones relacionadas"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_facility__reservation_ids
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_form
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_kanban
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_tree
+msgid "Show related reservations"
+msgstr "Mostrar reservas relacionadas"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_weekday_search
+msgid "Show weekdays only"
+msgstr "Mostrar solo los días de semana"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__signup_type
+msgid "Signup Token Type"
+msgstr "Tipo de token de registro"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__starred_message_ids
+msgid "Starred Message"
+msgstr "Mensaje destacado"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__state_id
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex_facility_reservation_rel__state
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__state
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_massive_actions_wizard__state
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__state
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_form
+msgid "State"
+msgstr "Estado"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_kanban
+msgid "State:"
+msgstr "Estado:"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Estado basado en actividades\n"
+"Atrasado: la fecha de vencimiento ya pasó\n"
+"Hoy: la fecha de la actividad es hoy\n"
+"Planeado: Actividades futuras."
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__street
+msgid "Street"
+msgstr "Calle"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_form
+msgid "Street 2..."
+msgstr "Calle # 2..."
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_form
+msgid "Street..."
+msgstr "Calle..."
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__street2
+msgid "Street2"
+msgstr "Calle # 2"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__subrogate_id
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__subrogate_id
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__subrogate_id
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__subrogate_id
+msgid "Subrogate"
+msgstr "Delegar"
+
+#. module: facility_management
+#: model:facility.weekday,name:facility_management.facility_weekday_sunday
+msgid "Sunday"
+msgstr "Domingo"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__supervisor_ids
+msgid "Supervisors"
+msgstr "Supervisores"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_section_qweb
+msgid "TIME"
+msgstr "HORA"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__category_id
+msgid "Tags"
+msgstr "Etiquetas"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_massive_actions_wizard__target_reservation_count
+msgid "Target count"
+msgstr "Nº de objetivos"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reporting_wizard__facility_ids
+msgid "Target facilities"
+msgstr "Instalaciones objetivo"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_massive_actions_wizard__target_reservation_ids
+msgid "Target reservations"
+msgstr "Reservas objetivo"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__vat
+msgid "Tax ID"
+msgstr "ID del impuesto"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__vat_label
+msgid "Tax ID Label"
+msgstr "Etiqueta del ID fiscal"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.facility_reservation_has_changed_email
+msgid ""
+"Thank you for your\n"
+"                    understanding and flexibility."
+msgstr ""
+"Gracias por tu\n"
+"                    comprensión y flexibilidad."
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.email_body_reservation_requests
+msgid "Thanks,"
+msgstr "Gracias,"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"El código de país ISO en dos caracteres.\n"
+"Puedes usar este campo para una búsqueda rápida."
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__vat
+msgid ""
+"The Tax Identification Number. Values here will be validated based on the country format. You can use '/' to indicate "
+"that the partner is not subject to tax."
+msgstr ""
+"El Número de Identificación Fiscal. Complételo si el contacto está sujeto a impuestos gubernamentales. Se utiliza en "
+"algunas declaraciones legales."
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__company_id
+#: model:ir.model.fields,help:facility_management.field_facility_complex_facility_reservation_rel__company_id
+#: model:ir.model.fields,help:facility_management.field_facility_facility__company_id
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__company_id
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__company_id
+msgid "The company this record belongs to"
+msgstr "La empresa a la que pertenece este registro"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_reservation_scheduler.py:0
+#: code:addons/facility_management/models/facility_scheduler_mixin.py:0
+msgid "The day of the week corresponding to the start date is not among the selected days of the week"
+msgstr "El día de la semana correspondiente a la fecha de inicio no está entre los días de la semana seleccionados"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.facility_reservation_has_changed_email
+msgid ""
+"The details of these\n"
+"                    changes are reflected below."
+msgstr ""
+"Los detalles de estos\n"
+"                    cambios se reflejan a continuación."
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_scheduler_mixin.py:0
+#: model:ir.model.constraint,message:facility_management.constraint_facility_reservation_scheduler_finish_after_begins
+#: model:ir.model.constraint,message:facility_management.constraint_facility_scheduler_mixin_finish_after_begins
+#: model:ir.model.constraint,message:facility_management.constraint_facility_search_available_wizard_finish_after_begins
+msgid "The end date must be after the start date"
+msgstr "La fecha de finalización debe ser posterior a la fecha de inicio"
+
+#. module: facility_management
+#: model:mail.message.subtype,description:facility_management.message_subtype_facility_reservation_has_updated
+msgid "The facility reservation has been changed"
+msgstr "La reserva de la instalación ha sido modificada"
+
+#. module: facility_management
+#: model:mail.message.subtype,description:facility_management.message_subtype_facility_reservation_state_rejected
+msgid ""
+"The facility reservation has been rejected. You may request a new\n"
+"            reservation or reach out to the complex administrator."
+msgstr ""
+"La reserva de la instalación ha sido rechazada. Puede solicitar una nueva reserva o comunicarse con el administrador "
+"del complejo."
+
+#. module: facility_management
+#: model:mail.message.subtype,description:facility_management.message_subtype_facility_reservation_state_pending
+msgid ""
+"The facility reservation has been reverted to pending\n"
+"            status."
+msgstr "La reserva de la instalación ha sido revertida al estado «pendiente»."
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__user_id
+msgid "The internal user in charge of this contact."
+msgstr "La usuaria interna a cargo de este contacto."
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/wizard/facility_reporting_wizard.py:0
+msgid "The interval cannot end without having started"
+msgstr "El intervalo no puede terminar sin haber comenzado"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_reservation.py:0
+msgid "The name must be at least 5 characters long."
+msgstr "El nombre debe tener al menos 5 caracteres."
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_facility.py:0
+#: model:ir.model.constraint,message:facility_management.constraint_facility_facility_USERS_GREATER_OR_EQUAL_TO_ZERO
+msgid "The number of users must be greater than or equal to zero"
+msgstr "El número de usuarios debe ser mayor o igual a cero"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_facility.py:0
+#: model:ir.model.constraint,message:facility_management.constraint_facility_facility_EXCESS_GREAT_OR_EQUAL_THAN_USERS
+msgid ""
+"The number of users that can be invited must be greater than or equal to the number of users that can use the facility"
+msgstr ""
+"El número de usuarios que pueden ser invitados debe ser mayor o igual al número de usuarios que pueden usar la "
+"instalación"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__company_registry
+msgid ""
+"The registry number of the company. Use it if it is different from the Tax ID. It must be unique across all partners of "
+"a same country"
+msgstr ""
+
+#. module: facility_management
+#: model:mail.message.subtype,description:facility_management.message_subtype_facility_reservation_state_confirmed
+msgid ""
+"The reservation is confirmed, and the facility will be available\n"
+"            for you on the selected date and time slot."
+msgstr "La reserva está confirmada y la instalación estará disponible para usted en la fecha y horario seleccionados."
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.facility_reservation_state_changed_email
+msgid ""
+"The status of the\n"
+"                    facility reservation ("
+msgstr ""
+"El estado de la\n"
+"                    reserva de la instalación ("
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_scheduler_mixin.py:0
+#: model:ir.model.constraint,message:facility_management.constraint_facility_reservation_scheduler_positive_finish_number
+#: model:ir.model.constraint,message:facility_management.constraint_facility_scheduler_mixin_positive_finish_number
+#: model:ir.model.constraint,message:facility_management.constraint_facility_search_available_wizard_positive_finish_number
+msgid "The total number of repetitions must be greater than zero"
+msgstr "El número total de repeticiones debe ser mayor que cero"
+
+#. module: facility_management
+#: model_terms:ir.actions.act_window,help:facility_management.action_facility_complex_act_window
+msgid "There are no complex yet"
+msgstr "Aún no hay complejos"
+
+#. module: facility_management
+#: model_terms:ir.actions.act_window,help:facility_management.action_facilities_act_window
+msgid "There are no facilities yet"
+msgstr "Aún no hay instalaciones"
+
+#. module: facility_management
+#: model_terms:ir.actions.act_window,help:facility_management.action_facility_type_act_window
+msgid "There are no facility types yet"
+msgstr "Todavía no hay tipos de instalaciones"
+
+#. module: facility_management
+#: model_terms:ir.actions.act_window,help:facility_management.action_reservations_act_window
+msgid "There are no reservations"
+msgstr "No hay reservas"
+
+#. module: facility_management
+#: model_terms:ir.actions.act_window,help:facility_management.action_weekdays_act_window
+msgid "There are no weekdays"
+msgstr "No hay días de la semana"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_complex.py:0
+msgid "There is already a complex with the same name in this company"
+msgstr "Ya existe un complejo con el mismo nombre en esta empresa"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_weekday.py:0
+#: model:ir.model.constraint,message:facility_management.constraint_facility_weekday_weekday_name_unique
+msgid "There is already a weekday with this name"
+msgstr "Ya existe un día de la semana con este nombre"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_weekday.py:0
+#: model:ir.model.constraint,message:facility_management.constraint_facility_weekday_weekday_sequence_unique
+msgid "There is already a weekday with this sequence"
+msgstr "Ya existe un día de la semana con esta secuencia"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_complex.py:0
+msgid "There is no user to check"
+msgstr "No hay ningún usuario que comprobar"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_reservation.py:0
+#: model:ir.model.constraint,message:facility_management.constraint_facility_reservation_unique_facility_id
+msgid "This facility is occupied by another reservation"
+msgstr "Esta instalación está ocupada por otra reserva"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_reservation.py:0
+msgid "This facility reservation has no associated scheduler"
+msgstr "Esta reserva de instalación no tiene un planificador asociado"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__email_normalized
+msgid ""
+"This field is used to search on email address as the primary email field can contain more than strictly an email "
+"address."
+msgstr ""
+"Este campo se usa para buscar en la dirección de correo electrónico, ya que el campo de correo electrónico principal "
+"puede contener más que estrictamente una dirección de correo electrónico."
+
+#. module: facility_management
+#: model:facility.weekday,name:facility_management.facility_weekday_thursday
+msgid "Thursday"
+msgstr "Jueves"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__date_delay
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__date_delay
+#: model:ir.model.fields,help:facility_management.field_facility_scheduler_mixin__date_delay
+#: model:ir.model.fields,help:facility_management.field_facility_search_available_wizard__date_delay
+msgid "Time length of the reservation"
+msgstr "Duración de la reserva"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__time_start
+#: model:ir.model.fields,help:facility_management.field_facility_scheduler_mixin__time_start
+#: model:ir.model.fields,help:facility_management.field_facility_search_available_wizard__time_start
+msgid "Time of reservation start"
+msgstr "Hora de inicio de la reserva"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__time_stop
+#: model:ir.model.fields,help:facility_management.field_facility_scheduler_mixin__time_stop
+#: model:ir.model.fields,help:facility_management.field_facility_search_available_wizard__time_stop
+msgid "Time of reservation stop"
+msgstr "Hora de finalización de la reserva"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.email_body_reservation_requests
+msgid "Time slot"
+msgstr "Franja horaria"
+
+#. module: facility_management
+#: model:ir.model,name:facility_management.model_time_span_report_mixin
+msgid "Time span report mixin"
+msgstr "Informe para el intervalo de tiempo"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__time_start
+#: model:ir.model.fields,field_description:facility_management.field_facility_scheduler_mixin__time_start
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__time_start
+msgid "Time start"
+msgstr "Hora inicial"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__time_stop
+#: model:ir.model.fields,field_description:facility_management.field_facility_scheduler_mixin__time_stop
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__time_stop
+msgid "Time stop"
+msgstr "Hora final"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__tz
+msgid "Timezone"
+msgstr "Zona horaria"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__tz_offset
+msgid "Timezone offset"
+msgstr "Compensación de zona horaria"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__title
+msgid "Title"
+msgstr "Título"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__finish_number
+#: model:ir.model.fields,help:facility_management.field_facility_scheduler_mixin__finish_number
+#: model:ir.model.fields,help:facility_management.field_facility_search_available_wizard__finish_number
+msgid "Total number of repetitions"
+msgstr "Número total de repeticiones"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__reservation_count
+msgid "Total number of reservations made for this facility complex"
+msgstr "Número total de reservas realizadas para este complejo"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__unconfirmed_reservation_count
+msgid "Total reservations awaiting confirmation for this facility complex"
+msgstr "Total de reservas pendientes de confirmación para este complejo"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_massive_actions_wizard__tracking_disable
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__tracking_disable
+msgid "Tracking disable"
+msgstr "Seguimiento deshabilitado"
+
+#. module: facility_management
+#: model:facility.weekday,name:facility_management.facility_weekday_tuesday
+msgid "Tuesday"
+msgstr "Martes"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__type_id
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__type_id
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__type_id
+msgid "Type"
+msgstr "Tipo"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_facility__type_id
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__type_id
+msgid "Type of facility"
+msgstr "Tipo de instalación"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_reservation__type_id
+msgid "Type of the chosen facility"
+msgstr "Tipo de instalación elegida"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Tipo de actividad de excepción registrada."
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__type_ids
+#: model:ir.ui.menu,name:facility_management.menu_facility_type
+msgid "Types"
+msgstr "Tipos"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_form
+msgid "Unbind"
+msgstr "Desvincular"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/wizard/facility_reservation_massive_actions_wizard.py:0
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_form
+msgid "Unbind from scheduler"
+msgstr "Desvincular del planificador"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__unconfirmed_reservation_ids
+msgid "Unconfirmed reservations"
+msgstr "Reservas no confirmadas"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/wizard/facility_reservation_massive_actions_wizard.py:0
+msgid "Unknown wizard action"
+msgstr "Acción de asistente desconocida"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_massive_actions_wizard__update_date_start
+msgid "Update date start"
+msgstr "Actualizar inicio"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_massive_actions_wizard__update_date_stop
+msgid "Update date stop"
+msgstr "Actualizar finalización"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_massive_actions_wizard__update_state
+msgid "Update state"
+msgstr "Actualizar estado"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_massive_actions_wizard__update_validate
+msgid "Update validate"
+msgstr "Actualizar validación"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/wizard/facility_reservation_massive_actions_wizard.py:0
+msgid "Update values"
+msgstr "Actualizar valores"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__barcode
+msgid "Use a barcode to identify this contact."
+msgstr "Usar un código de barras para identificar este contacto."
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__user_ids
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__users
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__users
+msgid "Users"
+msgstr "Usuarios"
+
+#. module: facility_management
+#: model:res.groups,comment:facility_management.facility_group_monitor
+msgid "Users who can authorize the requested facility reservations"
+msgstr "Usuarios que pueden autorizar las reservas de instalaciones solicitadas"
+
+#. module: facility_management
+#: model:res.groups,comment:facility_management.facility_group_manager
+msgid "Users who can create/edit information in all models"
+msgstr "Usuarios que pueden crear/editar información en todos los modelos"
+
+#. module: facility_management
+#: model:res.groups,comment:facility_management.facility_group_consultant
+msgid "Users who can only consult facilities and reservations"
+msgstr "Usuarios que solo pueden consultar instalaciones y reservas"
+
+#. module: facility_management
+#: model:res.groups,comment:facility_management.facility_group_applicant
+msgid "Users who can request a facility reservation"
+msgstr "Usuarios que pueden solicitar una reserva de instalaciones"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_facility__users_str
+msgid "Users/Excess"
+msgstr "Plazas/rebase"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation__validate
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_massive_actions_wizard__validate
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__validate
+msgid "Validate"
+msgstr "Validar"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_massive_actions_wizard_form
+msgid "Values"
+msgstr "Valores"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_search
+msgid "View only facility reservations not created with a scheduler"
+msgstr "Ver solo las reservas de instalaciones no creadas con un planificador"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.email_body_reservation_requests
+msgid "View reservation"
+msgstr "Ver reserva"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__website
+msgid "Website Link"
+msgstr "Enlace de página web"
+
+#. module: facility_management
+#: model:facility.weekday,name:facility_management.facility_weekday_wednesday
+msgid "Wednesday"
+msgstr "Miércoles"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/report/time_span_report_mixin.py:0
+msgid "Week from {} to  {}"
+msgstr "Semana del {} al {}"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__weekday
+#: model:ir.model.fields,field_description:facility_management.field_facility_scheduler_mixin__weekday
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__weekday
+#: model:ir.model.fields,field_description:facility_management.field_facility_weekday__sequence
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_reservation_scheduler__month_type__week
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_scheduler_mixin__month_type__week
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_search_available_wizard__month_type__week
+msgid "Weekday"
+msgstr "Día de semana"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_weekday.py:0
+#: model:ir.model.constraint,message:facility_management.constraint_facility_weekday_weekday_sequence_range
+msgid "Weekday must be between 1 (Monday) and 7 (Sunday)"
+msgstr "El día de la semana debe estar entre 1 (lunes) y 7 (domingo)"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__week_day_str
+#: model:ir.model.fields,field_description:facility_management.field_facility_scheduler_mixin__week_day_str
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__week_day_str
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__weekday
+#: model:ir.model.fields,help:facility_management.field_facility_scheduler_mixin__weekday
+#: model:ir.model.fields,help:facility_management.field_facility_search_available_wizard__weekday
+msgid "Weekday name"
+msgstr "Nombre del día de la semana"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_weekday__name
+msgid "Weekday name (e.g., Monday)"
+msgstr "Nombre del día de la semana"
+
+#. module: facility_management
+#: model:ir.actions.act_window,name:facility_management.action_weekdays_act_window
+#: model:ir.model.fields,field_description:facility_management.field_facility_reservation_scheduler__weekday_ids
+#: model:ir.model.fields,field_description:facility_management.field_facility_scheduler_mixin__weekday_ids
+#: model:ir.model.fields,field_description:facility_management.field_facility_search_available_wizard__weekday_ids
+#: model_terms:ir.ui.view,arch_db:facility_management.res_config_settings_view_form
+msgid "Weekdays"
+msgstr "Días de semana"
+
+#. module: facility_management
+#: model_terms:ir.actions.report,help:facility_management.action_report_facility_management_facility
+msgid "Weekly timetable for facilities"
+msgstr "Horario semanal de las instalaciones"
+
+#. module: facility_management
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_reservation_scheduler__interval_type__week
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_scheduler_mixin__interval_type__week
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_search_available_wizard__interval_type__week
+msgid "Weeks"
+msgstr "Semanas"
+
+#. module: facility_management
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_reservation_scheduler__finish_type__date
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_scheduler_mixin__finish_type__date
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_search_available_wizard__finish_type__date
+msgid "When passing"
+msgstr "Al pasar"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_complex__tz
+msgid ""
+"When printing documents and exporting/importing data, time values are computed according to this timezone.\n"
+"If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
+"Anywhere else, time values are computed according to the time offset of your web client."
+msgstr ""
+"Al imprimir documentos y exportar/importar datos, los valores de tiempo se calculan de acuerdo con esta zona horaria.\n"
+"Si no se establece la zona horaria, se utiliza UTC (hora universal coordinada).\n"
+"En cualquier otro lugar, los valores de tiempo se calculan de acuerdo con el desplazamiento de tiempo de su cliente web."
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_search
+msgid "With no repeat"
+msgstr "Sin repetición"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_search
+msgid "With repeat"
+msgstr "Con repetición"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_search
+msgid "With scheduler"
+msgstr "Con planificador"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_search
+msgid "Without scheduler"
+msgstr "Sin planificador"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_weekday__workday
+msgid "Workday"
+msgstr "Día laborable"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_weekday_search
+msgid "Working days"
+msgstr "Días laborables"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_reservation_scheduler.py:0
+msgid "Wrong weekday"
+msgstr "Día de la semana incorrecto"
+
+#. module: facility_management
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_reservation_scheduler__interval_type__year
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_scheduler_mixin__interval_type__year
+#: model:ir.model.fields.selection,name:facility_management.selection__facility_search_available_wizard__interval_type__year
+msgid "Years"
+msgstr "Años"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/wizard/facility_reporting_wizard.py:0
+msgid "You have not selected any facility"
+msgstr "No has seleccionado ninguna instalación"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.email_body_reservation_requests
+msgid ""
+"You have several reservation requests awaiting confirmation for\n"
+"          the complex"
+msgstr ""
+"Tienes varias solicitudes de reserva pendientes de confirmación para\n"
+"          el complejo"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_reservation.py:0
+msgid "You lack permission to confirm reservations in this complex"
+msgstr "No tienes permisos para confirmar reservas en este complejo"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_scheduler_mixin.py:0
+msgid "You must choose at least one day of the week"
+msgstr "Debes elegir al menos un día de la semana"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_reservation_scheduler.py:0
+msgid "You must select a facility to make the reservation"
+msgstr "Debes seleccionar una instalación para hacer la reserva"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_form
+msgid "ZIP"
+msgstr "CÓDIGO POSTAL"
+
+#. module: facility_management
+#: model:ir.model.fields,field_description:facility_management.field_facility_complex__zip
+msgid "Zip"
+msgstr "Código postal"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_form
+msgid "facility_complex_form"
+msgstr ""
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_search
+msgid "facility_complex_search"
+msgstr ""
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_complex_tree
+msgid "facility_complex_tree"
+msgstr ""
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_form
+msgid "facility_form"
+msgstr ""
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_form
+msgid "facility_reservation_form"
+msgstr ""
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_search
+msgid "facility_reservation_search"
+msgstr ""
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_tree
+msgid "facility_reservation_tree"
+msgstr ""
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_search
+msgid "facility_search"
+msgstr ""
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_tree
+msgid "facility_tree"
+msgstr ""
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_type_form
+msgid "facility_type_form"
+msgstr ""
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_type_search
+msgid "facility_type_search"
+msgstr ""
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_type_tree
+msgid "facility_type_tree"
+msgstr ""
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_weekday_form
+msgid "facility_weekday_form"
+msgstr ""
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_weekday_search
+msgid "facility_weekday_search"
+msgstr ""
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_weekday_tree
+msgid "facility_weekday_tree"
+msgstr ""
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_facility.py:0
+msgid "{} - Reservations"
+msgstr "{} - Reservas"

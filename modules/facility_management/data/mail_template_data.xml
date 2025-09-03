@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo noupdate="0">
+
+  <record id="mail_notify_reservation_requests" model="mail.template">
+    <field name="name">Reservation requests awaiting confirmation</field>
+    <field name="subject">${object.name} - Reservation requests awaiting confirmation</field>
+    <field name="email_from">${object.company_id.name} &lt;${(object.company_id.email or
+      user.email)|safe}&gt;</field>
+    <field name="email_to">${object.manager_id.name}
+      &lt;${(object.manager_id.email_normalized)|safe}&gt;</field>
+    <!-- <field name="user_signature" eval="True" /> -->
+    <field name="auto_delete" eval="True"/>
+    <field name="model_id" ref="facility_management.model_facility_complex"/>
+    <field name="body_html"><![CDATA[
+        <t t-call="facility_management.email_layout">
+
+          <!-- Set header variables -->
+          <t t-set="title"> </t>
+          <t t-set="subtitle">Reservation requests awaiting confirmation</t>
+          <t t-set="logo_src">/logo.png?company=</t>
+
+          <!-- Build the inner body by calling the content template -->
+          <t t-set="body_html">
+            <t t-call="facility_management.email_body_reservation_requests"/>
+          </t>
+
+        </t>
+      ]]></field>
+  </record>
+
+</odoo>

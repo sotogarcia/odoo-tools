@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo noupdate="1">
+
+    <record id="facility_complex_main_complex" model="facility.complex">
+        <field name="company_id" ref="base.main_company"/>
+        <field name="code">MAIN</field>
+        <field name="name">Main complex</field>
+        <field name="description"
+            ><![CDATA[Group of buildings used for most of the classes]]></field>
+        <field name="active" eval="True"/>
+        <field name="street">San Roque, 34</field>
+        <field name="city">Vigo</field>
+        <field name="zip">36205</field>
+        <field name="state_id" ref="base.state_es_po"/>
+        <field name="country_id" ref="base.es"/>
+        <field name="owner_id" ref="base.user_admin"/>
+    </record>
+
+    <record id="facility_complex_auxiliary_complex" model="facility.complex">
+        <field name="company_id" ref="base.main_company"/>
+        <field name="code">AUX</field>
+        <field name="name">Auxiliary complex</field>
+        <field name="description"
+            ><![CDATA[Group of buildings used for specific activities]]></field>
+        <field name="active" eval="True"/>
+        <field name="street">Campolabrado, 1</field>
+        <field name="street2">Narahío</field>
+        <field name="city"><![CDATA[San Sadurniño]]></field>
+        <field name="zip">15576</field>
+        <field name="state_id" ref="base.state_es_c"/>
+        <field name="country_id" ref="base.es"/>
+        <field name="owner_id" ref="base.user_admin"/>
+    </record>
+
+    <record id="facility_complex_test_complex" model="facility.complex">
+        <field name="company_id" ref="base.main_company"/>
+        <field name="code">TC</field>
+        <field name="name">Test complex</field>
+        <field name="description"
+            ><![CDATA[Group of buildings used for specific activities]]></field>
+        <field name="active" eval="True"/>
+        <field name="street">Severo Ochoca, 4</field>
+        <field name="street2"/>
+        <field name="city"><![CDATA[Vigo]]></field>
+        <field name="zip">36202</field>
+        <field name="state_id" ref="base.state_es_po"/>
+        <field name="country_id" ref="base.es"/>
+        <field name="owner_id" ref="base.user_admin"/>
+        <field name="supervisor_ids" eval="[(4, ref('base.user_admin'), 0)]"/>
+    </record>
+
+</odoo>

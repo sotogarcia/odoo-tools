@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo noupdate="0">
+
+  <!--
+      Generic email layout wrapper
+      This template defines the structure of an email with
+      header, body and footer sections.
+  -->
+
+  <template id="email_body_reservation_requests"
+            name="Email Body - Reservation Requests">
+    <t t-name="facility_management.email_body_reservation_requests">
+      <div style="font-size:13px;text-align:justify;">
+        <p style="margin:0.5em 0 1em 0;">Hello,</p>
+
+        <p style="margin:0.5em 0;">
+          You have several reservation requests awaiting confirmation for
+          the complex
+          <a t-att-href="object.get_form_view_url()" target="_blank"
+             style="font-weight:bold;">
+            <t t-esc="object.name"/>
+          </a>.
+        </p>
+
+        <p style="margin:0.5em 0;">
+          Please confirm these reservations as soon as possible, as they
+          are crucial for the proper performance of those who request them.
+        </p>
+
+        <table style="border:1px solid #CCC;border-collapse:collapse;width:100%;">
+          <thead>
+            <tr>
+              <th style="padding:3px 6px;border:1px solid #CCC;">Facility</th>
+              <th style="padding:3px 6px;border:1px solid #CCC;">Time slot</th>
+              <th style="padding:3px 6px;border:1px solid #CCC;">Applicant</th>
+              <th style="padding:3px 6px;border:1px solid #CCC;text-align:center;">
+                Go
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <t t-foreach="ctx.get('rows', [])" t-as="row">
+              <tr>
+                <td style="padding:3px 6px;border:1px solid #CCC;vertical-align:top;
+                           white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                  <a t-att-href="row['facility_url']" target="_blank"
+                     style="text-decoration:none;color:inherit;display:block;"
+                     t-att-title="row['facility']">
+                    <t t-esc="row['facility']"/>
+                  </a>
+                  <span style="font-size:smaller;display:block;color:#999;">
+                    (<t t-esc="row['create_date']"/>)
+                  </span>
+                </td>
+
+                <td style="padding:3px 6px;border:1px solid #CCC;vertical-align:top;">
+                  <span style="display:block;"><t t-esc="row['date_start']"/></span>
+                  <span style="display:block;"><t t-esc="row['date_stop']"/></span>
+                </td>
+
+                <td style="padding:3px 6px;border:1px solid #CCC;vertical-align:top;">
+                  <t t-if="row.get('manager_email')">
+                    <a t-att-href="'mailto:%s' % row['manager_email']" target="_self"
+                       style="text-decoration:none;color:inherit;display:block;"
+                       title="Send an email">
+                      <t t-esc="row['manager']"/>
+                    </a>
+                  </t>
+                  <t t-if="not row.get('manager_email')">
+                    <t t-esc="row['manager']"/>
+                  </t>
+                  <t t-if="row.get('manager_phone')">
+                    <a t-att-href="'tel:%s' % row['manager_phone']" target="_self"
+                       style="font-size:smaller;text-decoration:none;color:#999;
+                              display:block;"
+                       title="Call by phone">
+                      <t t-esc="row['manager_phone']"/>
+                    </a>
+                  </t>
+                </td>
+
+                <td style="padding:3px 6px;border:1px solid #CCC;vertical-align:top;
+                           text-align:center;"
+                    title="View reservation">
+                  <a t-att-href="row['url']" target="_blank"
+                     style="text-decoration:none;color:inherit;">
+                    #<t t-esc="row['id']"/>
+                  </a>
+                </td>
+              </tr>
+            </t>
+          </tbody>
+        </table>
+
+        <p style="margin:1em 0 0.5em 0;">Thanks,</p>
+        <p style="margin:0.5em 0;">
+          <a t-att-href="'mailto:%s' % user.email"
+             t-att-title="'Send mail to %s' % user.name">
+            <t t-esc="user.name"/>
+          </a>
+        </p>
+      </div>
+    </t>
+  </template>
+
+</odoo>

@@ -1,0 +1,44 @@
+/* REPORT
+ * facility_management.view_facility_section_qweb
+ */
+
+section.report-facility-section table.week-timetable {
+    table-layout: fixed;
+    font-size: smaller!important;
+}
+
+section.report-facility-section table.week-timetable thead th {
+    border-bottom-style: double!important;
+    border-bottom-width: 3px!important;
+    background-color: #356ea3;
+    color: white;
+}
+
+section.report-facility-section table.week-timetable tr.session:not(.session-first) td {
+    border-top-style: dotted!important;
+}
+
+section.report-facility-section table.week-timetable tr.session:not(.session-last) td {
+    border-bottom-style: dotted!important;
+}
+
+
+section.report-facility-section table.week-timetable tr.session:not(.session-first) td:first-child {
+    border-top-style: none!important;
+}
+
+section.report-facility-section table.week-timetable tr.session:not(.session-last) td:first-child {
+    border-bottom-style: none!important;
+}
+
+section.report-facility-section table.week-timetable tbody .session-first td {
+    border-top-width: 1px!important;
+}
+
+section.report-facility-section table.week-timetable tbody .session-last td {
+    border-bottom-width: 1px!important;
+}
+
+section.report-facility-section table.week-timetable tbody tr.day-even td {
+    background-color:  #E9ECEF;
+}

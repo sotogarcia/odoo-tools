@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo noupdate="1">
+
+    <record id="facility_weekday_monday" model="facility.weekday">
+        <field name="name">Monday</field>
+        <field name="workday" eval="True"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="facility_weekday_tuesday" model="facility.weekday">
+        <field name="name">Tuesday</field>
+        <field name="workday" eval="True"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="facility_weekday_wednesday" model="facility.weekday">
+        <field name="name">Wednesday</field>
+        <field name="workday" eval="True"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="facility_weekday_thursday" model="facility.weekday">
+        <field name="name">Thursday</field>
+        <field name="workday" eval="True"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="facility_weekday_friday" model="facility.weekday">
+        <field name="name">Friday</field>
+        <field name="workday" eval="True"/>
+        <field name="sequence" eval="5"/>
+    </record>
+
+    <record id="facility_weekday_saturday" model="facility.weekday">
+        <field name="name">Saturday</field>
+        <field name="workday" eval="False"/>
+        <field name="sequence" eval="6"/>
+    </record>
+
+    <record id="facility_weekday_sunday" model="facility.weekday">
+        <field name="name">Sunday</field>
+        <field name="workday" eval="False"/>
+        <field name="sequence" eval="7"/>
+    </record>
+
+</odoo>
