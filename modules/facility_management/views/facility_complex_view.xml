@@ -17,6 +17,7 @@
     <record id="view_facility_complex_tree" model="ir.ui.view">
         <field name="name">view.complex.tree</field>
         <field name="model">facility.complex</field>
+        <field name="type">list</field>
         <field name="priority" eval="16"/>
         <field name="active" eval="True"/>
         <field name="arch" type="xml">
@@ -26,7 +27,8 @@
                 <field name="company_id" class="oe_field_company_id"/>
                 <field name="manager_id" class="oe_field_manager_id"/>
                 <field name="facility_count" class="oe_field_facility_count"/>
-                <field name="unconfirmed_reservation_count" class="oe_field_unconfirmed_reservation_count" string="Awaiting"/>
+                <field name="unconfirmed_reservation_count"
+                    class="oe_field_unconfirmed_reservation_count" string="Awaiting"/>
             </list>
         </field>
     </record>
@@ -35,23 +37,31 @@
     <record id="view_facility_complex_form" model="ir.ui.view">
         <field name="name">view.complex.form</field>
         <field name="model">facility.complex</field>
+        <field name="type">form</field>
         <field name="priority" eval="16"/>
         <field name="active" eval="True"/>
         <field name="arch" type="xml">
             <form string="facility_complex_form">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="view_reservations" type="object" class="oe_stat_button oe_read_only" icon="fa-spinner" help="Show related reservations">
-                            <field name="unconfirmed_reservation_count" widget="statinfo" string="Awaiting"/>
+                        <button name="view_reservations" type="object"
+                            class="oe_stat_button oe_read_only" icon="fa-spinner"
+                            help="Show related reservations">
+                            <field name="unconfirmed_reservation_count" widget="statinfo"
+                                string="Awaiting"/>
                         </button>
-                        <button name="view_facilities" type="object" class="oe_stat_button oe_read_only" icon="fa-building-o" help="Show related facilities">
+                        <button name="view_facilities" type="object"
+                            class="oe_stat_button oe_read_only" icon="fa-building-o"
+                            help="Show related facilities">
                             <field name="facility_count" widget="statinfo" string="Facilities"/>
                         </button>
                     </div>
 
-                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                        invisible="active"/>
 
-                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+                    <field name="image_1920" widget="image" class="oe_avatar"
+                        options="{'preview_image': 'image_128'}"/>
 
                     <div class="oe_title">
                         <field name="id" class="oe_field_id" invisible="1"/>
@@ -65,7 +75,8 @@
 
                         <label for="name" class="oe_edit_only"/>
                         <h1>
-                            <field name="name" class="oe_field_name" placeholder="Enter new name" required="1"/>
+                            <field name="name" class="oe_field_name" placeholder="Enter new name"
+                                required="1"/>
                         </h1>
                     </div>
 
@@ -79,12 +90,17 @@
                         <group>
                             <label for="street" string="Address"/>
                             <div class="o_address_format">
-                                <field name="street" placeholder="Street..." class="o_address_street"/>
-                                <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                <field name="street" placeholder="Street..."
+                                    class="o_address_street"/>
+                                <field name="street2" placeholder="Street 2..."
+                                    class="o_address_street"/>
                                 <field name="city" placeholder="City" class="o_address_city"/>
-                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True}"/>
+                                <field name="state_id" class="o_address_state" placeholder="State"
+                                    options="{'no_open': True}"/>
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"/>
-                                <field name="country_id" placeholder="Country" class="o_address_country" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="country_id" placeholder="Country"
+                                    class="o_address_country"
+                                    options="{'no_open': True, 'no_create': True}"/>
                             </div>
                         </group>
                     </group>
@@ -92,18 +108,22 @@
                     <notebook>
                         <page string="Description" class="oe_page_description" accesskey="D">
                             <group col="2">
-                                <field name="description" class="oe_field_description" placeholder="Enter new description" colspan="4" nolabel="1"/>
+                                <field name="description" class="oe_field_description"
+                                    placeholder="Enter new description" colspan="4" nolabel="1"/>
                             </group>
                         </page>
                         <page string="Setup" class="oe_page_setup" accesskey="S">
                             <group col="4" groups="base.group_multi_company">
-                                <field name="company_id" class="oe_field_company_id" groups="base.group_multi_company"/>
+                                <field name="company_id" class="oe_field_company_id"
+                                    groups="base.group_multi_company"/>
                                 <separator colspan="2"/>
                             </group>
-                            <group col="4" string="Ownership" groups="record_ownership.record_ownership_proxy">
+                            <group col="4" string="Ownership"
+                                groups="record_ownership.record_ownership_proxy">
                                 <field name="owner_id" class="oe_field_owner_id"/>
                                 <field name="subrogate_id" class="oe_field_subrogate_id"/>
-                                <field name="supervisor_ids" class="oe_field_supervisor_ids" widget="many2many_tags" colspan="4"/>
+                                <field name="supervisor_ids" class="oe_field_supervisor_ids"
+                                    widget="many2many_tags" colspan="4"/>
                             </group>
                             <group col="4" string="Others">
                                 <field name="tz" class="oe_field_tz"/>
@@ -112,7 +132,7 @@
                     </notebook>
                 </sheet>
 
-                <chatter />
+                <chatter/>
 
             </form>
         </field>
@@ -122,6 +142,7 @@
     <record id="view_facility_complex_search" model="ir.ui.view">
         <field name="name">view.complex.search</field>
         <field name="model">facility.complex</field>
+        <field name="type">search</field>
         <field name="priority" eval="16"/>
         <field name="active" eval="True"/>
         <field name="arch" type="xml">
@@ -133,8 +154,9 @@
                 <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
 
                 <group expand="0" name="group_by" string="Group By">
-                    <filter name="group_by_company_id" string="Company" domain="[]" context="{'group_by' : 'company_id'}"/>
-               </group>
+                    <filter name="group_by_company_id" string="Company" domain="[]"
+                        context="{'group_by' : 'company_id'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -150,11 +172,8 @@
         <field name="context">{}</field>
         <field name="search_view_id" ref="view_facility_complex_search"/>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to add new complex
-            </p><p>
-                There are no complex yet
-            </p>
+            <p class="oe_view_nocontent_create"> Click to add new complex </p>
+            <p> There are no complex yet </p>
         </field>
     </record>
 

@@ -4,34 +4,38 @@
 
     <record id="facility_reservation_1" model="facility.reservation">
         <field name="description">Meeting with the teachers</field>
-        <field name="active" eval="True" />
-        <field name="facility_id" ref="facility_management.facility_computer_classroom_a" />
-        <field name="date_start" eval="DateTime.today().strftime('%Y-%m-%d 16:00:00')" />
-        <field name="date_stop" eval="DateTime.today().strftime('%Y-%m-%d 18:00:00')" />
-        <field name="validate" eval="True" />
-        <field name="owner_id" ref="base.public_user" />
+        <field name="active" eval="True"/>
+        <field name="facility_id" ref="facility_management.facility_computer_classroom_a"/>
+        <field name="date_start" eval="DateTime.today().strftime('%Y-%m-%d 16:00:00')"/>
+        <field name="date_stop" eval="DateTime.today().strftime('%Y-%m-%d 18:00:00')"/>
+        <field name="validate" eval="True"/>
+        <field name="owner_id" ref="base.public_user"/>
         <field name="state">requested</field>
     </record>
 
     <record id="facility_reservation_2" model="facility.reservation">
         <field name="description">Meeting with the students</field>
-        <field name="active" eval="True" />
-        <field name="facility_id" ref="facility_management.facility_classroom_1" />
-        <field name="date_start" eval="(DateTime.today()+ timedelta(days=1)).strftime('%Y-%m-%d 19:00:00')" />
-        <field name="date_stop" eval="(DateTime.today()+ timedelta(days=1)).strftime('%Y-%m-%d 21:00:00')" />
-        <field name="validate" eval="True" />
-        <field name="owner_id" ref="base.user_admin" />
+        <field name="active" eval="True"/>
+        <field name="facility_id" ref="facility_management.facility_classroom_1"/>
+        <field name="date_start"
+            eval="(DateTime.today()+ timedelta(days=1)).strftime('%Y-%m-%d 19:00:00')"/>
+        <field name="date_stop"
+            eval="(DateTime.today()+ timedelta(days=1)).strftime('%Y-%m-%d 21:00:00')"/>
+        <field name="validate" eval="True"/>
+        <field name="owner_id" ref="base.user_admin"/>
         <field name="state">requested</field>
     </record>
 
     <record id="facility_reservation_3" model="facility.reservation">
         <field name="description">Project a Powerpoint</field>
-        <field name="active" eval="True" />
-        <field name="facility_id" ref="facility_management.facility_computer_projector" />
-        <field name="date_start" eval="(DateTime.today()+ timedelta(days=1)).strftime('%Y-%m-%d 19:00:00')" />
-        <field name="date_stop" eval="(DateTime.today()+ timedelta(days=1)).strftime('%Y-%m-%d 21:00:00')" />
-        <field name="validate" eval="True" />
-        <field name="owner_id" ref="base.user_root" />
+        <field name="active" eval="True"/>
+        <field name="facility_id" ref="facility_management.facility_computer_projector"/>
+        <field name="date_start"
+            eval="(DateTime.today()+ timedelta(days=1)).strftime('%Y-%m-%d 19:00:00')"/>
+        <field name="date_stop"
+            eval="(DateTime.today()+ timedelta(days=1)).strftime('%Y-%m-%d 21:00:00')"/>
+        <field name="validate" eval="True"/>
+        <field name="owner_id" ref="base.user_root"/>
         <field name="state">rejected</field>
     </record>
 

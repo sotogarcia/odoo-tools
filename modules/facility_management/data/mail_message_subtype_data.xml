@@ -8,7 +8,8 @@
         <field name="relation_field">state</field>
         <field name="default" eval="True"/>
         <field name="sequence" eval="1"/>
-        <field name="description">The facility reservation has been reverted to pending status.</field>
+        <field name="description">The facility reservation has been reverted to pending
+            status.</field>
     </record>
 
     <record id="message_subtype_facility_reservation_state_confirmed" model="mail.message.subtype">
@@ -17,7 +18,8 @@
         <field name="relation_field">state</field>
         <field name="default" eval="True"/>
         <field name="sequence" eval="1"/>
-        <field name="description">The reservation is confirmed, and the facility will be available for you on the selected date and time slot.</field>
+        <field name="description">The reservation is confirmed, and the facility will be available
+            for you on the selected date and time slot.</field>
     </record>
 
     <record id="message_subtype_facility_reservation_state_rejected" model="mail.message.subtype">
@@ -26,13 +28,14 @@
         <field name="relation_field">state</field>
         <field name="default" eval="True"/>
         <field name="sequence" eval="1"/>
-        <field name="description">The facility reservation has been rejected. You may request a new reservation or reach out to the complex administrator.</field>
+        <field name="description">The facility reservation has been rejected. You may request a new
+            reservation or reach out to the complex administrator.</field>
     </record>
 
     <record id="message_subtype_facility_reservation_has_updated" model="mail.message.subtype">
         <field name="name">Reservation has been updated</field>
         <field name="res_model">facility.reservation</field>
-        <field name="relation_field" />
+        <field name="relation_field"/>
         <field name="default" eval="True"/>
         <field name="sequence" eval="1"/>
         <field name="description">The facility reservation has been changed</field>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="facility_management.CogMenuItem">
+        <DropdownItem class="'o_facility_cog_menu'" onSelected.bind="onClick">
+            Test Cog Menu
+        </DropdownItem>
+    </t>
+</templates>
