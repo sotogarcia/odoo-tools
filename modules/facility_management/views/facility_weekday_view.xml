@@ -83,7 +83,7 @@
         <field name="context">{}</field>
         <field name="search_view_id" ref="view_facility_weekday_search"/>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create"> Click to add new Weekdays </p>
+            <p class="oe_view_nocontent_create"> Click to add new weekdays </p>
             <p> There are no weekdays </p>
         </field>
     </record>

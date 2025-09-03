@@ -32,7 +32,7 @@ class FacilityReservationScheduler(models.Model):
         readonly=False,
         index=True,
         default=None,
-        help='A short description to this reservation',
+        help='A short description for this reservation',
         size=255,
         translate=True
     )
@@ -43,7 +43,7 @@ class FacilityReservationScheduler(models.Model):
         readonly=False,
         index=False,
         default=None,
-        help='A long description to this reservation',
+        help='A long description for this reservation',
         translate=True
     )
 
@@ -92,12 +92,34 @@ class FacilityReservationScheduler(models.Model):
                 _('You must select a facility to make the reservation')
             )
 
-        if self.state == 'facility':
-            return {
-                'domain': {
-                    'facility_id': self._compute_facility_domain()
-                }
-            }
+    available_facility_ids = fields.Many2many(
+        string='Available facilities',
+        required=False,
+        readonly=True,
+        index=False,
+        default=None,
+        help=("Facilities available for the current date range. Used to "
+              "filter 'facility_id' in the UI"),
+        comodel_name='facility.facility',
+        relation='facility_reservation_scheduler_available_facility_rel',
+        column1='scheduler_id',
+        column2='facility_id',
+        domain=[],
+        context={},
+        compute="_compute_available_facility_ids",
+    )
+
+    @api.depends("state")
+    def _compute_available_facility_ids(self):
+        facility_obj = self.env["facility.facility"]
+        for record in self:
+            if record.state == 'facility':
+                domain = record._compute_facility_domain(as_string=False)
+                available_set = facility_obj.search(domain)
+            else:
+                available_set = facility_obj.browse()
+
+            record.available_facility_ids = available_set
 
     @staticmethod
     def _warning(title, message):
@@ -125,7 +147,7 @@ class FacilityReservationScheduler(models.Model):
 
     complex_id = fields.Many2one(
         string='Complex',
-        help='Complex to which the facility belongs',
+        help='Complex the facility belongs to',
         related='facility_id.complex_id',
         readonly=True
     )

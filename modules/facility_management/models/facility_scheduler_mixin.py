@@ -152,40 +152,6 @@ class FacilitySchedulerMixin(models.AbstractModel):
             if not self._in_time_range(which='both'):
                 return self._warn(out_msg)
 
-    # date_start = fields.Datetime(
-    #     string='Beginning',
-    #     required=True,
-    #     readonly=True,
-    #     index=True,
-    #     default=None,
-    #     help='Date/time of reservation start',
-    #     compute='_compute_date_start'
-    # )
-
-    # @api.depends('full_day', 'date_base', 'time_start')
-    # def _compute_date_start(self):
-    #     for record in self:
-    #         tm = 0.0 if record.full_day else record.time_start
-    #         record.date_start = record.join_datetime(
-    #             record.date_base, tm, day_limit=True)
-
-    # date_stop = fields.Datetime(
-    #     string='Ending',
-    #     required=True,
-    #     readonly=True,
-    #     index=True,
-    #     default=None,
-    #     help='Date/time of reservation end',
-    #     compute='_compute_date_stop'
-    # )
-
-    # @api.depends('full_day', 'date_base', 'time_stop')
-    # def _compute_date_stop(self):
-    #     for record in self:
-    #         tm = 24.0 if record.full_day else record.time_stop
-    #         record.date_stop = record.join_datetime(
-    #             record.date_base, tm, day_limit=True)
-
     date_delay = fields.Float(
         string='Duration',
         required=True,
@@ -340,10 +306,6 @@ class FacilitySchedulerMixin(models.AbstractModel):
         ]
     )
 
-    @api.onchange('month_type')
-    def _onchange_month_type(self):
-        pass
-
     week_day_str = fields.Char(
         string='Weekday name',
         required=False,
@@ -376,10 +338,6 @@ class FacilitySchedulerMixin(models.AbstractModel):
             ('date', 'When passing')
         ]
     )
-
-    @api.onchange('finish_type')
-    def _onchange_finish_type(self):
-        pass
 
     finish_date = fields.Date(
         string='Finish date',
@@ -547,7 +505,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
     @staticmethod
     def _loop_security_break(index, limit=1024):
         if index >= limit:
-            msg = _('Make reservations security loop limit ({}) exceeded')
+            msg = _('Security loop limit for reservations ({}) exceeded')
             raise UserError(msg.format(limit))
 
         return index + 1

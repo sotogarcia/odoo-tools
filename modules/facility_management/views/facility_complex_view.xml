@@ -173,7 +173,7 @@
         <field name="search_view_id" ref="view_facility_complex_search"/>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create"> Click to add new complex </p>
-            <p> There are no complex yet </p>
+            <p> There are no complexes yet </p>
         </field>
     </record>
 

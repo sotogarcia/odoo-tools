@@ -22,7 +22,7 @@ _logger = getLogger(__name__)
 
 
 class FacilityComplex(models.Model):
-    """ A group of facilities, usually in the same location address
+    """ A group of facilities, usually in the same location
     """
 
     _name = 'facility.complex'
@@ -317,7 +317,7 @@ class FacilityComplex(models.Model):
         (
             'unique_complex_code',
             'UNIQUE("code")',
-            _('A complex with that code already exists')
+            _('A complex with this code already exists')
         )
     ]
 

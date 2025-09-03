@@ -12,7 +12,7 @@
             <form string="Search available facilities">
                 <header>
                     <button name="view_facilities" string="&#160;Search" type="object"
-                        icon="fa-search" help="Show found facilities using all the window"
+                        icon="fa-search" help="Show found facilities in the whole window"
                         class="btn-primary"/>
                 </header>
 

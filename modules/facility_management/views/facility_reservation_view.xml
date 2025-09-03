@@ -77,6 +77,7 @@
                         <field name="id" invisible="1"/>
                         <field name="active" invisible="1"/>
                         <field name="scheduler_id" invisible="1"/>
+                        <field name="available_facility_ids" invisible="1"/>
 
                         <label for="name" class="oe_edit_only"/>
                         <h1>
@@ -87,6 +88,7 @@
 
                     <group col="4" class="mt-2">
                         <field name="facility_id" colspan="4" class="oe_field_facility_id"
+                            domain="[('id', 'in', available_facility_ids)]"
                             context="{'facility_name_with_complex': True}"
                             options="{'no_quick_create': True, 'no_create': True}"
                             readonly="context.get('default_facility_id', 0)"/>

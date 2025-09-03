@@ -45,6 +45,9 @@
         'security/facility_weekday.xml',
         'security/facility_reservation_scheduler.xml',
         'security/facility_complex_reservation_rel.xml',
+        "security/facility_reporting_wizard.xml",
+        "security/facility_reservation_massive_actions_wizard.xml",
+        "security/facility_search_available_wizard.xml",
 
         'views/facility_weekday_view.xml',
         'views/facility_complex_view.xml',

@@ -101,7 +101,7 @@ class FacilityFacility(models.Model):
         readonly=False,
         index=True,
         default=None,
-        help='Complex to which the facility belongs',
+        help='Complex the facility belongs to',
         comodel_name='facility.complex',
         domain=[],
         context={},
@@ -140,7 +140,7 @@ class FacilityFacility(models.Model):
     )
 
     users_str = fields.Char(
-        string='Users/Excess',
+        string='Users / Excess users',
         required=False,
         readonly=True,
         index=False,

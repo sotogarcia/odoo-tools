@@ -33,7 +33,7 @@ class FacilityComplexFacilityReservationRel(models.Model):
         readonly=True,
         index=True,
         default=None,
-        help='A group of facilities, usually in the same location address',
+        help='A group of facilities, usually in the same location',
         comodel_name='facility.complex',
         domain=[],
         context={},

@@ -20,7 +20,7 @@
                                     string="Weekdays"/>
                             </div>
                         </setting>
-                        <setting string="Setup schedulers" help="List and/or modify the schedulers.">
+                        <setting string="Setup schedulers" help="List and modify schedulers">
                             <div class="content-group mt8">
                                 <button
                                     name="%(facility_management.action_facility_reservation_scheduler_act_window)d"

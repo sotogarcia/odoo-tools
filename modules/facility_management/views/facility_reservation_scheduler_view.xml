@@ -45,10 +45,6 @@
                     <field name="state" widget="statusbar" clickable="1"/>
                 </header>
 
-                <!--TODO: Result from converting "states='schedule'" attribute into an 'invisible' attribute
-
-                     Manually combine states condition into any 'invisible' overrides in inheriting views as well-->
-
                 <group col="6" id="schedule" string="Schedule" invisible="state != 'schedule'">
                     <field name="date_base" class="oe_field_date_base"
                         context="{'field_date_base': True}"/>
@@ -64,10 +60,6 @@
                     <field name="date_delay" class="oe_field_date_delay" widget="float_time"
                         invisible="full_day" context="{'field_date_delay': True}"/>
                 </group>
-
-                <!--TODO: Result from converting "states='schedule'" attribute into an 'invisible' attribute
-
-                     Manually combine states condition into any 'invisible' overrides in inheriting views as well-->
 
                 <group col="2" id="repeat" string="Repeat" invisible="state != 'schedule'">
                     <group col="2" class="mt-0">
@@ -104,20 +96,13 @@
                     </group>
                 </group>
 
-                <!--TODO: Result from converting "states='facility'" attribute into an 'invisible' attribute
-
-                     Manually combine states condition into any 'invisible' overrides in inheriting views as well-->
-
                 <group col="6" id="facility" string="Facility" invisible="state != 'facility'">
                     <field name="facility_id" class="oe_field_facility_id" colspan="4"
+                        domain="[('id', 'in', available_facility_ids)]"
                         context="{'facility_name_with_complex': True}"
                         options="{'no_quick_create': True, 'no_create': True, 'no_open': True}"/>
                     <field name="validate" class="oe_field_validate"/>
                 </group>
-
-                <!--TODO: Result from converting "states='facility'" attribute into an 'invisible' attribute
-
-                     Manually combine states condition into any 'invisible' overrides in inheriting views as well-->
 
                 <group col="4" id="details" string="Details" invisible="state != 'facility'">
                     <field name="company_id" class="oe_field_company_id text-truncate text-info"
@@ -130,18 +115,10 @@
                         invisible="users &lt;= 0"/>
                 </group>
 
-                <!--TODO: Result from converting "states='finish'" attribute into an 'invisible' attribute
-
-                     Manually combine states condition into any 'invisible' overrides in inheriting views as well-->
-
                 <group col="2" id="description" string="Description" invisible="state != 'finish'">
                     <field name="name" class="oe_field_name"/>
                     <field name="description" class="oe_field_description pt-4" colspan="2"/>
                 </group>
-
-                <!--TODO: Result from converting "states='finish'" attribute into an 'invisible' attribute
-
-                     Manually combine states condition into any 'invisible' overrides in inheriting views as well-->
 
                 <group col="4" id="options" string="Options" invisible="state != 'finish'"
                     groups="facility_management.facility_group_monitor">
@@ -149,10 +126,6 @@
                     <field name="tracking_disable" class="oe_field_tracking_disable"
                         string="No track"/>
                 </group>
-
-                <!--TODO: Result from converting "states='finish'" attribute into an 'invisible' attribute
-
-                     Manually combine states condition into any 'invisible' overrides in inheriting views as well-->
 
                 <group col="4" id="finish" string="Manager" invisible="state != 'finish'"
                     groups="record_ownership.record_ownership_proxy">

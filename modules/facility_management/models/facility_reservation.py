@@ -44,7 +44,7 @@ class FacilityReservation(models.Model):
         readonly=False,
         index=True,
         default=None,
-        help='A short description to this reservation',
+        help='A short description for this reservation',
         size=255,
         translate=True,
         tracking=True  # v18: reemplaza track_visibility
@@ -56,7 +56,7 @@ class FacilityReservation(models.Model):
         readonly=False,
         index=False,
         default=None,
-        help='A long description to this reservation',
+        help='A long description for this reservation',
         translate=True
     )
 
@@ -115,7 +115,7 @@ class FacilityReservation(models.Model):
 
     complex_id = fields.Many2one(
         string='Complex',
-        help='Complex to which the facility belongs',
+        help='Complex the facility belongs to',
         related='facility_id.complex_id',
         store=True
     )
@@ -146,12 +146,6 @@ class FacilityReservation(models.Model):
     def _onchange_date_start(self):
         self._compute_date_delay()
 
-        return {
-            'domain': {
-                'facility_id': self._valid_facility_domain()
-            }
-        }
-
     date_stop = fields.Datetime(
         string='Ending',
         required=True,
@@ -165,12 +159,6 @@ class FacilityReservation(models.Model):
     @api.onchange('date_stop')
     def _onchange_date_stop(self):
         self._compute_date_delay()
-
-        return {
-            'domain': {
-                'facility_id': self._valid_facility_domain()
-            }
-        }
 
     date_delay = fields.Float(
         string='Duration',
@@ -238,14 +226,6 @@ class FacilityReservation(models.Model):
         help='If checked, the event date range will be checked before saving'
     )
 
-    @api.onchange('validate')
-    def _onchange_validate(self):
-        return {
-            'domain': {
-                'facility_id': self._valid_facility_domain()
-            }
-        }
-
     scheduler_id = fields.Many2one(
         string='In scheduler',
         required=False,
@@ -266,7 +246,7 @@ class FacilityReservation(models.Model):
         readonly=True,
         index=False,
         default=False,
-        help='Check it when the reservation has a related scheduler',
+        help='Check this if the reservation has a related scheduler',
         compute='_compute_has_scheduler',
         search='_search_has_scheduler'
     )
@@ -313,6 +293,48 @@ class FacilityReservation(models.Model):
                     record.color = 10
                 else:
                     record.color = 3
+
+    available_facility_ids = fields.Many2many(
+        string='Available facilities',
+        required=False,
+        readonly=True,
+        index=False,
+        default=None,
+        help=("Facilities available for the current date range. Used to "
+              "filter 'facility_id' in the UI"),
+        comodel_name='facility.facility',
+        relation='facility_reservation_available_facility_rel',
+        column1='reservation_id',
+        column2='facility_id',
+        domain=[],
+        context={},
+        compute="_compute_available_facility_ids",
+    )
+
+    @api.depends("date_start", "date_stop", "validate")
+    def _compute_available_facility_ids(self):
+        """Compute facilities available for selection.
+
+        - validate=False -> no restriction (all facilities)
+        - validate=True  -> restrict to available in given dates
+        - validate=True but missing dates -> empty set
+        """
+        facility_obj = self.env["facility.facility"]
+
+        for record in self:
+            if not record.validate:
+                available_set = facility_obj.search(TRUE_DOMAIN)
+
+            elif record.date_start and record.date_stop:
+                available_set = facility_obj.available(
+                    date_start=record.date_start, 
+                    date_stop=record.date_stop
+                )
+
+            else:
+                available_set = facility_obj.browse()
+
+            record.available_facility_ids = available_set
 
     def get_tz(self):
         """Retrieve session timezone if available.
@@ -455,14 +477,6 @@ class FacilityReservation(models.Model):
 
         return _super.copy(default=default)
 
-    # @api.model
-    # def _where_calc(self, domain, active_test=True):
-    #     if not any(item[0] == 'state' for item in domain):
-    #         domain = [('state', '=', 'confirmed')] + domain
-    #
-    #     _super = super(FacilityReservation, self)
-    #     return _super._where_calc(domain, active_test)
-
     @staticmethod
     def now_o_clock(offset_hours=0, round_up=False):
         # v18: usar fields.Datetime en lugar de fields.datetime
@@ -487,24 +501,6 @@ class FacilityReservation(models.Model):
                 result = True
 
         return result
-
-    def _valid_facility_domain(self):
-        self.ensure_one()
-
-        if self.validate:
-            domain = FALSE_DOMAIN
-
-            facility_obj = self.env['facility.facility']
-            if self.date_start and self.date_stop:
-                facility_set = facility_obj.available(
-                    date_start=self.date_start, date_stop=self.date_stop)
-                if facility_set:
-                    facility_ids = facility_set.mapped('id')
-                    domain = [('id', 'in', facility_ids)]
-        else:
-            domain = TRUE_DOMAIN
-
-        return domain
 
     def _ensure_scheduler(self):
         self.ensure_one()
@@ -572,27 +568,6 @@ class FacilityReservation(models.Model):
         }
 
         return serialized
-
-    # def date_delay_str(self, span=None):
-    #     self.ensure_one()
-    #
-    #     if span is None:
-    #         span = (self.date_delay or 0)
-    #
-    #     hours = int(span)
-    #     pattern = '{h:02d} h'
-    #
-    #     span = (span % 1)
-    #     minutes = int(span * 60)
-    #     if minutes:
-    #         pattern += ' {m:02d}\''
-    #
-    #     span = ((span * 60) % 1)
-    #     seconds = int(span * 60)
-    #     if seconds:
-    #         pattern += ' {s:02d}\"'
-    #
-    #     return pattern.format(h=hours, m=minutes, s=seconds)
 
     def check_authorization_to_confirm(self, values):
         """
@@ -675,10 +650,6 @@ class FacilityReservation(models.Model):
                     xid = ('facility_management.message_subtype_'
                            'facility_reservation_state_pending')
                     return self.env.ref(xid)
-
-        # The following lines, which are common, are not needed in this case.
-        # parent = super(FacilityReservation, self)
-        # result = parent._track_subtype(init_values)
 
         xid = ('facility_management.'
                'message_subtype_facility_reservation_has_updated')

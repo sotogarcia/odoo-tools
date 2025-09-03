@@ -175,7 +175,7 @@ class FacilityReservationMassiveActionsWizard(models.TransientModel):
         readonly=False,
         index=False,
         default=False,
-        help='Check it to update validate'
+        help='Check it to update validation'
     )
 
     validate = fields.Boolean(
@@ -193,7 +193,7 @@ class FacilityReservationMassiveActionsWizard(models.TransientModel):
         readonly=False,
         index=False,
         default=False,
-        help='Checkit to update start date/time'
+        help='Check it to update start date/time'
     )
 
     date_start = fields.Datetime(
@@ -214,7 +214,7 @@ class FacilityReservationMassiveActionsWizard(models.TransientModel):
         readonly=False,
         index=False,
         default=False,
-        help='Checkit to update stop date/time'
+        help='Check it to update stop date/time'
     )
 
     date_stop = fields.Datetime(
