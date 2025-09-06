@@ -11,22 +11,23 @@ try:
 except ImportError:  # older Odoo (e.g. 13)
     from odoo.osv.expression import AND, expression as Expression
 
-from odoo.tools.translate import _
+from odoo.tools.translate import _lt
 from odoo.tools.safe_eval import safe_eval
 from operator import eq, ne, lt, le, gt, ge
 
 
-INVALID_DOMAIN = _('Given domain expression %r is not a valid ORM domain')
-INVALID_CTX = _('Given context expression %r is not a valid context mapping')
+INVALID_DOMAIN = _lt("Given domain expression %r is not a valid ORM domain")
+INVALID_CTX = _lt("Given context expression %r is not a valid context mapping")
 
 OPERATOR_MAP = {
-    '=': eq,
-    '!=': ne,
-    '<': lt,
-    '<=': le,
-    '>': gt,
-    '>=': ge,
+    "=": eq,
+    "!=": ne,
+    "<": lt,
+    "<=": le,
+    ">": gt,
+    ">=": ge,
 }
+
 
 def evaluate_domain(recordset, src_domain, default=None, raise_on_fail=True):
     """
@@ -71,7 +72,7 @@ def evaluate_domain(recordset, src_domain, default=None, raise_on_fail=True):
         try:
             # Evaluate with a minimal context; client-style domains often
             # reference `context`.
-            minimal_ctx = {'context': recordset.env.context}
+            minimal_ctx = {"context": recordset.env.context}
             domain = safe_eval(src_domain, minimal_ctx)
         except Exception as ex:
             if raise_on_fail:
@@ -101,11 +102,11 @@ def evaluate_context(recordset, src_context, default=None, raise_on_fail=True):
 
     if isinstance(src_context, dict):
         context = src_context
-    
+
     elif isinstance(src_context, str):
         # Evaluate with minimal context
         try:
-            minimal_ctx = {'context': recordset.env.context}
+            minimal_ctx = {"context": recordset.env.context}
             context = safe_eval(src_context, minimal_ctx)
         except Exception as ex:
             if raise_on_fail:
@@ -154,7 +155,7 @@ def one2many_count(parent_set, o2m_field_name, domain=None):
 
     # Validate One2many field first (even if parent_set is empty)
     field = parent_set._fields.get(o2m_field_name)
-    if not field or field.type != 'one2many':
+    if not field or field.type != "one2many":
         raise TypeError(
             "Field %r is not a one2many on model %s"
             % (o2m_field_name, parent_set._name)
@@ -162,7 +163,7 @@ def one2many_count(parent_set, o2m_field_name, domain=None):
 
     inverse_name = field.inverse_name
     domain_attribute = field.domain
-    
+
     # Initialize result with zeros for all parent IDs
     counts = {cid: 0 for cid in parent_set.ids}
     if not parent_set:
@@ -170,7 +171,7 @@ def one2many_count(parent_set, o2m_field_name, domain=None):
 
     # Prepare comodel environment and base domain (children pointing to parents)
     comodel_obj = parent_set.env[field.comodel_name]
-    comodel_domain = [(inverse_name, 'in', parent_set.ids)]
+    comodel_domain = [(inverse_name, "in", parent_set.ids)]
 
     domain_list = [comodel_domain]
 
@@ -181,17 +182,17 @@ def one2many_count(parent_set, o2m_field_name, domain=None):
             domain_list.append(field_domain)
 
     # Resolve active_test from context and append domain to the domain list
-    context_attribute = getattr(field, 'context', None)
+    context_attribute = getattr(field, "context", None)
     field_context = evaluate_context(
         parent_set, context_attribute, default=None, raise_on_fail=False
     )
-    if isinstance(field_context, dict) and 'active_test' in field_context:
-        active_test = bool(field_context['active_test'])
+    if isinstance(field_context, dict) and "active_test" in field_context:
+        active_test = bool(field_context["active_test"])
     else:
-        active_test = bool(parent_set.env.context.get('active_test', True))
+        active_test = bool(parent_set.env.context.get("active_test", True))
 
-    if active_test and 'active' in comodel_obj.fields_get(['active']):
-        domain_list.append([('active', '=', True)])
+    if active_test and "active" in comodel_obj.fields_get(["active"]):
+        domain_list.append([("active", "=", True)])
 
     # Append additional domain if provided
     if domain:
@@ -213,7 +214,7 @@ def one2many_count(parent_set, o2m_field_name, domain=None):
             continue
 
         cid = key[0]
-        counts[cid] = row['__count']
+        counts[cid] = row["__count"]
 
     return counts
 
@@ -247,42 +248,42 @@ def many2many_count(parent_set, m2m_field_name, domain=None):
 
     # Validate and introspect the M2M field from the parent model
     field = parent_set._fields.get(m2m_field_name)
-    if not field or field.type != 'many2many':
+    if not field or field.type != "many2many":
         raise TypeError(
             "Field %r is not a many2many on model %s"
             % (m2m_field_name, parent_set._name)
         )
 
     rel_table = field.relation
-    col_parent = field.column1      # FK to parent table
-    col_child = field.column2       # FK to child (comodel) table
+    col_parent = field.column1  # FK to parent table
+    col_child = field.column2  # FK to child (comodel) table
     child_model = parent_set.env[field.comodel_name]
     child_table = child_model._table
-    
+
     # Build child domain parts: field.domain (if any), user domain, active_test
     domain_list = []
 
     # Resolve field domain attribute and append it to the domain list
-    domain_attribute = getattr(field, 'domain', None)
+    domain_attribute = getattr(field, "domain", None)
     if domain_attribute:
         field_domain = evaluate_domain(
             parent_set, domain_attribute, default=None, raise_on_fail=False
         )
         if field_domain:
             domain_list.append(field_domain)
-  
+
     # Resolve active_test from context and append domain to the domain list
-    context_attribute = getattr(field, 'context', None)
+    context_attribute = getattr(field, "context", None)
     field_context = evaluate_context(
         parent_set, context_attribute, default=None, raise_on_fail=False
     )
-    if isinstance(field_context, dict) and 'active_test' in field_context:
-        active_test = bool(field_context['active_test'])
+    if isinstance(field_context, dict) and "active_test" in field_context:
+        active_test = bool(field_context["active_test"])
     else:
-        active_test = bool(parent_set.env.context.get('active_test', True))
+        active_test = bool(parent_set.env.context.get("active_test", True))
 
-    if active_test and 'active' in child_model.fields_get(['active']):
-        domain_list.append([('active', '=', True)])
+    if active_test and "active" in child_model.fields_get(["active"]):
+        domain_list.append([("active", "=", True)])
 
     # Append given domain if was set
     if domain:
@@ -294,7 +295,7 @@ def many2many_count(parent_set, m2m_field_name, domain=None):
     # Convert domain to SQL using `expression` + apply record rules
     expr = Expression(child_domain, child_model, alias=child_table)
     query = expr.query
-    child_model._apply_ir_rules(query, 'read')
+    child_model._apply_ir_rules(query, "read")
     from_clause = query.from_clause.code
     where_clause = query.where_clause.code
     params = query.where_clause.params

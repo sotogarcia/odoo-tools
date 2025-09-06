@@ -60,3 +60,16 @@
 - [ ] Revisar lista TODO 
        · El JS del botón debe comprobar los permisos
        · Icono al JS
+
+
+```
+┌──────────────────────────┐
+│ name                     │
+│ __Dirección__            │
+│ Telefono: ___ Email: ___ │
+│ Responsable: ___         │
+└──────────────────────────┘
+```
+
+facility_count
+manager_id

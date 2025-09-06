@@ -2,9 +2,9 @@
 
 <odoo noupdate="1">
 
-    <record id="access_facility_management_model_facility_search_available_wizard_group_monitor" model="ir.model.access">
-        <field name="name">access_facility_management_model_facility_search_available_wizard_group_monitor</field>
-        <field name="model_id" ref="facility_management.model_facility_search_available_wizard" />
+    <record id="access_facility_management_model_facility_reporting_wizard_group_monitor" model="ir.model.access">
+        <field name="name">access_facility_management_model_facility_reporting_wizard_group_monitor</field>
+        <field name="model_id" ref="facility_management.model_facility_reporting_wizard" />
         <field name="group_id" ref="facility_management.facility_group_monitor"/>
         <field name="perm_create" eval="True" />
         <field name="perm_read" eval="True" />

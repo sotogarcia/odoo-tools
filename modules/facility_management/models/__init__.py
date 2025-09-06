@@ -10,7 +10,7 @@ from . import facility_facility
 from . import facility_type
 from . import facility_reservation
 
-from . import ir_actions_report
+# from . import ir_actions_report
 from . import facility_weekday
 from . import facility_reservation_scheduler
 from . import res_config_settings

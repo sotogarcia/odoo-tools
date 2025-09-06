@@ -21,36 +21,35 @@ _logger = getLogger(__name__)
 
 
 class FacilitySchedulerMixin(models.AbstractModel):
-    """ Provides the necessary functionality to schedule dates
-    """
+    """Provides the necessary functionality to schedule dates"""
 
-    _name = 'facility.scheduler.mixin'
-    _description = 'Provides the necessary functionality to schedule dates'
+    _name = "facility.scheduler.mixin"
+    _description = "Provides the necessary functionality to schedule dates"
 
     date_base = fields.Date(
-        string='Date',
+        string="Date",
         required=True,
         readonly=False,
         index=False,
         default=lambda self: fields.Date.context_today(self),
-        help='Date of reservation start'
+        help="Date of reservation start",
     )
 
-    @api.onchange('date_base')
+    @api.onchange("date_base")
     def _onchange_date_base(self):
-        out_msg = _('Schedule time out of training action timespan')
-        weekday_msg = _('Day of the week corresponding to the start date '
-                        'is not among the selected days of the week')
+        out_msg = _("Schedule time out of training action timespan")
+        weekday_msg = _(
+            "Day of the week corresponding to the start date "
+            "is not among the selected days of the week"
+        )
 
-        if self._field_changed('field_date_base'):
-
+        if self._field_changed("field_date_base"):
             # date_base+time_start within the training action time range
-            if not self._in_time_range(which='left'):
+            if not self._in_time_range(which="left"):
                 return self._warn(out_msg)
 
             # day of the week corresponds to the date_base
-            if self.interval_type == 'week' and \
-               not self._match_weekday(self.date_base):
+            if self.interval_type == "week" and not self._match_weekday(self.date_base):
                 self._ensure_weekday()
                 return self._warn(weekday_msg)
 
@@ -59,36 +58,36 @@ class FacilitySchedulerMixin(models.AbstractModel):
                 self.finish_date = self.date_base
 
     time_start = fields.Float(
-        string='Time start',
+        string="Time start",
         required=True,
         readonly=False,
         index=False,
         default=lambda self: self.default_time_start(),
         digits=(16, 2),
-        help='Time of reservation start'
+        help="Time of reservation start",
     )
 
-    @api.onchange('time_start')
+    @api.onchange("time_start")
     def _onchange_time_start(self):
-        out_msg = _('Schedule time out of training action timespan')
+        out_msg = _("Schedule time out of training action timespan")
 
-        if self._field_changed('field_time_start') and not self.full_day:
-
+        if self._field_changed("field_time_start") and not self.full_day:
             # Within the day
             if self.time_start < 0:
                 self.time_start = 0
             elif self.time_start > 23 + (59 / 60):
                 self.time_start = 23 + (59 / 60)
 
-            self.time_start = self.round_m(self.time_start, (1 / 60), 'down')
+            self.time_start = self.round_m(self.time_start, (1 / 60), "down")
 
             # Less than time_stop
             if self.time_start > self.time_stop:
                 self.time_stop = self.round_m(
-                    self.time_start + (1 / 60), (1 / 60), 'down')
+                    self.time_start + (1 / 60), (1 / 60), "down"
+                )
 
             # date_base+time_start within the training action time range
-            if not self._in_time_range(which='left'):
+            if not self._in_time_range(which="left"):
                 return self._warn(out_msg)
 
     def default_time_start(self):
@@ -101,192 +100,193 @@ class FacilitySchedulerMixin(models.AbstractModel):
         return float(now_tz.hour)
 
     time_stop = fields.Float(
-        string='Time stop',
+        string="Time stop",
         required=True,
         readonly=False,
         index=False,
         default=lambda self: self.default_time_start() + 1.0,
         digits=(16, 2),
-        help='Time of reservation stop'
+        help="Time of reservation stop",
     )
 
-    @api.onchange('time_stop')
+    @api.onchange("time_stop")
     def _onchange_time_stop(self):
-        out_msg = _('Schedule time out of training action timespan')
-        min_date_delay = _('Session must last at least one minute')
+        out_msg = _("Schedule time out of training action timespan")
+        min_date_delay = _("Session must last at least one minute")
 
-        if self._field_changed('field_time_stop') and not self.full_day:
-
+        if self._field_changed("field_time_stop") and not self.full_day:
             # Within the day
             if self.time_stop < 0:
                 self.time_stop = self.time_start + (1 / 60)
             elif self.time_stop >= 24:
                 self.time_stop = 23 + (59 / 60)
 
-            self.time_stop = self.round_m(self.time_stop, (1 / 3600), 'down')
+            self.time_stop = self.round_m(self.time_stop, (1 / 3600), "down")
 
             # Less than time_start
             if self.time_stop < self.time_start + (1 / 60):
                 return self._warn(min_date_delay)
 
             # fisnish_date+time_stop within the training action time range
-            if not self._in_time_range(which='right'):
+            if not self._in_time_range(which="right"):
                 return self._warn(out_msg)
 
     full_day = fields.Boolean(
-        string='Full day',
+        string="Full day",
         required=False,
         readonly=False,
         index=False,
         default=False,
-        help='If checked, facility will be reserved for the entire day'
+        help="If checked, facility will be reserved for the entire day",
     )
 
-    @api.onchange('full_day')
+    @api.onchange("full_day")
     def _onchange_full_day(self):
-        out_msg = _('Schedule time out of training action timespan')
+        out_msg = _("Schedule time out of training action timespan")
 
-        if self._field_changed('field_full_day'):
-
+        if self._field_changed("field_full_day"):
             # date_base+time_start within the training action time range
-            if not self._in_time_range(which='both'):
+            if not self._in_time_range(which="both"):
                 return self._warn(out_msg)
 
     date_delay = fields.Float(
-        string='Duration',
+        string="Duration",
         required=True,
         readonly=False,
         index=False,
         default=0.0,
         digits=(16, 2),
-        help='Time length of the reservation',
+        help="Time length of the reservation",
         store=False,
-        compute='_compute_date_delay'
+        compute="_compute_date_delay",
     )
 
-    @api.depends('full_day', 'date_base', 'time_start', 'time_stop')
+    @api.depends("full_day", "date_base", "time_start", "time_stop")
     def _compute_date_delay(self):
         for record in self:
             if record.full_day:
                 record.date_delay = 24.0
             else:
                 start = record.join_datetime(
-                    record.date_base, record.time_start, day_limit=True)
+                    record.date_base, record.time_start, day_limit=True
+                )
 
                 stop = record.join_datetime(
-                    record.date_base, record.time_stop, day_limit=True)
+                    record.date_base, record.time_stop, day_limit=True
+                )
 
                 record.date_delay = self._float_interval(start, stop)
 
-    @api.onchange('date_delay')
+    @api.onchange("date_delay")
     def _onchange_date_delay(self):
         for record in self:
-            if not record.full_day and \
-               record._origin.date_delay != record.date_delay:
+            if not record.full_day and record._origin.date_delay != record.date_delay:
                 record.time_stop = record.time_start + record.date_delay
 
     weekday = fields.Char(
-        string='Weekday',
+        string="Weekday",
         required=False,
         readonly=True,
         index=False,
         default=None,
-        help='Weekday name',
+        help="Weekday name",
         size=50,
         translate=True,
-        compute='_compute_week_day'
+        compute="_compute_week_day",
     )
 
-    @api.depends('date_base')
+    @api.depends("date_base")
     def _compute_week_day(self):
         for record in self:
             if record.date_base:
-                record.weekday = record.date_base.strftime('%A').title()
+                record.weekday = record.date_base.strftime("%A").title()
             else:
                 record.weekday = None
 
     repeat = fields.Boolean(
-        string='Repeat',
+        string="Repeat",
         required=False,
         readonly=False,
         index=False,
         default=False,
-        help='If checked, reservation will be repeated over time'
+        help="If checked, reservation will be repeated over time",
     )
 
     interval_number = fields.Integer(
-        string='Repeat every',
+        string="Repeat every",
         required=True,
         readonly=False,
         index=False,
         default=1,
-        help='Numeric value for repeat interval'
+        help="Numeric value for repeat interval",
     )
 
-    @api.onchange('interval_number')
+    @api.onchange("interval_number")
     def _onchange_interval_number(self):
-        min_interval_msg = \
-            _('Interval number must be greater than or equal to one')
+        min_interval_msg = _("Interval number must be greater than or equal to one")
 
-        if self._field_changed('field_interval_number'):
+        if self._field_changed("field_interval_number"):
             if self.interval_number < 1:
                 self.interval_number = 1
                 return self._warn(min_interval_msg)
 
     interval_type = fields.Selection(
-        string='Interval type',
+        string="Interval type",
         required=True,
         readonly=False,
         index=False,
-        default='week',
+        default="week",
         help=False,
         selection=[
-            ('day', 'Days'),
-            ('week', 'Weeks'),
-            ('month', 'Months'),
-            ('year', 'Years'),
-        ]
+            ("day", "Days"),
+            ("week", "Weeks"),
+            ("month", "Months"),
+            ("year", "Years"),
+        ],
     )
 
-    @api.onchange('interval_type', 'weekday_ids')
+    @api.onchange("interval_type", "weekday_ids")
     def _onchange_interval_type(self):
-        weekday_msg = _('Day of the week corresponding to the start date '
-                        'is not among the selected days of the week')
+        weekday_msg = _(
+            "Day of the week corresponding to the start date "
+            "is not among the selected days of the week"
+        )
 
-        if self._field_changed('field_interval_type'):
-            if self.interval_type == 'week' and \
-               not self._match_weekday(self.date_base):
+        if self._field_changed("field_interval_type"):
+            if self.interval_type == "week" and not self._match_weekday(self.date_base):
                 self._ensure_weekday()
                 return self._warn(weekday_msg)
 
     weekday_ids = fields.Many2many(
-        string='Weekdays',
+        string="Weekdays",
         required=True,
         readonly=False,
         index=True,
         default=lambda self: self.default_weekday_ids(),
-        help='Days of the week on which it is repeated',
-        comodel_name='facility.weekday',
+        help="Days of the week on which it is repeated",
+        comodel_name="facility.weekday",
         # relation= <-- This must to be empty to allow inheritance
-        column1='target_id',
-        column2='weekday_id',
+        column1="target_id",
+        column2="weekday_id",
         domain=[],
         context={},
     )
 
     def default_weekday_ids(self):
-        week_day_domain = [('workday', '=', True)]
-        week_day_obj = self.env['facility.weekday']
+        week_day_domain = [("workday", "=", True)]
+        week_day_obj = self.env["facility.weekday"]
         return week_day_obj.search(week_day_domain)
 
-    @api.constrains('weekday_ids')
+    @api.constrains("weekday_ids")
     def _check_weekday_ids(self):
-        msg1 = _('You must choose at least one day of the week')
-        msg2 = _('The day of the week corresponding to the start date is not '
-                 'among the selected days of the week')
+        msg1 = _("You must choose at least one day of the week")
+        msg2 = _(
+            "The day of the week corresponding to the start date is not "
+            "among the selected days of the week"
+        )
 
         for record in self:
-            if record.interval_type == 'week':
+            if record.interval_type == "week":
                 if not record.weekday_ids:
                     raise ValidationError(msg1)
 
@@ -294,69 +294,62 @@ class FacilitySchedulerMixin(models.AbstractModel):
                     raise ValidationError(msg2)
 
     month_type = fields.Selection(
-        string='Month type',
+        string="Month type",
         required=True,
         readonly=False,
         index=True,
-        default='week',
-        help='Monthly recurrence type',
-        selection=[
-            ('week', 'Weekday'),
-            ('month', 'Month day')
-        ]
+        default="week",
+        help="Monthly recurrence type",
+        selection=[("week", "Weekday"), ("month", "Month day")],
     )
 
     week_day_str = fields.Char(
-        string='Weekday name',
+        string="Weekday name",
         required=False,
         readonly=True,
         index=False,
         default=None,
-        help='Name of the current weekday and repeat order in month',
+        help="Name of the current weekday and repeat order in month",
         size=50,
         translate=True,
-        compute='_compute_week_day_str'
+        compute="_compute_week_day_str",
     )
 
-    @api.depends('date_base')
+    @api.depends("date_base")
     def _compute_week_day_str(self):
         for record in self:
-            day_name = record.date_base.strftime('%A').title()
+            day_name = record.date_base.strftime("%A").title()
             nth = record.nth_weekday().title()
 
-            record.week_day_str = '{} ({})'.format(day_name, nth)
+            record.week_day_str = "{} ({})".format(day_name, nth)
 
     finish_type = fields.Selection(
-        string='Finish',
+        string="Finish",
         required=True,
         readonly=False,
         index=False,
-        default='number',
+        default="number",
         help=False,
-        selection=[
-            ('number', 'After repeating'),
-            ('date', 'When passing')
-        ]
+        selection=[("number", "After repeating"), ("date", "When passing")],
     )
 
     finish_date = fields.Date(
-        string='Finish date',
+        string="Finish date",
         required=True,
         readonly=False,
         index=False,
         default=lambda self: self._next_month(),
-        help='Date of the last repetition'
+        help="Date of the last repetition",
     )
 
-    @api.onchange('finish_date')
+    @api.onchange("finish_date")
     def _onchange_finish_date(self):
-        out_msg = _('Schedule time out of training action timespan')
-        min_finish_date = _('Finish date cannot be less than start date')
+        out_msg = _("Schedule time out of training action timespan")
+        min_finish_date = _("Finish date cannot be less than start date")
 
-        if self._field_changed('field_finish_date'):
-
+        if self._field_changed("field_finish_date"):
             # date_base+time_start within the training action time range
-            if not self._in_time_range(which='right'):
+            if not self._in_time_range(which="right"):
                 return self._warn(out_msg)
 
             # date_base less than or equal to finish_date
@@ -365,36 +358,46 @@ class FacilitySchedulerMixin(models.AbstractModel):
                 return self._warn(min_finish_date)
 
     finish_number = fields.Integer(
-        string='Repetitions',
+        string="Repetitions",
         required=True,
         readonly=False,
         index=False,
         default=5,
-        help='Total number of repetitions'
+        help="Total number of repetitions",
     )
 
-    @api.onchange('finish_number')
+    @api.onchange("finish_number")
     def _onchange_finish_number(self):
-        min_finish_number_msg = \
-            _('Finish number must be greater than or equal to one')
-        if self._field_changed('field_finish_number'):
+        min_finish_number_msg = _("Finish number must be greater than or equal to one")
+        if self._field_changed("field_finish_number"):
             if self.finish_number < 1:
                 self.finish_number = 1
                 return self._warn(min_finish_number_msg)
 
     next_schedule = fields.Datetime(
-        string='Next schedule',
+        string="Next schedule",
         required=False,
         readonly=True,
         index=False,
         default=None,
-        help='Display next schedule date/time',
-        compute='_compute_next_schedule'
+        help="Display next schedule date/time",
+        compute="_compute_next_schedule",
     )
 
-    @api.depends('date_base', 'time_start', 'time_stop', 'full_day', 'repeat',
-                 'interval_number', 'interval_type', 'finish_type',
-                 'finish_date', 'finish_number', 'weekday_ids', 'month_type')
+    @api.depends(
+        "date_base",
+        "time_start",
+        "time_stop",
+        "full_day",
+        "repeat",
+        "interval_number",
+        "interval_type",
+        "finish_type",
+        "finish_date",
+        "finish_number",
+        "weekday_ids",
+        "month_type",
+    )
     def _compute_next_schedule(self):
         for record in self:
             date_cursor = record.date_base
@@ -402,24 +405,24 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
     _sql_constraints = [
         (
-            'positive_interval',
-            'CHECK(time_start < time_stop)',
-            _('Reservation cannot finish before it starts')
+            "positive_interval",
+            "CHECK(time_start < time_stop)",
+            "Reservation cannot finish before it starts",
         ),
         (
-            'positive_interval_number',
-            'CHECK(repeat <> True or interval_number > 0)',
-            _('Interval number must be greater than zero')
+            "positive_interval_number",
+            "CHECK(repeat <> True or interval_number > 0)",
+            "Interval number must be greater than zero",
         ),
         (
-            'positive_finish_number',
-            'CHECK(finish_type <> \'total\' or finish_number > 0)',
-            _('The total number of repetitions must be greater than zero')
+            "positive_finish_number",
+            "CHECK(finish_type <> 'total' or finish_number > 0)",
+            "The total number of repetitions must be greater than zero",
         ),
         (
-            'finish_after_begins',
-            'CHECK(finish_date >= date_base)',
-            _('The end date must be after the start date')
+            "finish_after_begins",
+            "CHECK(finish_date >= date_base)",
+            "The end date must be after the start date",
         ),
     ]
 
@@ -430,7 +433,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
     def nth_weekday(self):
         target = self.date_base
 
-        mixin = self.env['time.span.report.mixin']
+        mixin = self.env["time.span.report.mixin"]
 
         weekday = target.weekday()
 
@@ -438,13 +441,13 @@ class FacilitySchedulerMixin(models.AbstractModel):
         date_range = mixin._date_range(day_one, target, full_weeks=False)
         cardinal = len([dt for dt in date_range if dt.weekday() == weekday])
 
-        lang = mixin._get_lang() or 'es_ES'
+        lang = mixin._get_lang() or "es_ES"
 
-        return num2words(cardinal, to='ordinal', lang=lang)
+        return num2words(cardinal, to="ordinal", lang=lang)
 
     @staticmethod
     def _week_day_position(date_start, months=1):
-        """ Compute the same weekday for the next month (ex: third tuesday)
+        """Compute the same weekday for the next month (ex: third tuesday)
             See: https://stackoverflow.com/questions/7025984
 
             the method also works correctly when the given ``date_start`` param
@@ -470,7 +473,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
         return d_next
 
     def _match_weekday(self, date_cursor):
-        sequences = self.mapped('weekday_ids.sequence')
+        sequences = self.mapped("weekday_ids.sequence")
         return date_cursor.isoweekday() in sequences
 
     def _search_weekday_for(self, date_cursor):
@@ -488,15 +491,14 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
         weekday_sequence = date_cursor.weekday() + 1
 
-        weekday_domain = [('sequence', '=', weekday_sequence)]
-        weekday_obj = self.env['facility.weekday']
+        weekday_domain = [("sequence", "=", weekday_sequence)]
+        weekday_obj = self.env["facility.weekday"]
         weekday = weekday_obj.search(weekday_domain, limit=1)
 
         return weekday
 
     def _ensure_weekday(self):
-        """ Ensure date_base weekday is choosen in weekday_ids
-        """
+        """Ensure date_base weekday is choosen in weekday_ids"""
         for record in self:
             weekday = self._search_weekday_for(record.date_base)
             if weekday and weekday not in self.weekday_ids:
@@ -505,7 +507,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
     @staticmethod
     def _loop_security_break(index, limit=1024):
         if index >= limit:
-            msg = _('Security loop limit for reservations ({}) exceeded')
+            msg = _("Security loop limit for reservations ({}) exceeded")
             raise UserError(msg.format(limit))
 
         return index + 1
@@ -513,16 +515,16 @@ class FacilitySchedulerMixin(models.AbstractModel):
     def _next_repetition_date(self, date_cursor):
         interval = self.interval_number
 
-        if self.interval_type == 'year':
+        if self.interval_type == "year":
             result = date_cursor + relativedelta(years=interval)
 
-        elif self.interval_type == 'month':
-            if self.month_type == 'month':
+        elif self.interval_type == "month":
+            if self.month_type == "month":
                 result = date_cursor + relativedelta(months=interval)
             else:
                 result = self._week_day_position(date_cursor, months=interval)
 
-        elif self.interval_type == 'week':
+        elif self.interval_type == "week":
             result = date_cursor + timedelta(days=1)
 
             while not self._match_weekday(result):
@@ -533,7 +535,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
         return result
 
     def _reached_last_repetition_date(self, dates, date_cursor):
-        if self.finish_type == 'number':
+        if self.finish_type == "number":
             return len(dates) >= self.finish_number
         else:  # date
             return date_cursor > self.finish_date
@@ -547,12 +549,10 @@ class FacilitySchedulerMixin(models.AbstractModel):
         dates = []
 
         while not self._reached_last_repetition_date(dates, date_cursor):
-
             loop_index = self._loop_security_break(loop_index)
 
             # Check match for weekday if applicable before append new date
-            if self.interval_type != 'week' or \
-               self._match_weekday(date_cursor):
+            if self.interval_type != "week" or self._match_weekday(date_cursor):
                 dates.append(date_cursor)
 
             date_cursor = self._next_repetition_date(date_cursor)
@@ -560,7 +560,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
         return dates
 
     def _overlapped_domain(self, f1, f2, v1, v2, inverse=False):
-        """ Create a valid Odoo domain to search reservations whose time
+        """Create a valid Odoo domain to search reservations whose time
         intervals, given by its limits, overlap with the given time interval.
 
                            F1                 F2
@@ -587,9 +587,9 @@ class FacilitySchedulerMixin(models.AbstractModel):
         """
 
         if inverse:
-            op1, op2, op3 = '|', '>=', '<='
+            op1, op2, op3 = "|", ">=", "<="
         else:
-            op1, op2, op3 = '&', '<', '>'
+            op1, op2, op3 = "&", "<", ">"
 
         return [op1, (f1, op2, v2), (f2, op3, v1)]
 
@@ -601,7 +601,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
     @api.model
     def join_datetime(self, dt, tm=0.0, day_limit=False):
-        """ Joins in a datetime value using a given date and a float value
+        """Joins in a datetime value using a given date and a float value
 
         Args:
             dt (date): date to jon
@@ -630,7 +630,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
     @api.model
     def split_datetime(self, dt):
-        """ Splits a datetime value in a date and a float time interval
+        """Splits a datetime value in a date and a float time interval
 
         Args:
             dt (datetime): datetime to split
@@ -651,7 +651,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
         return d.date(), t
 
     def scheduled_dates(self):
-        """ Return all the dates, whithout time, that will be resulting from
+        """Return all the dates, whithout time, that will be resulting from
         the  criteria of the scheduler.
 
         Returns:
@@ -666,7 +666,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
             return [self.date_base]
 
     def matching_reservations(self, not_confirmed=False):
-        """ Search for reservations search for reservations that match the
+        """Search for reservations search for reservations that match the
         dates of the schedule.
 
         Args:
@@ -685,26 +685,27 @@ class FacilitySchedulerMixin(models.AbstractModel):
         time_start = 0.0 if self.full_day else self.time_start
         time_stop = 24.0 if self.full_day else self.time_stop
 
-        domains = [('state', '<>', 'rejected')] if not_confirmed else []
+        domains = [("state", "<>", "rejected")] if not_confirmed else []
         for dt in dates:
             v1 = self.join_datetime(dt, time_start, day_limit=True)
             v2 = self.join_datetime(dt, time_stop, day_limit=True)
 
-            v1 = v1.strftime('%Y-%m-%d %H:%M:%S')
-            v2 = v2.strftime('%Y-%m-%d %H:%M:%S')
+            v1 = v1.strftime("%Y-%m-%d %H:%M:%S")
+            v2 = v2.strftime("%Y-%m-%d %H:%M:%S")
 
             domain = self._overlapped_domain(
-                'date_start', 'date_stop', v1, v2, inverse=False)
+                "date_start", "date_stop", v1, v2, inverse=False
+            )
             domains.append(domain)
 
         reservation_domain = OR(domains)
-        reservation_obj = self.env['facility.reservation']
+        reservation_obj = self.env["facility.reservation"]
         reservation_set = reservation_obj.search(reservation_domain)
 
         return reservation_set
 
     def as_context_default(self):
-        """ Builds a dictionary that allows to pass by context the values have
+        """Builds a dictionary that allows to pass by context the values have
         been set for the scheduler attributes. This dictionary will be used to
         open over and over again the assistant to search for free classrooms.
 
@@ -715,31 +716,26 @@ class FacilitySchedulerMixin(models.AbstractModel):
         self.ensure_one()
 
         return {
-            'default_date_base': self.date_base.strftime('%Y-%m-%d'),
-            'default_time_start': self.time_start,
-            'default_time_stop': self.time_stop,
-            'default_full_day': self.full_day,
-            'default_repeat': self.repeat,
-            'default_interval_number': self.interval_number,
-            'default_interval_type': self.interval_type,
-            'default_weekday_ids': self.weekday_ids.mapped('id'),
-            'default_month_type': self.month_type,
-            'default_finish_type': self.finish_type,
-            'default_finish_date': self.finish_date.strftime('%Y-%m-%d'),
-            'default_finish_number': self.finish_number,
+            "default_date_base": self.date_base.strftime("%Y-%m-%d"),
+            "default_time_start": self.time_start,
+            "default_time_stop": self.time_stop,
+            "default_full_day": self.full_day,
+            "default_repeat": self.repeat,
+            "default_interval_number": self.interval_number,
+            "default_interval_type": self.interval_type,
+            "default_weekday_ids": self.weekday_ids.mapped("id"),
+            "default_month_type": self.month_type,
+            "default_finish_type": self.finish_type,
+            "default_finish_date": self.finish_date.strftime("%Y-%m-%d"),
+            "default_finish_number": self.finish_number,
         }
 
     @staticmethod
-    def _warn(message, title='Value error'):
-        return {
-            'warning': {
-                'title': title,
-                'message': message
-            }
-        }
+    def _warn(message, title="Value error"):
+        return {"warning": {"title": title, "message": message}}
 
-    def _in_time_range(self, which='both'):
-        """ This method should be overridden by derived classes that need to
+    def _in_time_range(self, which="both"):
+        """This method should be overridden by derived classes that need to
         check that ``date_base`` and ``finish_date`` field values are
         within the required bounds.
 
@@ -765,10 +761,10 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
     # Developing a function to round to a múltiple from math import ceil, floor
     @staticmethod
-    def round_m(number, multiple, direction='nearest'):
-        if direction == 'up':
+    def round_m(number, multiple, direction="nearest"):
+        if direction == "up":
             return multiple * ceil(number / multiple)
-        elif direction == 'down':
+        elif direction == "down":
             return multiple * floor(number / multiple)
         else:
             return multiple * round(number / multiple)
@@ -788,20 +784,20 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
     @staticmethod
     def _date_addition(dt, hours):
-        """  Sum the given time, in hours, to the given datetime value.
+        """Sum the given time, in hours, to the given datetime value.
 
         Args:
             dt (datetime): base date/time value or date value instead
             hours (float): time offset given in hours
         """
 
-        if type(dt) is date: # noqa: E721
+        if type(dt) is date:  # noqa: E721
             dt = datetime.combine(dt, time.min)
 
         return dt + timedelta(hours=hours)
 
     def compute_interval(self, dt):
-        """ Rreturns the combination of the given date with the ``time_start``
+        """Rreturns the combination of the given date with the ``time_start``
         and with the ``time_stop`` field values.
 
         IMPORTANT: This method keep in mind ``full_day`` could be set to True.

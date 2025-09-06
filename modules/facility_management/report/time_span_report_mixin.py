@@ -5,7 +5,7 @@
 ###############################################################################
 
 from odoo import models, fields, api
-from odoo.tools.translate import _
+from odoo.tools.translate import _, _lt
 
 from logging import getLogger
 from datetime import timedelta, datetime
@@ -14,42 +14,43 @@ from pytz import timezone, utc
 _logger = getLogger(__name__)
 
 
-NOT_IMP_MSG = _('Abstract method «{}» not implemented in «{}» has been called')
+NOT_IMP_MSG = _lt(
+    "Abstract method «{}» not implemented in «{}» has been called"
+)
 
 
 class TimeSpanReportMixin(models.AbstractModel):
-    """ Custom report behavior
-    """
+    """Custom report behavior"""
 
-    _name = 'time.span.report.mixin'
-    _description = u'Time span report mixin'
+    _name = "time.span.report.mixin"
+    _description = "Time span report mixin"
 
     def _read_record_values(self, record):
-        msg = NOT_IMP_MSG.format('_read_record_values', self._name)
+        msg = NOT_IMP_MSG.format("_read_record_values", self._name)
         raise NotImplementedError(msg)
 
     def _get_report_values(self, docids, data=None):
-        msg = NOT_IMP_MSG.format('_get_report_values', self._name)
+        msg = NOT_IMP_MSG.format("_get_report_values", self._name)
         raise NotImplementedError(msg)
 
     # -------------------------------------------------------------------------
 
     def _get_lang(self):
-        lang = self.env.context.get('lang', False)
+        lang = self.env.context.get("lang", False)
         if not lang:
-            uid = self.env.context.get('uid', False)
+            uid = self.env.context.get("uid", False)
             if uid:
-                user = self.env['res.users'].browse(uid)
+                user = self.env["res.users"].browse(uid)
             else:
-                user = self.env.ref('base.user_root').lang
+                user = self.env.ref("base.user_root").lang
 
-            lang = user.lang if user else 'es_ES'
+            lang = user.lang if user else "es_ES"
 
         return lang
 
     @classmethod
     def _date_range(cls, date_start, date_stop, full_weeks):
-        """ Make a valid date range to loop by days.
+        """Make a valid date range to loop by days.
 
         If ``full_weeks`` is True the range will start on the first day of the
         week and end on the last day of the week.
@@ -72,7 +73,7 @@ class TimeSpanReportMixin(models.AbstractModel):
 
     @api.model
     def _get_interval(self, data):
-        """ Get date_start and date_stop value from given ``data['interval']``
+        """Get date_start and date_stop value from given ``data['interval']``
             dictionary if have been set
 
             ```
@@ -90,18 +91,17 @@ class TimeSpanReportMixin(models.AbstractModel):
         date_start, date_stop = None, None
 
         if data:
-            interval = data.get('interval', False)
+            interval = data.get("interval", False)
 
         if not interval:
-            interval = self.env.context.get('time_span', False)
+            interval = self.env.context.get("time_span", False)
 
         if interval:
-
-            date_start = interval.get('date_start', False)
+            date_start = interval.get("date_start", False)
             if isinstance(date_start, str):
                 date_start = fields.Datetime.to_datetime(date_start)
 
-            date_stop = interval.get('date_stop', False)
+            date_stop = interval.get("date_stop", False)
             if isinstance(date_stop, str):
                 date_stop = fields.Datetime.to_datetime(date_stop)
 
@@ -117,10 +117,14 @@ class TimeSpanReportMixin(models.AbstractModel):
     def _in(reservation, target_date):
         next_date = target_date + timedelta(days=1)
 
-        begin = reservation.date_start >= target_date and \
-            reservation.date_start < next_date
-        finish = reservation.date_stop >= target_date and \
-            reservation.date_stop < next_date
+        begin = (
+            reservation.date_start >= target_date
+            and reservation.date_start < next_date
+        )
+        finish = (
+            reservation.date_stop >= target_date
+            and reservation.date_stop < next_date
+        )
 
         return begin or finish
 
@@ -130,7 +134,7 @@ class TimeSpanReportMixin(models.AbstractModel):
 
     @classmethod
     def _week_str(cls, target_date):
-        date_format = _('%B, %d')
+        date_format = _("%B, %d")
 
         date_start = cls.midnight(target_date)
         date_stop = cls.midnight(target_date)
@@ -142,11 +146,11 @@ class TimeSpanReportMixin(models.AbstractModel):
         date_start = date_start.strftime(date_format)
         date_stop = date_stop.strftime(date_format)
 
-        return _('Week from {} to  {}').format(date_start, date_stop)
+        return _("Week from {} to  {}").format(date_start, date_stop)
 
     @staticmethod
     def date_str(target_date):
-        return target_date.strftime('%a, %d-%b').upper()
+        return target_date.strftime("%a, %d-%b").upper()
 
     @staticmethod
     def midnight(dt):
@@ -159,14 +163,13 @@ class TimeSpanReportMixin(models.AbstractModel):
         start = reservation.date_start + tz_offset
         stop = reservation.date_stop + tz_offset
 
-        start = start.strftime('%H:%M')
-        stop = stop.strftime('%H:%M')
+        start = start.strftime("%H:%M")
+        stop = stop.strftime("%H:%M")
 
-        return '{}-{}'.format(start, stop)
+        return "{}-{}".format(start, stop)
 
     @classmethod
     def _weekly_interval(cls, date_start, date_stop):
-
         date_start = cls.midnight(date_start)
         date_stop = cls.midnight(date_stop)
 

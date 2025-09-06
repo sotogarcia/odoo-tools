@@ -26,7 +26,7 @@
 
                 <section class="report-facility-section col-12">
                     <header>
-                        <h4 class="facility-name mb-3"><t t-esc="o.name" /></h4>
+                        <h4 class="facility-name mb-3"><t t-esc="o.display_name" /></h4>
                     </header>
 
                     <t t-foreach="values['weeks']" t-as="week">
@@ -47,7 +47,7 @@
                                 <t t-set="daily_reservations" t-value='day_value' />
                                 <t t-if="daily_reservations">
                                     <t t-foreach="daily_reservations.values()" t-as="reservation">
-                                        <tr t-attf-class="td-time reservation {{ 'reservation-first' if (reservation_first) else '' }} {{ 'reservation-last' if (reservation_last) else '' }} {{ 'reservation-middle' if (not reservation_start and not reservation_last) else '' }} {{ 'day-even' if day_index % 2 == 0 else 'day-odd' }}">
+                                        <tr t-attf-class="td-time reservation {{ 'reservation-first' if (reservation_first) else '' }} {{ 'reservation-last' if (reservation_last) else '' }} {{ 'reservation-middle' if (not reservation_first and not reservation_last) else '' }} {{ 'day-even' if day_index % 2 == 0 else 'day-odd' }}">
                                             <td style="width: 12%">
                                                 <t t-if="reservation_first">
                                                     <strong><t t-esc="reservation['date']" /></strong>
@@ -135,9 +135,10 @@
             <t t-name="facility_management.view_facility_qweb">
                 <t t-call="web.html_container">
                     <t t-foreach="docs" t-as="o">
+                      <t t-if="not o" t-set="o" t-value="doc" />
                         <t t-call="web.external_layout">
-                            <t t-call="facility_management.view_facility_document_qweb" />
-                        </t>
+                          <t t-call="facility_management.view_facility_document_qweb" />
+                      </t>
                     </t>
                 </t> <!-- t-html_container -->
             </t>
