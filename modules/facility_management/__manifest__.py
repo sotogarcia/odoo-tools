@@ -31,7 +31,6 @@
         "security/facility_weekday.xml",
         "security/facility_reservation_scheduler.xml",
         "security/facility_complex_reservation_rel.xml",
-        "security/facility_reporting_wizard.xml",
         "security/facility_reservation_massive_actions_wizard.xml",
         "security/facility_search_available_wizard.xml",
         "views/facility_weekday_view.xml",
@@ -42,9 +41,7 @@
         "views/facility_reservation_scheduler_view.xml",
         "views/res_config_settings_view.xml",
         "wizard/facility_search_available_wizard_view.xml",
-        "wizard/facility_reporting_wizard_view.xml",
         "wizard/facility_reservation_massive_actions_wizard_view.xml",
-        "report/facility_report.xml",
     ],
     "demo": [
         "demo/facility_complex_demo.xml",
