@@ -44,7 +44,7 @@
         "wizard/facility_search_available_wizard_view.xml",
         "wizard/facility_reporting_wizard_view.xml",
         "wizard/facility_reservation_massive_actions_wizard_view.xml",
-        "report/facility_report.xml",
+        "report/facility_reservations_report.xml",
     ],
     "demo": [
         "demo/facility_complex_demo.xml",

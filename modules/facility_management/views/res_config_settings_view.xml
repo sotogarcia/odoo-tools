@@ -9,7 +9,7 @@
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
-                <app data-string="Facilities" string="Facilities" name="facility_management"
+                <app string="Facilities" name="facility_management"
                     groups="base.group_system">
                     <block title="Hidden resources" name="hidden_resources">
                         <setting string="Setup weekdays"
@@ -20,14 +20,12 @@
                                     string="Weekdays"/>
                             </div>
                         </setting>
-                        <setting string="Setup schedulers" help="List and modify schedulers">
+                        <setting string="Week start" help="Day considered as the start of the week">
                             <div class="content-group mt8">
-                                <button
-                                    name="%(facility_management.action_facility_reservation_scheduler_act_window)d"
-                                    type="action" class="btn btn-link" icon="oi-arrow-right"
-                                    string="Schedulers"/>
+                                <field name="week_start_day" widget="selection"/>
                             </div>
                         </setting>
+
                     </block>
 
                     <block title="Others" name="others">
@@ -36,6 +34,14 @@
                             <div class="content-group mt8">
                                 <label for="auto_archive_on_rejection" class="o_light_label"/>
                                 <field name="auto_archive_on_rejection"/>
+                            </div>
+                        </setting>
+                        <setting string="Setup schedulers" help="List and modify schedulers">
+                            <div class="content-group mt8">
+                                <button
+                                    name="%(facility_management.action_facility_reservation_scheduler_act_window)d"
+                                    type="action" class="btn btn-link" icon="oi-arrow-right"
+                                    string="Schedulers"/>
                             </div>
                         </setting>
                     </block>
