@@ -411,7 +411,17 @@ class FacilityReservation(models.Model):
                     _("The name must be at least 5 characters long.")
                 )
 
-    def _name_get(self):
+    @api.depends(
+        "name",
+        "facility_id",
+        "facility_id.name",
+        "facility_id.complex_id",
+        "facility_id.complex_id.name",
+        "manager_id",
+        "manager_id.name",
+    )
+    @api.depends_context("lang")
+    def _compute_display_name(self):
         """Computes a single facility display name
 
         This is a private user-defined method, Not to be confused with the
@@ -421,45 +431,26 @@ class FacilityReservation(models.Model):
             str: name will be shown in GUI
         """
 
-        self.ensure_one()
-
-        if self.name:
-            name = self.name
-
-        elif self.facility_id:
-            facility = self.facility_id.name
-
-            facility_complex = self.facility_id.complex_id
-            uid_is_allowed = (
-                facility_complex
-                and facility_complex.is_an_allowed_supervisor()
-            )
-
-            if uid_is_allowed and self.owner_id:
-                owner = self.owner_id.name
-                name = "{} - {}".format(facility, owner)
-            else:
-                name = "{}".format(facility)
-        else:
-            name = _("New facility")
-
-        return name
-
-    def name_get(self):
-        """Only technicals can see the reservation owner. Other users see only
-        facility name.
-
-        Returns:
-            tuple: ((id, name))
-        """
-
-        result = []
-
         for record in self:
-            name = record._name_get()
-            result.append((record.id, name))
+            if record.name:
+                record.display_name = record.name
 
-        return result
+            elif record.facility_id:
+                facility = record.facility_id.name
+
+                facility_complex = record.facility_id.complex_id
+                uid_is_allowed = (
+                    facility_complex
+                    and facility_complex.is_an_allowed_supervisor()
+                )
+
+                if uid_is_allowed and record.manager_id:
+                    manager = record.manager_id.name
+                    record.display_name = "{} - {}".format(facility, manager)
+                else:
+                    record.display_name = "{}".format(facility)
+            else:
+                record.display_name = _("New facility")
 
     @api.returns("self", lambda value: value.id)
     def copy(self, default=None):

@@ -22,7 +22,6 @@
         <field name="active" eval="True"/>
         <field name="arch" type="xml">
             <list string="facility_weekday_tree" editable="bottom">
-                <field name="sequence" class="oe_field_sequence" widget="handle"/>
                 <field name="name" class="oe_field_name"/>
                 <field name="workday" class="oe_field_workday"/>
             </list>

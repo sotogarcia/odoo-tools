@@ -49,7 +49,9 @@ class FacilitySchedulerMixin(models.AbstractModel):
                 return self._warn(out_msg)
 
             # day of the week corresponds to the date_base
-            if self.interval_type == "week" and not self._match_weekday(self.date_base):
+            if self.interval_type == "week" and not self._match_weekday(
+                self.date_base
+            ):
                 self._ensure_weekday()
                 return self._warn(weekday_msg)
 
@@ -180,7 +182,10 @@ class FacilitySchedulerMixin(models.AbstractModel):
     @api.onchange("date_delay")
     def _onchange_date_delay(self):
         for record in self:
-            if not record.full_day and record._origin.date_delay != record.date_delay:
+            if (
+                not record.full_day
+                and record._origin.date_delay != record.date_delay
+            ):
                 record.time_stop = record.time_start + record.date_delay
 
     weekday = fields.Char(
@@ -223,7 +228,9 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
     @api.onchange("interval_number")
     def _onchange_interval_number(self):
-        min_interval_msg = _("Interval number must be greater than or equal to one")
+        min_interval_msg = _(
+            "Interval number must be greater than or equal to one"
+        )
 
         if self._field_changed("field_interval_number"):
             if self.interval_number < 1:
@@ -253,7 +260,9 @@ class FacilitySchedulerMixin(models.AbstractModel):
         )
 
         if self._field_changed("field_interval_type"):
-            if self.interval_type == "week" and not self._match_weekday(self.date_base):
+            if self.interval_type == "week" and not self._match_weekday(
+                self.date_base
+            ):
                 self._ensure_weekday()
                 return self._warn(weekday_msg)
 
@@ -368,7 +377,9 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
     @api.onchange("finish_number")
     def _onchange_finish_number(self):
-        min_finish_number_msg = _("Finish number must be greater than or equal to one")
+        min_finish_number_msg = _(
+            "Finish number must be greater than or equal to one"
+        )
         if self._field_changed("field_finish_number"):
             if self.finish_number < 1:
                 self.finish_number = 1
@@ -438,10 +449,10 @@ class FacilitySchedulerMixin(models.AbstractModel):
         weekday = target.weekday()
 
         day_one = target - timedelta(target.day - 1)
-        date_range = mixin._date_range(day_one, target, full_weeks=False)
+        date_range = mixin.date_range(day_one, target, full_weeks=False)
         cardinal = len([dt for dt in date_range if dt.weekday() == weekday])
 
-        lang = mixin._get_lang() or "es_ES"
+        lang = mixin.get_lang() or "es_ES"
 
         return num2words(cardinal, to="ordinal", lang=lang)
 
@@ -552,7 +563,9 @@ class FacilitySchedulerMixin(models.AbstractModel):
             loop_index = self._loop_security_break(loop_index)
 
             # Check match for weekday if applicable before append new date
-            if self.interval_type != "week" or self._match_weekday(date_cursor):
+            if self.interval_type != "week" or self._match_weekday(
+                date_cursor
+            ):
                 dates.append(date_cursor)
 
             date_cursor = self._next_repetition_date(date_cursor)

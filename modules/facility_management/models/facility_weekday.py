@@ -35,7 +35,7 @@ class FacilityWeekday(models.Model):
     sequence = fields.Integer(
         string="Weekday",
         required=True,
-        readonly=False,
+        readonly=True,
         index=True,
         default=1,
         help="ISO weekday number: 1=Monday ... 7=Sunday",

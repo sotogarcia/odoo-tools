@@ -23,5 +23,5 @@
         <field name="perm_unlink" eval="False" />
         <field name="active" eval="True" />
     </record>
-    
+
 </odoo>

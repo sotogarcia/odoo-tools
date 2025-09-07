@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo noupdate="0">
+
+  <template id="report_facility_reservations_week">
+
+    <t t-set="week_id"
+      t-value="make_html_id(facility.id, week_row['iso_week_number'], week_row['date_start'], prefix='week')"/>
+
+    <article class="report-week-section" t-attf-aria-labelledby="{{ week_id }}-name"
+      t-att-id="week_id">
+
+      <table class="table table-bordered w-100 week-timetable">
+        <caption t-attf-id="{{ week_id }}-name">
+          <t t-esc="week_row['week_str']"/>
+        </caption>
+        <thead>
+          <tr>
+            <th style="width: 12%" class="th-date">DATE</th>
+            <th style="width: 12%" class="th-time">TIME</th>
+            <th style="width: 48%" class="th-subject">DESCRIPTION</th>
+            <th style="width: 14%" class="th-facility">TYPE</th>
+            <th style="width: 14%" class="th-teacher">MANAGER</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <t t-foreach="week_row['days']" t-as="day_row">
+            <t t-set="daily_reservations" t-value="day_row['reservations']"/>
+            <t t-if="daily_reservations">
+              <t t-foreach="daily_reservations" t-as="reservation_row">
+                <t t-set="reservation" t-value="reservation_row['item']"/>
+                <t t-set="reservation_id"
+                  t-value="make_html_id(reservation.id, prefix='reservation')"/>
+                <tr t-att-id="reservation_id"
+                  t-attf-class="td-time reservation {{ 'reservation-first' if (reservation_row_first) else '' }} {{ 'reservation-last' if (reservation_row_last) else '' }} {{ 'reservation-middle' if (not reservation_row_first and not reservation_row_last) else '' }} {{ 'day-even' if day_row_index % 2 == 0 else 'day-odd' }}">
+                  <td style="width: 12%">
+                    <t t-if="reservation_row_first">
+                      <strong>
+                        <t t-esc="day_row['date_str']"/>
+                      </strong>
+                    </t>
+                    <t t-else=""> &#160; </t>
+                  </td>
+                  <td style="width: 12%">
+                    <t t-esc="reservation_row['time_str']"/>
+                  </td>
+                  <td style="width: 50%">
+                    <strong class="d-block text-truncate font-weight-bold">
+                      <t t-esc="reservation_row['name']"/>
+                    </strong>
+                    <small class="d-block">
+                      <t t-esc="reservation_row['description']"/>
+                    </small>
+                  </td>
+                  <td style="width: 12%">
+                    <t t-esc="reservation.type_id.name"/>
+                  </td>
+                  <td style="width: 14%">
+                    <t
+                      t-if="reservation and reservation.manager_id and reservation.manager_id.email">
+                      <a t-attf-href="mailto:{{ reservation.manager_id.email }}"
+                        t-attf-title="Contactar con {{ reservation.manager_id.name }}">
+                        <t t-esc="reservation.manager_id.name"/>
+                      </a>
+                    </t>
+                  </td>
+                </tr>
+              </t>
+            </t>
+
+            <t t-if="not daily_reservations">
+              <t t-set="reservation_id"
+                t-value="make_html_id(facility.id, week_row['iso_week_number'], week_row['date_start'], day_row_index + 1, prefix='reservation')"/>
+              <tr t-att-id="reservation_id"
+                t-attf-class="reservation reservation-empty reservation-first reservation-last {{ 'day-even' if day_row_index % 2 == 0 else 'day-odd' }}">
+                <td style="width: 12%">
+                  <strong>
+                    <t t-esc="day_row['date_str']"/>
+                  </strong>
+                </td>
+                <td style="width: 12%">···</td>
+                <td style="width: 50%">···</td>
+                <td style="width: 14%">···</td>
+                <td style="width: 12%">···</td>
+              </tr>
+            </t>
+          </t>
+        </tbody>
+
+      </table>
+
+    </article>
+
+  </template>
+
+
+  <template id="report_facility_reservations_document">
+    <t t-call="web.external_layout">
+
+      <t t-set="facility" t-value="o"/>
+      <t t-set="facility_row" t-value="datasheet.get(facility.id)"/>
+      <t t-set="make_html_id" t-value="helpers['make_html_id']"/>
+
+      <div class="page">
+        <t t-set="facility_id" t-value="make_html_id(facility.id, prefix='facility')"/>
+
+        <section class="report-facility-section" t-attf-aria-labelledby="{{ facility_id }}-name"
+          t-att-id="facility_id">
+
+          <h2 t-attf-id="{{ facility_id }}-name">
+            <t t-esc="facility_row['name']"/>
+          </h2>
+
+          <t t-foreach="facility_row['weeks']" t-as="week_row">
+            <t t-call="facility_management.report_facility_reservations_week"/>
+          </t>
+
+        </section>
+
+      </div>
+
+    </t>
+  </template>
+
+  <template id="report_facility_reservations">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="o">
+        <t t-call="facility_management.report_facility_reservations_document" t-lang="lang"/>
+      </t>
+    </t>
+  </template>
+
+  <record id="action_report_facility_reservations" model="ir.actions.report">
+    <field name="model">facility.facility</field>
+    <field name="name">Facility reservations</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">facility_management.report_facility_reservations</field>
+    <field name="report_file">facility_management.report_facility_reservations</field>
+    <field name="print_report_name">object.name</field>
+    <field name="binding_model_id" ref="facility_management.model_facility_facility"/>
+    <field name="binding_type">report</field>
+    <field name="binding_view_types">list,form</field>
+  </record>
+
+</odoo>

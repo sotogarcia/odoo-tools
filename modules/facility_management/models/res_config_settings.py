@@ -14,18 +14,36 @@ _logger = getLogger(__name__)
 
 
 class ResConfigSettings(models.TransientModel):
-    ''' Module configuration attributes
-    '''
+    """Module configuration attributes"""
 
-    _inherit = ['res.config.settings']
+    _inherit = ["res.config.settings"]
 
     auto_archive_on_rejection = fields.Boolean(
-        string='Auto archive',
+        string="Auto archive",
         required=False,
         readonly=False,
         index=False,
         default=False,
-        help=('If enabled, records will be automatically archived when they '
-              'are rejected'),
-        config_parameter='facility_management.auto_archive_on_rejection'
+        help=(
+            "If enabled, records will be automatically archived when they "
+            "are rejected"
+        ),
+        config_parameter="facility_management.auto_archive_on_rejection",
+    )
+
+    week_start_day = fields.Many2one(
+        string="Week start day",
+        required=True,
+        readonly=False,
+        index=False,
+        default=lambda self: self.env.ref(
+            "facility_management.facility_weekday_monday"
+        ),
+        help="Day considered as the start of the week.",
+        comodel_name="facility.weekday",
+        domain=[],
+        context={},
+        ondelete="restrict",
+        auto_join=False,
+        config_parameter="facility_management.week_start_day",
     )

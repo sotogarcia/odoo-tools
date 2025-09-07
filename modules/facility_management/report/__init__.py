@@ -5,3 +5,4 @@
 ###############################################################################
 
 from . import time_span_report_mixin
+from . import facility_reservations_report
