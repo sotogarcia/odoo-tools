@@ -2,49 +2,50 @@
 
 <odoo noupdate="1">
 
-    <record id="access_facility_management_model_facility_type_group_consultant" model="ir.model.access">
-        <field name="name">access_facility_management_model_facility_type_group_consultant</field>
-        <field name="model_id" ref="facility_management.model_facility_type" />
-        <field name="group_id" ref="facility_management.facility_group_consultant"/>
-        <field name="perm_create" eval="False" />
-        <field name="perm_read" eval="True" />
-        <field name="perm_write" eval="False" />
-        <field name="perm_unlink" eval="False" />
-        <field name="active" eval="True" />
-    </record>
+  <record id="access_facility_management_model_facility_type_group_consultant"
+    model="ir.model.access">
+    <field name="name">access_facility_management_model_facility_type_group_consultant</field>
+    <field name="model_id" ref="facility_management.model_facility_type"/>
+    <field name="group_id" ref="facility_management.facility_group_consultant"/>
+    <field name="perm_create" eval="False"/>
+    <field name="perm_read" eval="True"/>
+    <field name="perm_write" eval="False"/>
+    <field name="perm_unlink" eval="False"/>
+    <field name="active" eval="True"/>
+  </record>
 
-    <record id="access_facility_management_model_facility_type_group_teacher" model="ir.model.access">
-        <field name="name">access_facility_management_model_facility_type_group_teacher</field>
-        <field name="model_id" ref="facility_management.model_facility_type" />
-        <field name="group_id" ref="facility_management.facility_group_applicant"/>
-        <field name="perm_create" eval="False" />
-        <field name="perm_read" eval="True" />
-        <field name="perm_write" eval="True" />
-        <field name="perm_unlink" eval="False" />
-        <field name="active" eval="True" />
-    </record>
+  <record id="access_facility_management_model_facility_type_group_teacher" model="ir.model.access">
+    <field name="name">access_facility_management_model_facility_type_group_teacher</field>
+    <field name="model_id" ref="facility_management.model_facility_type"/>
+    <field name="group_id" ref="facility_management.facility_group_applicant"/>
+    <field name="perm_create" eval="False"/>
+    <field name="perm_read" eval="True"/>
+    <field name="perm_write" eval="True"/>
+    <field name="perm_unlink" eval="False"/>
+    <field name="active" eval="True"/>
+  </record>
 
-    <record id="access_facility_management_model_facility_type_group_technical" model="ir.model.access">
-        <field name="name">access_facility_management_model_facility_type_group_technical</field>
-        <field name="model_id" ref="facility_management.model_facility_type" />
-        <field name="group_id" ref="facility_management.facility_group_monitor"/>
-        <field name="perm_create" eval="True" />
-        <field name="perm_read" eval="True" />
-        <field name="perm_write" eval="True" />
-        <field name="perm_unlink" eval="True" />
-        <field name="active" eval="True" />
-    </record>
+  <record id="access_facility_management_model_facility_type_group_technical"
+    model="ir.model.access">
+    <field name="name">access_facility_management_model_facility_type_group_technical</field>
+    <field name="model_id" ref="facility_management.model_facility_type"/>
+    <field name="group_id" ref="facility_management.facility_group_monitor"/>
+    <field name="perm_create" eval="True"/>
+    <field name="perm_read" eval="True"/>
+    <field name="perm_write" eval="True"/>
+    <field name="perm_unlink" eval="True"/>
+    <field name="active" eval="True"/>
+  </record>
 
-    <record id="access_facility_management_model_facility_type_group_manager" model="ir.model.access">
-        <field name="name">access_facility_management_model_facility_type_group_manager</field>
-        <field name="model_id" ref="facility_management.model_facility_type" />
-        <field name="group_id" ref="facility_management.facility_group_manager"/>
-        <field name="perm_create" eval="True" />
-        <field name="perm_read" eval="True" />
-        <field name="perm_write" eval="True" />
-        <field name="perm_unlink" eval="True" />
-        <field name="active" eval="True" />
-    </record>
+  <record id="access_facility_management_model_facility_type_group_manager" model="ir.model.access">
+    <field name="name">access_facility_management_model_facility_type_group_manager</field>
+    <field name="model_id" ref="facility_management.model_facility_type"/>
+    <field name="group_id" ref="facility_management.facility_group_manager"/>
+    <field name="perm_create" eval="True"/>
+    <field name="perm_read" eval="True"/>
+    <field name="perm_write" eval="True"/>
+    <field name="perm_unlink" eval="True"/>
+    <field name="active" eval="True"/>
+  </record>
 
 </odoo>
-

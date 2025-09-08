@@ -2,67 +2,65 @@
 
 <odoo noupdate="0">
 
-    <record id="facility_reservation_state_changed_email" model="ir.ui.view">
-        <field name="name">Facility reservation state changed</field>
-        <field name="model"/>
-        <field name="type">qweb</field>
-        <field name="mode">primary</field>
-        <field name="priority" eval="16"/>
-        <field name="active" eval="True"/>
-        <field name="inherit_id" ref="mail.mail_notification_layout"/>
-        <field name="key">mail.mail_notification_layout</field>
-        <field name="arch" type="xml">
-            <xpath expr="//div[@t-out='message.body']" position="before">
+  <record id="facility_reservation_state_changed_email" model="ir.ui.view">
+    <field name="name">Facility reservation state changed</field>
+    <field name="model"/>
+    <field name="type">qweb</field>
+    <field name="mode">primary</field>
+    <field name="priority" eval="16"/>
+    <field name="active" eval="True"/>
+    <field name="inherit_id" ref="mail.mail_notification_layout"/>
+    <field name="key">mail.mail_notification_layout</field>
+    <field name="arch" type="xml">
+      <xpath expr="//div[@t-out='message.body']" position="before">
 
-                <p style="width: 600px; margin: 5px 0px; text-align: justify;"> Hello. </p>
+        <p style="width: 600px; margin: 5px 0px; text-align: justify;"> Hello. </p>
 
-                <p style="width: 600px; margin: 5px 0px; text-align: justify;"> The status of the
-                    facility reservation (<b style="font-style: italic;"><t
-                            t-esc="message.record_name"/></b>) you previously requested has
-                    undergone a change. I kindly ask you to review the details to ensure you're
-                    fully aware of the current situation and any implications it might have for your
-                    plans. </p>
-            </xpath>
+        <p style="width: 600px; margin: 5px 0px; text-align: justify;"> The status of the facility
+          reservation (<b style="font-style: italic;"><t t-esc="message.record_name"/></b>) you
+          previously requested has undergone a change. I kindly ask you to review the details to
+          ensure you're fully aware of the current situation and any implications it might have for
+          your plans. </p>
+      </xpath>
 
-            <xpath expr="//ul[@t-if='tracking_values']" position="after">
-                <p style="width: 600px; margin: 5px 0px; text-align: justify;"> If you encounter any
-                    issues or have questions, please don't hesitate to contact the complex
-                    administrator. This person will be available to assist you. </p>
-            </xpath>
+      <xpath expr="//ul[@t-if='tracking_values']" position="after">
+        <p style="width: 600px; margin: 5px 0px; text-align: justify;"> If you encounter any issues
+          or have questions, please don't hesitate to contact the complex administrator. This person
+          will be available to assist you. </p>
+      </xpath>
 
-        </field>
-    </record>
+    </field>
+  </record>
 
 
-    <record id="facility_reservation_has_changed_email" model="ir.ui.view">
-        <field name="name">Facility reservation has changed</field>
-        <field name="model"/>
-        <field name="type">qweb</field>
-        <field name="mode">primary</field>
-        <field name="priority" eval="16"/>
-        <field name="active" eval="True"/>
-        <field name="inherit_id" ref="mail.mail_notification_layout"/>
-        <field name="key">mail.mail_notification_layout</field>
-        <field name="arch" type="xml">
-            <xpath expr="//div[@t-out='message.body']" position="before">
+  <record id="facility_reservation_has_changed_email" model="ir.ui.view">
+    <field name="name">Facility reservation has changed</field>
+    <field name="model"/>
+    <field name="type">qweb</field>
+    <field name="mode">primary</field>
+    <field name="priority" eval="16"/>
+    <field name="active" eval="True"/>
+    <field name="inherit_id" ref="mail.mail_notification_layout"/>
+    <field name="key">mail.mail_notification_layout</field>
+    <field name="arch" type="xml">
+      <xpath expr="//div[@t-out='message.body']" position="before">
 
-                <p style="width: 600px; margin: 5px 0px; text-align: justify;"> Hello. </p>
+        <p style="width: 600px; margin: 5px 0px; text-align: justify;"> Hello. </p>
 
-                <p style="width: 600px; margin: 5px 0px; text-align: justify;"> I would like to
-                    inform you that changes have been made to one of your facility reservations.
-                    Please review the updated details when you can, and let me know if you have any
-                    questions or concerns. </p>
+        <p style="width: 600px; margin: 5px 0px; text-align: justify;"> I would like to inform you
+          that changes have been made to one of your facility reservations. Please review the
+          updated details when you can, and let me know if you have any questions or concerns. </p>
 
-                <p style="width: 600px; margin: 5px 0px; text-align: justify;"> The details of these
-                    changes are reflected below. </p>
-            </xpath>
+        <p style="width: 600px; margin: 5px 0px; text-align: justify;"> The details of these changes
+          are reflected below. </p>
+      </xpath>
 
-            <xpath expr="//ul[@t-if='tracking_values']" position="after">
-                <p style="width: 600px; margin: 5px 0px; text-align: justify;"> Thank you for your
-                    understanding and flexibility. </p>
-            </xpath>
+      <xpath expr="//ul[@t-if='tracking_values']" position="after">
+        <p style="width: 600px; margin: 5px 0px; text-align: justify;"> Thank you for your
+          understanding and flexibility. </p>
+      </xpath>
 
-        </field>
-    </record>
+    </field>
+  </record>
 
 </odoo>

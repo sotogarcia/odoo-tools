@@ -47,3 +47,14 @@ class ResConfigSettings(models.TransientModel):
         auto_join=False,
         config_parameter="facility_management.week_start_day",
     )
+
+    availability_margin_minutes = fields.Integer(
+        string="Availability margin (minutes)",
+        required=True,
+        readonly=False,
+        index=False,
+        default=60,
+        help="Number of minutes after now during which future reservations "
+        "will mark a facility as unavailable.",
+        config_parameter="facility_management.availability_margin_minutes",
+    )

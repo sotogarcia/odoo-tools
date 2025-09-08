@@ -55,8 +55,6 @@
     ],
     "assets": {
         "web.assets_backend": [
-            "facility_management/static/src/js/facility_widgets.esm.js",
-            "facility_management/static/src/xml/facility_widgets.xml",
             "facility_management/static/src/js/cog_menu.esm.js",
             "facility_management/static/src/xml/cog_menu.xml",
         ],

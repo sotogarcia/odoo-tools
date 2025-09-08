@@ -27,7 +27,7 @@ class FacilityType(models.Model):
         readonly=False,
         index=True,
         default=None,
-        help=False,
+        help="Name of the facility type",
         size=255,
         translate=True,
     )
@@ -38,7 +38,7 @@ class FacilityType(models.Model):
         readonly=False,
         index=False,
         default=None,
-        help="Enter new description",
+        help="Additional details or notes about this facility type",
         translate=True,
     )
 
@@ -49,6 +49,15 @@ class FacilityType(models.Model):
         index=False,
         default=True,
         help="Enables/disables the record",
+    )
+
+    is_space = fields.Boolean(
+        string="Is space",
+        required=False,
+        readonly=False,
+        index=True,
+        default=False,
+        help="Check this option if the record represents a physical space.",
     )
 
     _sql_constraints = [

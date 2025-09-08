@@ -2,202 +2,197 @@
 
 <odoo noupdate="0">
 
-    <record id="view_facility_reservation_scheduler_tree" model="ir.ui.view">
-        <field name="name">Facility reservation scheduler tree</field>
-        <field name="model">facility.reservation.scheduler</field>
-        <field name="type">list</field>
-        <field name="priority" eval="16"/>
-        <field name="active" eval="True"/>
-        <field name="arch" type="xml">
-            <list string="Facility reservation scheduler">
-                <field name="name" class="oe_field_name"/>
-                <field name="facility_id" class="oe_field_facility_id"/>
-                <field name="date_base" class="oe_field_date_base"/>
-                <field name="time_start" class="oe_field_time_start"/>
-                <field name="time_stop" class="oe_field_time_stop"/>
-                <field name="repeat" class="oe_field_repeat"/>
-                <field name="finish_type" class="oe_field_finish_type"/>
-                <field name="interval_type" class="oe_field_interval_type"/>
-                <field name="manager_id" class="oe_field_manager_id"/>
-            </list>
-        </field>
-    </record>
+  <record id="view_facility_reservation_scheduler_tree" model="ir.ui.view">
+    <field name="name">Facility reservation scheduler tree</field>
+    <field name="model">facility.reservation.scheduler</field>
+    <field name="type">list</field>
+    <field name="priority" eval="16"/>
+    <field name="active" eval="True"/>
+    <field name="arch" type="xml">
+      <list string="Facility reservation scheduler">
+        <field name="name" class="oe_field_name"/>
+        <field name="facility_id" class="oe_field_facility_id"
+          context="{'facility_name_with_complex': True}"/>
+        <field name="date_base" class="oe_field_date_base"/>
+        <field name="time_start" class="oe_field_time_start"/>
+        <field name="time_stop" class="oe_field_time_stop"/>
+        <field name="repeat" class="oe_field_repeat"/>
+        <field name="finish_type" class="oe_field_finish_type"/>
+        <field name="interval_type" class="oe_field_interval_type"/>
+        <field name="manager_id" class="oe_field_manager_id"/>
+      </list>
+    </field>
+  </record>
 
-    <record id="view_facility_reservation_scheduler_form" model="ir.ui.view">
-        <field name="name">Facility reservation scheduler</field>
-        <field name="model">facility.reservation.scheduler</field>
-        <field name="type">form</field>
-        <field name="priority" eval="16"/>
-        <field name="active" eval="True"/>
-        <field name="arch" type="xml">
-            <form string="Facility reservation scheduler">
+  <record id="view_facility_reservation_scheduler_form" model="ir.ui.view">
+    <field name="name">Facility reservation scheduler</field>
+    <field name="model">facility.reservation.scheduler</field>
+    <field name="type">form</field>
+    <field name="priority" eval="16"/>
+    <field name="active" eval="True"/>
+    <field name="arch" type="xml">
+      <form string="Facility reservation scheduler">
 
-                <field name="reservation_ids" invisible="1"/>
+        <field name="reservation_ids" invisible="1"/>
 
-                <header>
-                    <button name="make_reservations" string="&#160;Reserve" type="object"
-                        icon="fa-play" help="Make reservations" class="btn btn-primary"
-                        invisible="(not date_base) or (not facility_id) or (state != 'finish')"/>
-                    <button name="remove_reservations" string="&#160;Remove" type="object"
-                        icon="fa-trash" help="Remove" class="btn btn-warning"
-                        confirm="Are you sure you want to remove all scheduled reservations?"
-                        invisible="(not date_base) or (not facility_id) or (state != 'finish')"/>
-                    <field name="state" widget="statusbar" clickable="1"/>
-                </header>
+        <header>
+          <button name="make_reservations" string="&#160;Reserve" type="object" icon="fa-play"
+            help="Make reservations" class="btn btn-primary"
+            invisible="(not date_base) or (not facility_id) or (state != 'finish')"/>
+          <button name="remove_reservations" string="&#160;Remove" type="object" icon="fa-trash"
+            help="Remove" class="btn btn-warning"
+            confirm="Are you sure you want to remove all scheduled reservations?"
+            invisible="(not date_base) or (not facility_id) or (state != 'finish')"/>
+          <field name="state" widget="statusbar" clickable="1"/>
+        </header>
 
-                <group col="6" id="schedule" string="Schedule" invisible="state != 'schedule'">
-                    <field name="date_base" class="oe_field_date_base"
-                        context="{'field_date_base': True}"/>
-                    <field name="weekday" class="oe_field_week_day text-info font-italic"
-                        colspan="2" nolabel="1" context="{'field_weekday': True}"/>
-                    <field name="full_day" class="oe_field_full_day"
-                        context="{'field_full_day': True}"/>
+        <group col="6" id="schedule" string="Schedule" invisible="state != 'schedule'">
+          <field name="date_base" class="oe_field_date_base" context="{'field_date_base': True}"/>
+          <field name="weekday" class="oe_field_week_day text-info font-italic" colspan="2"
+            nolabel="1" context="{'field_weekday': True}"/>
+          <field name="full_day" class="oe_field_full_day" context="{'field_full_day': True}"/>
 
-                    <field name="time_start" class="oe_field_time_start" widget="float_time"
-                        invisible="full_day" context="{'field_time_start': True}"/>
-                    <field name="time_stop" class="oe_field_time_stop" widget="float_time"
-                        invisible="full_day" context="{'field_time_stop': True}"/>
-                    <field name="date_delay" class="oe_field_date_delay" widget="float_time"
-                        invisible="full_day" context="{'field_date_delay': True}"/>
-                </group>
+          <field name="time_start" class="oe_field_time_start" widget="float_time"
+            invisible="full_day" context="{'field_time_start': True}"/>
+          <field name="time_stop" class="oe_field_time_stop" widget="float_time"
+            invisible="full_day" context="{'field_time_stop': True}"/>
+          <field name="date_delay" class="oe_field_date_delay" widget="float_time"
+            invisible="full_day" context="{'field_date_delay': True}"/>
+        </group>
 
-                <group col="2" id="repeat" string="Repeat" invisible="state != 'schedule'">
-                    <group col="2" class="mt-0">
-                        <field name="repeat" class="oe_field_repeat"
-                            context="{'field_repeat': True}"/>
-                        <field name="interval_number" class="oe_field_interval_number" min="1"
-                            invisible="not repeat" context="{'field_interval_number': True}"/>
+        <group col="2" id="repeat" string="Repeat" invisible="state != 'schedule'">
+          <group col="2" class="mt-0">
+            <field name="repeat" class="oe_field_repeat" context="{'field_repeat': True}"/>
+            <field name="interval_number" class="oe_field_interval_number" min="1"
+              invisible="not repeat" context="{'field_interval_number': True}"/>
 
-                        <separator colspan="2" invisible="not repeat"/>
-                        <field name="finish_type" class="oe_field_finish_type"
-                            invisible="not repeat" context="{'field_finish_type': True}"/>
-                        <field name="finish_date" class="oe_field_finish_date"
-                            invisible="(not repeat) or (finish_type != 'date')"
-                            context="{'field_finish_date': True}"/>
-                        <field name="finish_number" class="oe_field_finish_number"
-                            invisible="(not repeat) or (finish_type != 'number')"
-                            context="{'field_finish_number': True}"/>
-                    </group>
+            <separator colspan="2" invisible="not repeat"/>
+            <field name="finish_type" class="oe_field_finish_type" invisible="not repeat"
+              context="{'field_finish_type': True}"/>
+            <field name="finish_date" class="oe_field_finish_date"
+              invisible="(not repeat) or (finish_type != 'date')"
+              context="{'field_finish_date': True}"/>
+            <field name="finish_number" class="oe_field_finish_number"
+              invisible="(not repeat) or (finish_type != 'number')"
+              context="{'field_finish_number': True}"/>
+          </group>
 
-                    <group col="2" class="mt-0" invisible="not repeat">
-                        <separator colspan="2"/>
-                        <field name="interval_type" class="oe_field_interval_type"
-                            context="{'field_interval_type': True}"/>
-                        <field name="weekday_ids" class="oe_field_weekday_ids"
-                            invisible="interval_type != 'week'" widget="many2many_checkboxes"
-                            context="{'field_weekday_ids': True}"/>
-                        <field name="month_type" class="oe_field_month_type"
-                            invisible="interval_type != 'month'"
-                            context="{'field_month_type': True}"/>
-                        <field name="week_day_str"
-                            class="oe_field_week_day_str text-info font-italic"
-                            invisible="(interval_type != 'month') or (month_type != 'week')"
-                            context="{'field_week_day_str': True}"/>
-                    </group>
-                </group>
+          <group col="2" class="mt-0" invisible="not repeat">
+            <separator colspan="2"/>
+            <field name="interval_type" class="oe_field_interval_type"
+              context="{'field_interval_type': True}"/>
+            <field name="weekday_ids" class="oe_field_weekday_ids"
+              invisible="interval_type != 'week'" widget="many2many_checkboxes"
+              context="{'field_weekday_ids': True}"/>
+            <field name="month_type" class="oe_field_month_type"
+              invisible="interval_type != 'month'" context="{'field_month_type': True}"/>
+            <field name="week_day_str" class="oe_field_week_day_str text-info font-italic"
+              invisible="(interval_type != 'month') or (month_type != 'week')"
+              context="{'field_week_day_str': True}"/>
+          </group>
+        </group>
 
-                <group col="6" id="facility" string="Facility" invisible="state != 'facility'">
-                    <field name="facility_id" class="oe_field_facility_id" colspan="4"
-                        domain="[('id', 'in', available_facility_ids)]"
-                        options="{'no_quick_create': True, 'no_create': True, 'no_open': True}"/>
-                    <field name="validate" class="oe_field_validate"/>
-                </group>
+        <group col="6" id="facility" string="Facility" invisible="state != 'facility'">
+          <field name="facility_id" class="oe_field_facility_id" colspan="4"
+            domain="[('id', 'in', available_facility_ids)]"
+            context="{'facility_name_with_complex': True}"
+            options="{'no_quick_create': True, 'no_create': True, 'no_open': True}"/>
+          <field name="validate" class="oe_field_validate"/>
+        </group>
 
-                <group col="4" id="details" string="Details" invisible="state != 'facility'">
-                    <field name="company_id" class="oe_field_company_id text-truncate text-info"
-                        options="{'no_open': True}"/>
-                    <field name="complex_id" class="oe_field_complex_id text-truncate text-info"
-                        options="{'no_open': True}"/>
-                    <field name="type_id" class="oe_field_type_id text-truncate text-info"
-                        options="{'no_open': True}"/>
-                    <field name="users" class="oe_field_users" options="{'no_open': True}"
-                        invisible="users &lt;= 0"/>
-                </group>
+        <group col="4" id="details" string="Details" invisible="state != 'facility'">
+          <field name="company_id" class="oe_field_company_id text-truncate text-info"
+            options="{'no_open': True}"/>
+          <field name="complex_id" class="oe_field_complex_id text-truncate text-info"
+            options="{'no_open': True}"/>
+          <field name="type_id" class="oe_field_type_id text-truncate text-info"
+            options="{'no_open': True}"/>
+          <field name="users" class="oe_field_users" options="{'no_open': True}"
+            invisible="users &lt;= 0"/>
+        </group>
 
-                <group col="2" id="description" string="Description" invisible="state != 'finish'">
-                    <field name="name" class="oe_field_name"/>
-                    <field name="description" class="oe_field_description pt-4" colspan="2"/>
-                </group>
+        <group col="2" id="description" string="Description" invisible="state != 'finish'">
+          <field name="name" class="oe_field_name"/>
+          <field name="description" class="oe_field_description pt-4" colspan="2"/>
+        </group>
 
-                <group col="4" id="options" string="Options" invisible="state != 'finish'"
-                    groups="facility_management.facility_group_monitor">
-                    <field name="confirm" class="oe_field_confirm"/>
-                    <field name="tracking_disable" class="oe_field_tracking_disable"
-                        string="No track"/>
-                </group>
+        <group col="4" id="options" string="Options" invisible="state != 'finish'"
+          groups="facility_management.facility_group_monitor">
+          <field name="confirm" class="oe_field_confirm"/>
+          <field name="tracking_disable" class="oe_field_tracking_disable" string="No track"/>
+        </group>
 
-                <group col="4" id="finish" string="Manager" invisible="state != 'finish'"
-                    groups="record_ownership.record_ownership_proxy">
-                    <field name="owner_id" class="oe_field_owner_id"
-                        options="{'no_quick_create': True, 'no_create': True, 'no_open': True}"/>
-                    <field name="subrogate_id" class="oe_field_subrogate_id"
-                        options="{'no_quick_create': True, 'no_create': True, 'no_open': True}"/>
-                </group>
+        <group col="4" id="finish" string="Manager" invisible="state != 'finish'"
+          groups="record_ownership.record_ownership_proxy">
+          <field name="owner_id" class="oe_field_owner_id"
+            options="{'no_quick_create': True, 'no_create': True, 'no_open': True}"/>
+          <field name="subrogate_id" class="oe_field_subrogate_id"
+            options="{'no_quick_create': True, 'no_create': True, 'no_open': True}"/>
+        </group>
 
-                <footer/>
+        <footer/>
 
-            </form>
-        </field>
-    </record>
+      </form>
+    </field>
+  </record>
 
-    <record id="view_facility_reservation_scheduler_search" model="ir.ui.view">
-        <field name="name">Reservation scheduler search view</field>
-        <field name="model">facility.reservation.scheduler</field>
-        <field name="type">search</field>
-        <field name="priority" eval="16"/>
-        <field name="active" eval="True"/>
-        <field name="arch" type="xml">
-            <search string="Reservation scheduler search view">
-                <field name="name" class="oe_field_name"/>
+  <record id="view_facility_reservation_scheduler_search" model="ir.ui.view">
+    <field name="name">Reservation scheduler search view</field>
+    <field name="model">facility.reservation.scheduler</field>
+    <field name="type">search</field>
+    <field name="priority" eval="16"/>
+    <field name="active" eval="True"/>
+    <field name="arch" type="xml">
+      <search string="Reservation scheduler search view">
+        <field name="name" class="oe_field_name"/>
 
-                <field name="facility_id" class="oe_field_facility_id"/>
-                <field name="manager_id" class="oe_field_manager_id"/>
+        <field name="facility_id" class="oe_field_facility_id"/>
+        <field name="manager_id" class="oe_field_manager_id"/>
 
-                <field name="date_base" class="oe_field_date_base"/>
-                <field name="finish_date" class="oe_field_finish_date"/>
+        <field name="date_base" class="oe_field_date_base"/>
+        <field name="finish_date" class="oe_field_finish_date"/>
 
-                <field name="finish_type" class="oe_field_finish_type"/>
-                <field name="interval_type" class="oe_field_interval_type"/>
+        <field name="finish_type" class="oe_field_finish_type"/>
+        <field name="interval_type" class="oe_field_interval_type"/>
 
-                <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
+        <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
 
-                <separator/>
+        <separator/>
 
-                <filter string="With repeat" name="with_repeat" domain="[('repeat', '=', True)]"/>
-                <filter string="With no repeat" name="with_no_repeat"
-                    domain="[('repeat', '!=', True)]"/>
+        <filter string="With repeat" name="with_repeat" domain="[('repeat', '=', True)]"/>
+        <filter string="With no repeat" name="with_no_repeat" domain="[('repeat', '!=', True)]"/>
 
-                <group expand="0" name="group_by" string="Group By">
-                    <filter name="group_by_facility_id" string="Facility" domain="[]"
-                        context="{'group_by' : 'facility_id'}"/>
-                    <filter name="group_by_manager_id" string="Manager" domain="[]"
-                        context="{'group_by' : 'manager_id'}"/>
-                    <filter name="group_by_date" string="Date" domain="[]"
-                        context="{'group_by' : 'date_base'}"/>
-                    <filter name="group_by_finish_type" string="Finish type" domain="[]"
-                        context="{'group_by' : 'finish_type'}"/>
-                    <filter name="group_by_interval_type" string="Interval type" domain="[]"
-                        context="{'group_by' : 'interval_type'}"/>
-                </group>
+        <group expand="0" name="group_by" string="Group By">
+          <filter name="group_by_facility_id" string="Facility" domain="[]"
+            context="{'group_by' : 'facility_id'}"/>
+          <filter name="group_by_manager_id" string="Manager" domain="[]"
+            context="{'group_by' : 'manager_id'}"/>
+          <filter name="group_by_date" string="Date" domain="[]"
+            context="{'group_by' : 'date_base'}"/>
+          <filter name="group_by_finish_type" string="Finish type" domain="[]"
+            context="{'group_by' : 'finish_type'}"/>
+          <filter name="group_by_interval_type" string="Interval type" domain="[]"
+            context="{'group_by' : 'interval_type'}"/>
+        </group>
 
-            </search>
-        </field>
-    </record>
+      </search>
+    </field>
+  </record>
 
-    <record id="action_facility_reservation_scheduler_act_window" model="ir.actions.act_window">
-        <field name="type">ir.actions.act_window</field>
-        <field name="name">Reservation schedulers</field>
-        <field name="res_model">facility.reservation.scheduler</field>
-        <field name="view_mode">list,form</field>
-        <field name="target">current</field>
-        <field name="domain">[]</field>
-        <field name="context">{}</field>
-        <field name="search_view_id"
-            ref="facility_management.view_facility_reservation_scheduler_search"/>
-    </record>
+  <record id="action_facility_reservation_scheduler_act_window" model="ir.actions.act_window">
+    <field name="type">ir.actions.act_window</field>
+    <field name="name">Reservation schedulers</field>
+    <field name="res_model">facility.reservation.scheduler</field>
+    <field name="view_mode">list,form</field>
+    <field name="target">current</field>
+    <field name="domain">[]</field>
+    <field name="context">{}</field>
+    <field name="search_view_id"
+      ref="facility_management.view_facility_reservation_scheduler_search"/>
+  </record>
 
-    <!-- Main menu for model.name -->
-    <!--  <record id="menu_facility_reservation_scheduler" model="ir.ui.menu" >
+  <!-- Main menu for model.name -->
+  <!--  <record id="menu_facility_reservation_scheduler" model="ir.ui.menu" >
         <field name="name">Schedulers</field>
         <field name="sequence" eval="20" />
         <field name="action" ref="action_facility_reservation_scheduler_act_window" />
@@ -205,24 +200,24 @@
         <field name="groups_id" eval="[(4, ref('facility_management.facility_group_manager'))]"/>
     </record> -->
 
-    <record id="action_facility_reservation_scheduler_as_wizard_act_window"
-        model="ir.actions.act_window">
-        <field name="type">ir.actions.act_window</field>
-        <field name="name">Facility reservation</field>
-        <field name="res_model">facility.reservation.scheduler</field>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-        <field name="domain">[]</field>
-        <field name="context">{}</field>
-    </record>
+  <record id="action_facility_reservation_scheduler_as_wizard_act_window"
+    model="ir.actions.act_window">
+    <field name="type">ir.actions.act_window</field>
+    <field name="name">Facility reservation</field>
+    <field name="res_model">facility.reservation.scheduler</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    <field name="domain">[]</field>
+    <field name="context">{}</field>
+  </record>
 
-    <!-- Main menu for model.name -->
-    <record id="menu_facility_reservation_scheduler_as_wizard" model="ir.ui.menu">
-        <field name="name">Facility reservation</field>
-        <field name="sequence" eval="20"/>
-        <field name="action" ref="action_facility_reservation_scheduler_as_wizard_act_window"/>
-        <field name="parent_id" ref="facility_management.menu_facility_management_reservations"/>
-        <field name="groups_id" eval="[(4, ref('facility_management.facility_group_applicant'))]"/>
-    </record>
+  <!-- Main menu for model.name -->
+  <record id="menu_facility_reservation_scheduler_as_wizard" model="ir.ui.menu">
+    <field name="name">Facility reservation</field>
+    <field name="sequence" eval="20"/>
+    <field name="action" ref="action_facility_reservation_scheduler_as_wizard_act_window"/>
+    <field name="parent_id" ref="facility_management.menu_facility_management_reservations"/>
+    <field name="groups_id" eval="[(4, ref('facility_management.facility_group_applicant'))]"/>
+  </record>
 
 </odoo>

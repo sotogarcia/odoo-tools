@@ -18,9 +18,10 @@
 
             <separator colspan="4" string="Facilities"/>
             <field name="facility_ids" class="oe_field_facility_ids" nolabel="1" colspan="4"
+              context="{'facility_name_with_complex': True}"
               options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
 
-            <field name="report_type" class="oe_field_report_type" />
+            <field name="report_type" class="oe_field_report_type"/>
             <field name="full_weeks" class="oe_field_full_weeks"/>
           </group>
 
@@ -30,10 +31,10 @@
           <div class="d-flex w-100">
             <group col="2" class="flex-grow-1 text-nowrap">
               <field name="close_on_report_download" class="oe_field_close_on_report_download"
-                readonly="report_type == 'qweb-html'" />
+                readonly="report_type == 'qweb-html'"/>
             </group>
-            <button name="reporting" string="Print schedules" type="object"
-              help="Print report" class="btn-primary text-nowrap" />
+            <button name="reporting" string="Print schedules" type="object" help="Print report"
+              class="btn-primary text-nowrap"/>
           </div>
         </footer>
 

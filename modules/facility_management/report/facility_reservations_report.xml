@@ -138,9 +138,7 @@
     <field name="report_name">facility_management.report_facility_reservations</field>
     <field name="report_file">facility_management.report_facility_reservations</field>
     <field name="print_report_name">object.name</field>
-    <field name="binding_model_id" ref="facility_management.model_facility_facility"/>
-    <field name="binding_type">report</field>
-    <field name="binding_view_types">list,form</field>
+    <field name="binding_model_id" />
   </record>
 
 </odoo>

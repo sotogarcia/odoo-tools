@@ -63,14 +63,18 @@
        · Icono al JS
 
 
+- [x] Kanban view for facility.complex
 ```
 ┌──────────────────────────┐
 │ name                     │
-│ __Dirección__            │
 │ Telefono: ___ Email: ___ │
 │ Responsable: ___         │
+│ Aulas   Capacidad  Otros │
+│ __Dirección__            │
 └──────────────────────────┘
 ```
+- [x] Image in kanban view: complex and facility.
 
-facility_count
-manager_id
+
+
+

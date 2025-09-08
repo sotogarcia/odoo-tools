@@ -90,6 +90,17 @@ class FacilityFacility(models.Model):
         auto_join=False,
     )
 
+    is_space = fields.Boolean(
+        string="Is space",
+        required=False,
+        readonly=False,
+        index=True,
+        default=False,
+        help="Check this option if the record represents a physical space.",
+        related="type_id.is_space",
+        store=True,
+    )
+
     complex_id = fields.Many2one(
         string="Complex",
         required=True,
@@ -376,7 +387,9 @@ class FacilityFacility(models.Model):
     @api.depends("next_use")
     def _compute_color(self):
         now = datetime.now()
-        next_hour = now + timedelta(hours=1)
+
+        margin = self._get_availability_margin()
+        next_hour = now + timedelta(minutes=margin)
 
         for record in self:
             if not record.next_use or record.next_use >= next_hour:
@@ -385,6 +398,66 @@ class FacilityFacility(models.Model):
                 record.color = 3
             else:
                 record.color = 1
+
+    is_available = fields.Boolean(
+        string="Available",
+        required=False,
+        readonly=True,
+        index=False,
+        default=False,
+        help="True if there are no reservations now or within the next hour.",
+        compute="_compute_available",
+        search="_search_available",
+        store=False,
+    )
+
+    @api.depends(
+        "reservation_ids",
+        "reservation_ids.date_start",
+        "reservation_ids.date_stop",
+    )
+    def _compute_available(self):
+        facility_ids = self.ids
+        now = fields.Datetime.now()
+
+        margin = self._get_availability_margin()
+        ubound = now + timedelta(minutes=margin)
+
+        domain = [
+            ("facility_id", "in", facility_ids),
+            ("date_start", "<", ubound),
+            ("date_stop", ">", now),
+        ]
+        groups = self.env["facility.reservation"].read_group(
+            domain, ["facility_id"], ["facility_id"]
+        )
+        counts = {
+            g["facility_id"][0]: g["__count"]
+            for g in groups
+            if g.get("facility_id")
+        }
+        for rec in self:
+            rec.is_available = counts.get(rec.id, 0) == 0
+
+    @api.model
+    def _search_available(self, operator, value):
+        print("_search_available")
+        now = fields.Datetime.now()
+        ubound = now + timedelta(hours=1)
+        groups = self.env["facility.reservation"].read_group(
+            [("date_start", "<", ubound), ("date_stop", ">", now)],
+            ["facility_id"],
+            ["facility_id"],
+        )
+        busy_ids = [
+            g["facility_id"][0] for g in groups if g.get("facility_id")
+        ]
+
+        # queremos disponibles ⇒ excluir ocupados
+        if (operator == "=" and value) or (operator == "!=" and not value):
+            return [("id", "not in", busy_ids)] if busy_ids else []
+        # queremos no disponibles ⇒ incluir ocupados
+        return [("id", "in", busy_ids)] if busy_ids else FALSE_DOMAIN
 
     _sql_constraints = [
         (
@@ -453,30 +526,13 @@ class FacilityFacility(models.Model):
     @api.depends_context("lang")
     def _compute_display_name(self):
         context = self.env.context
-        without_complex = context.get("facility_name_without_complex", False)
-
-        print(context)
+        with_complex = context.get("facility_name_with_complex", False)
 
         for record in self:
-            parts = [] if without_complex else [record.complex_id.name]
+            parts = [record.complex_id.name] if with_complex else []
             parts.append(record.name)
 
             record.display_name = " / ".join(parts)
-
-    def name_get(self):
-        result = []
-
-        context = self.env.context
-        without_complex = context.get("facility_name_without_complex", False)
-
-        for record in self:
-            parts = [] if without_complex else [record.complex_id.name]
-            parts.append(record.name)
-
-            name = " - ".join(parts)
-            result.append((record.id, name))
-
-        return result
 
     def view_reservations(self):
         self.ensure_one()
@@ -551,6 +607,26 @@ class FacilityFacility(models.Model):
         facility_set = facility_obj.search(facility_domain)
 
         return facility_set
+
+    def _get_availability_margin(self):
+        """Return the configured availability margin in minutes,
+        or 60 if not set or invalid.
+        """
+        param_xid = "facility_management.availability_margin_minutes"
+        config = self.env["ir.config_parameter"].sudo()
+
+        try:
+            param_value = config.get_param(param_xid, "60")
+            param_value = int(param_value)
+        except (TypeError, ValueError) as ex:
+            _logger.error(
+                "Invalid availability margin configuration: %s",
+                ex,
+                exc_info=True,
+            )
+            param_value = 60
+
+        return param_value
 
 
 # 1 -> Naranja oscuro

@@ -243,7 +243,10 @@ class FacilitySchedulerMixin(models.AbstractModel):
         readonly=False,
         index=False,
         default="week",
-        help=False,
+        help=(
+            "Defines the unit of time used between repetitions "
+            "(day, week, month, or year)"
+        ),
         selection=[
             ("day", "Days"),
             ("week", "Weeks"),
@@ -338,7 +341,10 @@ class FacilitySchedulerMixin(models.AbstractModel):
         readonly=False,
         index=False,
         default="number",
-        help=False,
+        help=(
+            "Defines when the repetition should stop: after a number of "
+            "occurrences or when reaching a specific date"
+        ),
         selection=[("number", "After repeating"), ("date", "When passing")],
     )
 

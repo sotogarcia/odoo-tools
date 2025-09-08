@@ -2,64 +2,64 @@
 
 <odoo noupdate="1">
 
-    <record id="facility_classroom_1" model="facility.facility">
-        <field name="name">Classroom 1</field>
-        <field name="code">C1</field>
-        <field name="description"><![CDATA[Classroom numbered as 1]]></field>
-        <field name="active" eval="True"/>
-        <field name="type_id" ref="facility_management.facility_type_regular_classroom"/>
-        <field name="complex_id" ref="facility_management.facility_complex_main_complex"/>
-        <field name="users">20</field>
-        <field name="excess">20</field>
-        <field name="owner_id" ref="base.user_admin"/>
-    </record>
+  <record id="facility_classroom_1" model="facility.facility">
+    <field name="name">Classroom 1</field>
+    <field name="code">C1</field>
+    <field name="description"><![CDATA[Classroom numbered as 1]]></field>
+    <field name="active" eval="True"/>
+    <field name="type_id" ref="facility_management.facility_type_regular_classroom"/>
+    <field name="complex_id" ref="facility_management.facility_complex_main_complex"/>
+    <field name="users">20</field>
+    <field name="excess">20</field>
+    <field name="owner_id" ref="base.user_admin"/>
+  </record>
 
-    <record id="facility_classroom_2" model="facility.facility">
-        <field name="name">Classroom 2</field>
-        <field name="code">C2</field>
-        <field name="description"><![CDATA[Classroom numbered as 2]]></field>
-        <field name="active" eval="True"/>
-        <field name="type_id" ref="facility_management.facility_type_regular_classroom"/>
-        <field name="complex_id" ref="facility_management.facility_complex_main_complex"/>
-        <field name="users">15</field>
-        <field name="excess">15</field>
-        <field name="owner_id" ref="base.user_admin"/>
-    </record>
+  <record id="facility_classroom_2" model="facility.facility">
+    <field name="name">Classroom 2</field>
+    <field name="code">C2</field>
+    <field name="description"><![CDATA[Classroom numbered as 2]]></field>
+    <field name="active" eval="True"/>
+    <field name="type_id" ref="facility_management.facility_type_regular_classroom"/>
+    <field name="complex_id" ref="facility_management.facility_complex_main_complex"/>
+    <field name="users">15</field>
+    <field name="excess">15</field>
+    <field name="owner_id" ref="base.user_admin"/>
+  </record>
 
-    <record id="facility_classroom_3" model="facility.facility">
-        <field name="name">Classroom 3</field>
-        <field name="code">C3</field>
-        <field name="description"><![CDATA[Classroom numbered as 3]]></field>
-        <field name="active" eval="True"/>
-        <field name="type_id" ref="facility_management.facility_type_regular_classroom"/>
-        <field name="complex_id" ref="facility_management.facility_complex_main_complex"/>
-        <field name="users">18</field>
-        <field name="excess">20</field>
-        <field name="owner_id" ref="base.user_admin"/>
-    </record>
+  <record id="facility_classroom_3" model="facility.facility">
+    <field name="name">Classroom 3</field>
+    <field name="code">C3</field>
+    <field name="description"><![CDATA[Classroom numbered as 3]]></field>
+    <field name="active" eval="True"/>
+    <field name="type_id" ref="facility_management.facility_type_regular_classroom"/>
+    <field name="complex_id" ref="facility_management.facility_complex_main_complex"/>
+    <field name="users">18</field>
+    <field name="excess">20</field>
+    <field name="owner_id" ref="base.user_admin"/>
+  </record>
 
-    <record id="facility_computer_classroom_a" model="facility.facility">
-        <field name="name">Computer room A</field>
-        <field name="code">IA</field>
-        <field name="description"><![CDATA[Computer classroom named as A]]></field>
-        <field name="active" eval="True"/>
-        <field name="type_id" ref="facility_management.facility_type_computer_classroom"/>
-        <field name="complex_id" ref="facility_management.facility_complex_auxiliary_complex"/>
-        <field name="users">12</field>
-        <field name="excess">15</field>
-        <field name="owner_id" ref="base.user_admin"/>
-    </record>
+  <record id="facility_computer_classroom_a" model="facility.facility">
+    <field name="name">Computer room A</field>
+    <field name="code">IA</field>
+    <field name="description"><![CDATA[Computer classroom named as A]]></field>
+    <field name="active" eval="True"/>
+    <field name="type_id" ref="facility_management.facility_type_computer_classroom"/>
+    <field name="complex_id" ref="facility_management.facility_complex_auxiliary_complex"/>
+    <field name="users">12</field>
+    <field name="excess">15</field>
+    <field name="owner_id" ref="base.user_admin"/>
+  </record>
 
-    <record id="facility_computer_projector" model="facility.facility">
-        <field name="name">Projector</field>
-        <field name="code">PRJ</field>
-        <field name="description"><![CDATA[Projector]]></field>
-        <field name="active" eval="True"/>
-        <field name="type_id" ref="facility_management.facility_type_regular_equipment"/>
-        <field name="complex_id" ref="facility_management.facility_complex_auxiliary_complex"/>
-        <field name="users">0</field>
-        <field name="excess">0</field>
-        <field name="owner_id" ref="base.user_admin"/>
-    </record>
+  <record id="facility_computer_projector" model="facility.facility">
+    <field name="name">Projector</field>
+    <field name="code">PRJ</field>
+    <field name="description"><![CDATA[Projector]]></field>
+    <field name="active" eval="True"/>
+    <field name="type_id" ref="facility_management.facility_type_regular_equipment"/>
+    <field name="complex_id" ref="facility_management.facility_complex_auxiliary_complex"/>
+    <field name="users">0</field>
+    <field name="excess">0</field>
+    <field name="owner_id" ref="base.user_admin"/>
+  </record>
 
 </odoo>

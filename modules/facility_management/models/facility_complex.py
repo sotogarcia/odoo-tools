@@ -92,7 +92,7 @@ class FacilityComplex(models.Model):
         comodel_name="facility.facility",
         inverse_name="complex_id",
         domain=[],
-        context={"facility_name_without_complex": True},
+        context={},
         auto_join=False,
     )
 
@@ -135,6 +135,54 @@ class FacilityComplex(models.Model):
 
         return [("id", "in", matched)] if matched else FALSE_DOMAIN
 
+    space_ids = fields.One2many(
+        string="Spaces",
+        required=False,
+        readonly=False,
+        index=True,
+        default=None,
+        help="Spaces in this complex",
+        comodel_name="facility.facility",
+        inverse_name="complex_id",
+        domain=[("is_space", "=", True)],
+        context={},
+        auto_join=False,
+    )
+
+    space_count = fields.Integer(
+        string="Space count",
+        required=True,
+        readonly=True,
+        index=False,
+        default=0,
+        help="Number of active spaces in this complex",
+        compute="_compute_space_count",
+    )
+
+    @api.depends("space_ids", "space_ids.is_space")
+    def _compute_space_count(self):
+        """Compute count of *active* facilities per complex (batch)."""
+        counts = one2many_count(self, "space_ids")
+
+        for record in self:
+            record.space_count = counts.get(record.id, 0)
+
+    users = fields.Integer(
+        string="Seats",
+        required=False,
+        readonly=True,
+        index=False,
+        default=0,
+        help="Total user capacity across all facilities in this complex",
+        compute="_compute_users",
+    )
+
+    @api.depends("facility_ids", "facility_ids.users")
+    def _compute_users(self):
+        for record in self:
+            vals = record.facility_ids.mapped("users")
+            record.users = sum((v or 0) for v in vals)
+
     supervisor_ids = fields.Many2many(
         string="Supervisors",
         required=False,
@@ -160,7 +208,7 @@ class FacilityComplex(models.Model):
         readonly=True,
         index=False,
         default=None,
-        help=False,
+        help="Reservations linked to this complex (requested state)",
         comodel_name="facility.reservation",
         relation="facility_complex_facility_reservation_rel",
         column1="complex_id",
@@ -192,7 +240,7 @@ class FacilityComplex(models.Model):
         readonly=True,
         index=False,
         default=None,
-        help=False,
+        help="Reservations awaiting confirmation for this complex",
         comodel_name="facility.reservation",
         relation="facility_complex_facility_reservation_rel",
         column1="complex_id",
@@ -220,6 +268,55 @@ class FacilityComplex(models.Model):
 
         for record in self:
             record.unconfirmed_reservation_count = counts.get(record.id, 0)
+
+    display_address = fields.Char(
+        string="Display address",
+        required=False,
+        readonly=True,
+        index=False,
+        default=None,
+        help="Formatted postal address of the complex (without company)",
+        compute="_compute_display_address",
+        store=False,
+    )
+
+    @api.depends(
+        "partner_id",
+        "partner_id.name",
+        "partner_id.parent_id",
+        "partner_id.company_name",
+        "partner_id.street",
+        "partner_id.street2",
+        "partner_id.city",
+        "partner_id.zip",
+        "partner_id.state_id",
+        "partner_id.country_id",
+    )
+    def _compute_display_address(self):
+        for record in self:
+            partner = record.partner_id
+            record.display_address = (
+                partner
+                and partner._display_address(without_company=True)
+                or False
+            )
+
+    phone_number = fields.Char(
+        string="Phone number",
+        required=False,
+        readonly=True,
+        index=False,
+        default=None,
+        help="Primary phone for the complex (partner phone or mobile",
+        compute="_compute_phone_number",
+        store=False,
+    )
+
+    @api.depends("phone", "mobile")
+    def _compute_phone_number(self):
+        for record in self:
+            partner = record.partner_id
+            record.phone_number = partner.phone or partner.mobile or False
 
     def _build_supervisor_ids_domain(self):
         """
@@ -417,10 +514,7 @@ class FacilityComplex(models.Model):
 
         ctx = self.env.context.copy()
         ctx.update(safe_eval(action.context))
-        ctx.update(
-            default_complex_id=self.id,
-            facility_name_without_complex=True,
-        )
+        ctx.update(default_complex_id=self.id)
 
         domain = [("complex_id", "=", self.id)]
 
