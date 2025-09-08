@@ -99,7 +99,6 @@
                 <group col="6" id="facility" string="Facility" invisible="state != 'facility'">
                     <field name="facility_id" class="oe_field_facility_id" colspan="4"
                         domain="[('id', 'in', available_facility_ids)]"
-                        context="{'facility_name_with_complex': True}"
                         options="{'no_quick_create': True, 'no_create': True, 'no_open': True}"/>
                     <field name="validate" class="oe_field_validate"/>
                 </group>

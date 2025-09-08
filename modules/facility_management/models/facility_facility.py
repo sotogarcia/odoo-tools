@@ -449,14 +449,28 @@ class FacilityFacility(models.Model):
 
         return super(FacilityFacility, self).copy(default)
 
+    @api.depends("name", "complex_id", "complex_id.name")
+    @api.depends_context("lang")
+    def _compute_display_name(self):
+        context = self.env.context
+        without_complex = context.get("facility_name_without_complex", False)
+
+        print(context)
+
+        for record in self:
+            parts = [] if without_complex else [record.complex_id.name]
+            parts.append(record.name)
+
+            record.display_name = " / ".join(parts)
+
     def name_get(self):
         result = []
 
         context = self.env.context
-        with_complex = context.get("facility_name_with_complex", False)
+        without_complex = context.get("facility_name_without_complex", False)
 
         for record in self:
-            parts = [record.complex_id.name] if with_complex else []
+            parts = [] if without_complex else [record.complex_id.name]
             parts.append(record.name)
 
             name = " - ".join(parts)

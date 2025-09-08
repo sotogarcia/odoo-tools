@@ -37,6 +37,7 @@
 - [x] Reemplazar `user_has_groups` por `self.env.user.has_group()`/`has_groups()`.
 - [x] Unificar acceso: usar `check_access()` en lugar de `check_access_*`.
 - [x] Reemplazar `_name_search` por `_search_display_name`.
+- [x] Reemplazar `_name_get` por `_compute_display_name`.
 - [x] Importar `Registry` de `odoo.modules.registry`; usar `Registry(db_name)`.
 - [x] Considerar `self.env._('...')` en lugar de `_('...')`.
 - [x] Limpiar vistas: autoañadir campos invisibles en dominios/atributos.

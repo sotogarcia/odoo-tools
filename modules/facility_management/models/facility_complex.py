@@ -92,7 +92,7 @@ class FacilityComplex(models.Model):
         comodel_name="facility.facility",
         inverse_name="complex_id",
         domain=[],
-        context={},
+        context={"facility_name_without_complex": True},
         auto_join=False,
     )
 
@@ -417,7 +417,10 @@ class FacilityComplex(models.Model):
 
         ctx = self.env.context.copy()
         ctx.update(safe_eval(action.context))
-        ctx.update({"default_complex_id": self.id})
+        ctx.update(
+            default_complex_id=self.id,
+            facility_name_without_complex=True,
+        )
 
         domain = [("complex_id", "=", self.id)]
 
