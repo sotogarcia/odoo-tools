@@ -15,7 +15,7 @@
               help="Establish the order for the days of the week and determine which are working days.">
               <div class="content-group mt8">
                 <button name="%(facility_management.action_weekdays_act_window)d" type="action"
-                  class="btn btn-link" icon="oi-arrow-right" string="Weekdays"/>
+                  class="btn btn-link" icon="oi-arrow-right" string="Update"/>
               </div>
             </setting>
             <setting string="Week start" help="Day considered as the start of the week">
@@ -43,11 +43,11 @@
                 <field name="auto_archive_on_rejection"/>
               </div>
             </setting>
-            <setting string="Setup schedulers" help="List and modify schedulers">
+            <setting string="Facility types" help="List and modify facility types">
               <div class="content-group mt8">
                 <button
-                  name="%(facility_management.action_facility_reservation_scheduler_act_window)d"
-                  type="action" class="btn btn-link" icon="oi-arrow-right" string="Schedulers"/>
+                  name="%(facility_management.action_facility_type_act_window)d"
+                  type="action" class="btn btn-link" icon="oi-arrow-right" string="Update"/>
               </div>
             </setting>
           </block>

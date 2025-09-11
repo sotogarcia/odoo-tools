@@ -61,6 +61,8 @@
 - [ ] Revisar lista TODO 
        · El JS del botón debe comprobar los permisos
        · Icono al JS
+- Track visibility
+- clickable="1" por options="{'clickable': 1}"
 
 
 - [x] Kanban view for facility.complex

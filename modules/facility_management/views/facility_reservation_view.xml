@@ -50,7 +50,8 @@
     <field name="arch" type="xml">
       <form string="facility_reservation_form">
         <header>
-          <field name="state" widget="statusbar" clickable="1"
+          <field name="state" widget="statusbar" options="{'clickable': 1}"
+            statusbar_colors='{"requested": "yellow", "confirmed": "green", "rejected":"red"}'
             groups="facility_management.facility_group_monitor"/>
           <button name="unbind" class="btn btn-danger" string="Unbind" type="object"
             icon="fa-unlink"

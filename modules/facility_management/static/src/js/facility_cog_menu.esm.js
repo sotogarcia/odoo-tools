@@ -35,7 +35,7 @@ const cogMenuRegistry = registry.category("cogMenu");
 // -----------------------------------------------------------------------------
 export class FacilityCogMenu extends Component {
     // QWeb template for this item (must exist in your module XML).
-    static template = "facility_management.CogMenuItem";
+    static template = "facility_management.FacilityCogMenuItem";
 
     // Child components used by this item.
     static components = {
@@ -141,6 +141,6 @@ export const FacilityCogMenuItem = {
 // Finally, register the item in the cog menu registry so it becomes available
 // in eligible views.
 // -----------------------------------------------------------------------------
-cogMenuRegistry.add("facility-cog-menu", FacilityCogMenuItem, {
+cogMenuRegistry.add("facility-facility-cog-menu", FacilityCogMenuItem, {
     sequence: 10
 });

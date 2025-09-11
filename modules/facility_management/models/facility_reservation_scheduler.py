@@ -8,8 +8,13 @@ from odoo import models, fields, api
 from odoo.tools.translate import _
 from odoo.osv.expression import TRUE_DOMAIN, FALSE_DOMAIN
 from odoo.tools.safe_eval import safe_eval
+from ..utils.helpers import OPERATOR_MAP, one2many_count
 
 from logging import getLogger
+from odoo.tools.misc import format_date, format_time
+import pytz
+from datetime import datetime, date, time, timedelta
+
 
 _logger = getLogger(__name__)
 
@@ -55,46 +60,6 @@ class FacilityReservationScheduler(models.Model):
         help="Enables/disables this reservation",
     )
 
-    state = fields.Selection(
-        string="State",
-        required=True,
-        readonly=False,
-        index=True,
-        default="schedule",
-        help="Current group status",
-        selection=[
-            ("schedule", "Schedule"),
-            ("facility", "Facility"),
-            ("finish", "Finish"),
-        ],
-    )
-
-    @api.onchange("state")
-    def _onchange_state(self):
-        if (
-            self.repeat
-            and self.state != "schedule"
-            and self.interval_type == "week"
-            and not self._match_weekday(self.date_base)
-        ):
-            self.state = "schedule"
-
-            return self._warning(
-                _("Wrong weekday"),
-                _(
-                    "The day of the week corresponding to the start date is not "
-                    "among the selected days of the week"
-                ),
-            )
-
-        if self.state == "finish" and not self.facility_id:
-            self.state = "facility"
-
-            return self._warning(
-                _("Missing facility"),
-                _("You must select a facility to make the reservation"),
-            )
-
     available_facility_ids = fields.Many2many(
         string="Available facilities",
         required=False,
@@ -112,19 +77,46 @@ class FacilityReservationScheduler(models.Model):
         domain=[],
         context={},
         compute="_compute_available_facility_ids",
+        compute_sudo=True,
+        store=False,
     )
 
-    @api.depends("state")
+    @api.depends(
+        "facility_id",
+        "validate",
+        "confirm",
+        "date_base",
+        "full_day",
+        "time_start",
+        "time_stop",
+        "repeat",
+        "interval_number",
+        "finish_type",
+        "finish_date",
+        "finish_number",
+        "interval_type",
+        "weekday_ids",
+        "month_type",
+    )
     def _compute_available_facility_ids(self):
+        """Compute dynamic set used to filter the facility selector."""
         facility_obj = self.env["facility.facility"]
-        for record in self:
-            if record.state == "facility":
-                domain = record._compute_facility_domain(as_string=False)
-                available_set = facility_obj.search(domain)
-            else:
-                available_set = facility_obj.browse()
 
-            record.available_facility_ids = available_set
+        # One search([]) reused across all records when needed
+        all_facilities = None
+
+        for record in self:
+            # Until the scheduler is both validated AND confirmed,
+            # expose the full list to avoid confusing empty filters.
+            if not (record.validate and record.confirm):
+                if all_facilities is None:
+                    all_facilities = facility_obj.search([])
+                record.available_facility_ids = all_facilities
+                continue
+
+            # When validated+confirmed, apply the computed domain
+            domain = record._compute_facility_domain(as_string=False)
+            record.available_facility_ids = facility_obj.search(domain)
 
     @staticmethod
     def _warning(title, message):
@@ -143,6 +135,13 @@ class FacilityReservationScheduler(models.Model):
         ondelete="cascade",
         auto_join=False,
     )
+
+    # all image fields are base64 encoded and PIL-supported
+    image_1920 = fields.Image("Image", related="facility_id.image_1920")
+    image_1024 = fields.Image("Image 1024", related="facility_id.image_1024")
+    image_512 = fields.Image("Image 512", related="facility_id.image_512")
+    image_256 = fields.Image("Image 256", related="facility_id.image_256")
+    image_128 = fields.Image("Image 128", related="facility_id.image_128")
 
     company_id = fields.Many2one(
         string="Company", related="facility_id.company_id", readonly=True
@@ -218,6 +217,30 @@ class FacilityReservationScheduler(models.Model):
         search="_search_reservation_count",
     )
 
+    @api.depends("reservation_ids")
+    def _compute_reservation_count(self):
+        counts = one2many_count(self, "reservation_ids")
+
+        for record in self:
+            record.reservation_count = counts.get(record.id, 0)
+
+    @api.model
+    def _search_reservation_count(self, operator, value):
+        # Handle boolean-like searches Odoo may pass for required fields
+        if value is True:
+            return TRUE_DOMAIN if operator == "=" else FALSE_DOMAIN
+        if value is False:
+            return TRUE_DOMAIN if operator != "=" else FALSE_DOMAIN
+
+        cmp_func = OPERATOR_MAP.get(operator)
+        if not cmp_func:
+            return FALSE_DOMAIN  # unsupported operator
+
+        counts = one2many_count(self.search([]), "reservation_ids")
+        matched = [cid for cid, cnt in counts.items() if cmp_func(cnt, value)]
+
+        return [("id", "in", matched)] if matched else FALSE_DOMAIN
+
     tracking_disable = fields.Boolean(
         string="Tracking disable",
         required=False,
@@ -227,59 +250,38 @@ class FacilityReservationScheduler(models.Model):
         help="Disable the e-mail notification",
     )
 
-    @api.depends("reservation_ids")
-    def _compute_reservation_count(self):
+    last_recalculated_at = fields.Char(
+        string="Last update",
+        required=False,
+        readonly=True,
+        index=False,
+        default=None,
+        help=False,
+        compute="_compute_last_recalculated_at",
+    )
+
+    @api.depends("write_date")
+    def _compute_last_recalculated_at(self):
         for record in self:
-            record.reservation_count = len(record.reservation_ids)
+            ts = record.write_date
+            if not ts:
+                record.last_recalculated_at = ""
+                continue
 
-    @api.model
-    def _search_reservation_count(self, operator, value):
-        domain = FALSE_DOMAIN
+            # Convert to user's timezone
+            local_dt = fields.Datetime.context_timestamp(record, ts)
+            today_local = fields.Date.context_today(record)
 
-        if value is True:  # Field is mandatory
-            domain = TRUE_DOMAIN if operator == "=" else FALSE_DOMAIN
-
-        elif value is False:  # Field is mandatory
-            domain = TRUE_DOMAIN if operator != "=" else FALSE_DOMAIN
-
-        else:
-            sql = self._search_reservation_count_sql
-
-            self.env.cr.execute(sql.format(operator=operator, value=value))
-            rows = self.env.cr.dictfetchall()
-
-            if not rows:
-                return FALSE_DOMAIN
-
-            scheduler_ids = [row["scheduler_id"] for row in (rows or [])]
-
-            domain = [("id", "in", scheduler_ids)]
-
-        return domain
-
-    _search_reservation_count_sql = """
-        WITH active_reservations AS (
-            SELECT
-                "id" AS reservation_id,
-                scheduler_id
-            FROM
-                facility_reservation
-            WHERE
-                active
-                AND STATE = 'confirmed'
-        )
-         SELECT
-            ars."id" AS scheduler_id
-        FROM
-            facility_reservation_scheduler AS ars
-            LEFT JOIN active_reservations AS ar ON ars."id" = ar.scheduler_id
-        WHERE
-            ars.active
-        GROUP BY
-            ars."id"
-        HAVING
-            COUNT ( ar.scheduler_id ) {operator} {value}
-    """
+            if local_dt.date() == today_local:
+                # Show only time if it is today
+                record.last_recalculated_at = format_time(
+                    self.env, local_dt.time()
+                )
+            else:
+                # Show only date if it is another day
+                record.last_recalculated_at = format_date(
+                    self.env, local_dt.date()
+                )
 
     def _uid_is_manager(self):
         technical_group = "facility_management.facility_group_manager"
@@ -407,6 +409,27 @@ class FacilityReservationScheduler(models.Model):
 
         return target_set
 
+    @api.model_create_multi
+    def create(self, value_list):
+        """Overridden method 'create'"""
+
+        parent = super(FacilityReservationScheduler, self)
+        result = parent.create(value_list)
+
+        result.make_reservations()
+
+        return result
+
+    def write(self, values):
+        """Overridden method 'write'"""
+
+        parent = super(FacilityReservationScheduler, self)
+        result = parent.write(values)
+
+        self.make_reservations()
+
+        return result
+
     def _make_reservations(self):
         """Compute the intervals and either create new reservations or update
         existing ones accordingly. Excess reservations are unlinked.
@@ -447,45 +470,50 @@ class FacilityReservationScheduler(models.Model):
 
             self._toggle_reservation_status(changed_set.exists(), True)
 
-    def make_reservations(self):
+            # Update write_date
+            self._write({})
+
+    def make_reservations(self, reload=True):
         """Create or update reservations from the current scheduler."""
 
         for record in self:
             record._make_reservations()
 
-        return self._sertialize_reservation_act(target="main")
+    def view_reservations(self):
+        self.ensure_one()
 
-    def remove_reservations(self):
-        removed_ids = []
-
-        for record in self:
-            today = fields.Date.context_today(record)
-            today = fields.Date.to_string(today)
-
-            reservation_set = record._search_related_reservation()
-            if reservation_set:
-                removed_ids.extend(reservation_set.ids)
-                reservation_set.unlink()
-
-        return self._sertialize_reservation_act(target="main")
-
-    def _sertialize_reservation_act(self, target=None):
         action_xid = "facility_management.action_reservations_act_window"
         act_wnd = self.env.ref(action_xid)
 
         context = self.env.context.copy()
         context.update(safe_eval(act_wnd.context))
+        context.update({"default_scheduler_id": self.id})
+
+        domain = [("scheduler_id", "=", self.id)]
 
         serialized = {
             "type": "ir.actions.act_window",
             "res_model": act_wnd.res_model,
-            "target": target or act_wnd.target,
+            "target": "current",
             "name": act_wnd.name,
             "view_mode": act_wnd.view_mode,
-            "domain": safe_eval(act_wnd.domain),
+            "domain": domain,
             "context": context,
             "search_view_id": act_wnd.search_view_id.id,
             "help": act_wnd.help,
         }
 
         return serialized
+
+    @api.depends("facility_id", "facility_id.name", "reservation_ids")
+    @api.depends_context("lang")
+    def _compute_display_name(self):
+        for record in self:
+            name = (
+                record.name
+                or (record.facility_id and record.facility_id.name)
+                or _("New scheduler")
+            )
+            count = len(record.reservation_ids)
+
+            record.display_name = _("%s (%s res.)") % (name, count)

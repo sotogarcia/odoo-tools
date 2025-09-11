@@ -9,12 +9,10 @@ from odoo.tools.translate import _
 from odoo.osv.expression import TRUE_DOMAIN, FALSE_DOMAIN
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS
 from odoo.exceptions import UserError, ValidationError
-
-from datetime import timedelta
 from odoo.tools.safe_eval import safe_eval
-import pytz
-from datetime import datetime, date, time
 
+import pytz
+from datetime import datetime, date, time, timedelta
 from logging import getLogger
 
 
@@ -30,7 +28,7 @@ class FacilityReservation(models.Model):
     _inherit = ["ownership.mixin", "mail.thread"]
 
     _rec_name = "id"
-    _order = "date_start DESC, date_stop ASC"
+    _order = "date_start ASC, date_stop ASC"
 
     _check_company_auto = True
 
@@ -262,7 +260,7 @@ class FacilityReservation(models.Model):
         return [("scheduler_id", operator, value)]
 
     reservation_count = fields.Integer(
-        string="Reservation count", related="scheduler_id.reservation_count"
+        string="Scheduler", related="scheduler_id.reservation_count"
     )
 
     color = fields.Integer(

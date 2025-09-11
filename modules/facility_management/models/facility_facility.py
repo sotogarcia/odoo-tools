@@ -9,6 +9,7 @@ from odoo.tools.translate import _
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import TRUE_DOMAIN, FALSE_DOMAIN
 from odoo.exceptions import UserError
+from ..utils.helpers import OPERATOR_MAP, one2many_count
 
 from datetime import datetime, timedelta
 
@@ -198,57 +199,27 @@ class FacilityFacility(models.Model):
 
     @api.depends("reservation_ids")
     def _compute_reservation_count(self):
+        counts = one2many_count(self, "reservation_ids")
+
         for record in self:
-            record.reservation_count = len(record.reservation_ids)
+            record.reservation_count = counts.get(record.id, 0)
 
     @api.model
     def _search_reservation_count(self, operator, value):
-        domain = FALSE_DOMAIN
+        # Handle boolean-like searches Odoo may pass for required fields
+        if value is True:
+            return TRUE_DOMAIN if operator == "=" else FALSE_DOMAIN
+        if value is False:
+            return TRUE_DOMAIN if operator != "=" else FALSE_DOMAIN
 
-        if value is True:  # Field is mandatory
-            domain = TRUE_DOMAIN if operator == "=" else FALSE_DOMAIN
+        cmp_func = OPERATOR_MAP.get(operator)
+        if not cmp_func:
+            return FALSE_DOMAIN  # unsupported operator
 
-        elif value is False:  # Field is mandatory
-            domain = TRUE_DOMAIN if operator != "=" else FALSE_DOMAIN
+        counts = one2many_count(self.search([]), "reservation_ids")
+        matched = [cid for cid, cnt in counts.items() if cmp_func(cnt, value)]
 
-        else:
-            sql = self._search_reservation_count_sql
-
-            self.env.cr.execute(sql.format(operator=operator, value=value))
-            rows = self.env.cr.dictfetchall()
-
-            if not rows:
-                return FALSE_DOMAIN
-
-            facility_ids = [row["facility_id"] for row in (rows or [])]
-
-            domain = [("id", "in", facility_ids)]
-
-        return domain
-
-    _search_reservation_count_sql = """
-         WITH active_reservations AS (
-            SELECT
-                "id" AS reservation_id,
-                facility_id
-            FROM
-                facility_reservation
-            WHERE
-                active
-                AND STATE = 'confirmed'
-        )
-        SELECT DISTINCT
-            aef."id" AS facility_id
-        FROM
-            facility_facility AS aef
-            LEFT JOIN active_reservations AS ar ON aef."id" = ar.facility_id
-        WHERE
-            aef.active
-        GROUP BY
-            aef."id"
-        HAVING
-            COUNT ( ar.facility_id ) {operator} {value}
-    """
+        return [("id", "in", matched)] if matched else FALSE_DOMAIN
 
     next_use = fields.Datetime(
         string="Next use",
