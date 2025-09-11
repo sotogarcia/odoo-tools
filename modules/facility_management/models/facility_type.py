@@ -13,49 +13,57 @@ _logger = getLogger(__name__)
 
 
 class FacilityType(models.Model):
-    """ Type of facility
-    """
+    """Type of facility"""
 
-    _name = 'facility.type'
-    _description = 'Facility type'
+    _name = "facility.type"
+    _description = "Facility type"
 
-    _rec_name = 'name'
-    _order = 'name ASC'
+    _rec_name = "name"
+    _order = "name ASC"
 
     name = fields.Char(
-        string='Name',
+        string="Name",
         required=True,
         readonly=False,
         index=True,
         default=None,
-        help=False,
+        help="Name of the facility type",
         size=255,
-        translate=True
+        translate=True,
     )
 
     description = fields.Text(
-        string='Description',
+        string="Description",
         required=False,
         readonly=False,
         index=False,
         default=None,
-        help='Enter new description',
-        translate=True
+        help="Additional details or notes about this facility type",
+        translate=True,
     )
 
     active = fields.Boolean(
-        string='Active',
+        string="Active",
         required=False,
         readonly=False,
         index=False,
         default=True,
-        help='Enables/disables the record'
+        help="Enables/disables the record",
+    )
+
+    is_space = fields.Boolean(
+        string="Is space",
+        required=False,
+        readonly=False,
+        index=True,
+        default=False,
+        help="Check this option if the record represents a physical space.",
     )
 
     _sql_constraints = [
         (
-            'unique_facility_type_name',
+            "unique_facility_type_name",
             'UNIQUE("name")',
-            _('Facility type already exists')
+            "Facility type already exists",
         )
     ]

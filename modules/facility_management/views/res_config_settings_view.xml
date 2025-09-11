@@ -2,46 +2,58 @@
 
 <odoo noupdate="0">
 
-    <record id="res_config_settings_view_form" model="ir.ui.view">
-        <field name="name">res.config.settings.view.form.inherit.facility_management</field>
-        <field name="model">res.config.settings</field>
-        <field name="priority" eval="20"/>
-        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//form" position="inside">
-                <app data-string="Facilities" string="Facilities" name="facility_management"
-                    groups="base.group_system">
-                    <block title="Hidden resources" name="hidden_resources">
-                        <setting string="Setup weekdays"
-                            help="Establish the order for the days of the week and determine which are working days.">
-                            <div class="content-group mt8">
-                                <button name="%(facility_management.action_weekdays_act_window)d"
-                                    type="action" class="btn btn-link" icon="oi-arrow-right"
-                                    string="Weekdays"/>
-                            </div>
-                        </setting>
-                        <setting string="Setup schedulers" help="List and modify schedulers">
-                            <div class="content-group mt8">
-                                <button
-                                    name="%(facility_management.action_facility_reservation_scheduler_act_window)d"
-                                    type="action" class="btn btn-link" icon="oi-arrow-right"
-                                    string="Schedulers"/>
-                            </div>
-                        </setting>
-                    </block>
+  <record id="res_config_settings_view_form" model="ir.ui.view">
+    <field name="name">res.config.settings.view.form.inherit.facility_management</field>
+    <field name="model">res.config.settings</field>
+    <field name="priority" eval="20"/>
+    <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//form" position="inside">
+        <app string="Facilities" name="facility_management" groups="base.group_system">
+          <block title="Week" name="hidden_resources">
+            <setting string="Setup weekdays"
+              help="Establish the order for the days of the week and determine which are working days.">
+              <div class="content-group mt8">
+                <button name="%(facility_management.action_weekdays_act_window)d" type="action"
+                  class="btn btn-link" icon="oi-arrow-right" string="Update"/>
+              </div>
+            </setting>
+            <setting string="Week start" help="Day considered as the start of the week">
+              <div class="content-group mt8">
+                <field name="week_start_day" widget="selection"/>
+              </div>
+            </setting>
 
-                    <block title="Others" name="others">
-                        <setting string="Rejection"
-                            help="Auto-archive reservation requests when they are rejected">
-                            <div class="content-group mt8">
-                                <label for="auto_archive_on_rejection" class="o_light_label"/>
-                                <field name="auto_archive_on_rejection"/>
-                            </div>
-                        </setting>
-                    </block>
-                </app>
-            </xpath>
-        </field>
-    </record>
+          </block>
+
+          <block title="Reservations" name="hidden_resources">
+            <setting string="Availability margin"
+              help="Number of minutes after the current time during which future reservations will mark a facility as unavailable.">
+              <div class="content-group mt8">
+                <field name="availability_margin_minutes" widget="number"/>
+              </div>
+            </setting>
+          </block>
+
+          <block title="Others" name="others">
+            <setting string="Rejection"
+              help="Auto-archive reservation requests when they are rejected">
+              <div class="content-group mt8">
+                <label for="auto_archive_on_rejection" class="o_light_label"/>
+                <field name="auto_archive_on_rejection"/>
+              </div>
+            </setting>
+            <setting string="Facility types" help="List and modify facility types">
+              <div class="content-group mt8">
+                <button
+                  name="%(facility_management.action_facility_type_act_window)d"
+                  type="action" class="btn btn-link" icon="oi-arrow-right" string="Update"/>
+              </div>
+            </setting>
+          </block>
+        </app>
+      </xpath>
+    </field>
+  </record>
 
 </odoo>

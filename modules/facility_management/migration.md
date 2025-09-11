@@ -37,6 +37,7 @@
 - [x] Reemplazar `user_has_groups` por `self.env.user.has_group()`/`has_groups()`.
 - [x] Unificar acceso: usar `check_access()` en lugar de `check_access_*`.
 - [x] Reemplazar `_name_search` por `_search_display_name`.
+- [x] Reemplazar `_name_get` por `_compute_display_name`.
 - [x] Importar `Registry` de `odoo.modules.registry`; usar `Registry(db_name)`.
 - [x] Considerar `self.env._('...')` en lugar de `_('...')`.
 - [x] Limpiar vistas: autoañadir campos invisibles en dominios/atributos.
@@ -60,3 +61,22 @@
 - [ ] Revisar lista TODO 
        · El JS del botón debe comprobar los permisos
        · Icono al JS
+- Track visibility
+- clickable="1" por options="{'clickable': 1}"
+
+
+- [x] Kanban view for facility.complex
+```
+┌──────────────────────────┐
+│ name                     │
+│ Telefono: ___ Email: ___ │
+│ Responsable: ___         │
+│ Aulas   Capacidad  Otros │
+│ __Dirección__            │
+└──────────────────────────┘
+```
+- [x] Image in kanban view: complex and facility.
+
+
+
+

@@ -6,4 +6,3 @@
 
 from . import facility_search_available_wizard
 from . import facility_reporting_wizard
-from . import facility_reservation_massive_actions_wizard

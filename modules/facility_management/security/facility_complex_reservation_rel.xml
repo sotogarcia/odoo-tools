@@ -2,56 +2,64 @@
 
 <odoo noupdate="1">
 
-    <record id="access_model_facility_complex_facility_reservation_rel_scheduler_consultant" model="ir.model.access">
-        <field name="name">access_model_facility_complex_facility_reservation_rel_scheduler_consultant</field>
-        <field name="model_id" ref="facility_management.model_facility_complex_facility_reservation_rel" />
-        <field name="group_id" ref="facility_management.facility_group_consultant"/>
-        <field name="perm_create" eval="False" />
-        <field name="perm_read" eval="True" />
-        <field name="perm_write" eval="False" />
-        <field name="perm_unlink" eval="False" />
-        <field name="active" eval="True" />
-    </record>
+  <record id="access_model_facility_complex_facility_reservation_rel_scheduler_consultant"
+    model="ir.model.access">
+    <field name="name"
+      >access_model_facility_complex_facility_reservation_rel_scheduler_consultant</field>
+    <field name="model_id" ref="facility_management.model_facility_complex_facility_reservation_rel"/>
+    <field name="group_id" ref="facility_management.facility_group_consultant"/>
+    <field name="perm_create" eval="False"/>
+    <field name="perm_read" eval="True"/>
+    <field name="perm_write" eval="False"/>
+    <field name="perm_unlink" eval="False"/>
+    <field name="active" eval="True"/>
+  </record>
 
-    <record id="access_model_facility_complex_facility_reservation_rel_scheduler_teacher" model="ir.model.access">
-        <field name="name">access_model_facility_complex_facility_reservation_rel_scheduler_teacher</field>
-        <field name="model_id" ref="facility_management.model_facility_complex_facility_reservation_rel" />
-        <field name="group_id" ref="facility_management.facility_group_applicant"/>
-        <field name="perm_create" eval="True" />
-        <field name="perm_read" eval="True" />
-        <field name="perm_write" eval="True" />
-        <field name="perm_unlink" eval="False" />
-        <field name="active" eval="True" />
-    </record>
+  <record id="access_model_facility_complex_facility_reservation_rel_scheduler_teacher"
+    model="ir.model.access">
+    <field name="name"
+      >access_model_facility_complex_facility_reservation_rel_scheduler_teacher</field>
+    <field name="model_id" ref="facility_management.model_facility_complex_facility_reservation_rel"/>
+    <field name="group_id" ref="facility_management.facility_group_applicant"/>
+    <field name="perm_create" eval="True"/>
+    <field name="perm_read" eval="True"/>
+    <field name="perm_write" eval="True"/>
+    <field name="perm_unlink" eval="False"/>
+    <field name="active" eval="True"/>
+  </record>
 
-    <record id="access_model_facility_complex_facility_reservation_rel_scheduler_technical" model="ir.model.access">
-        <field name="name">access_model_facility_complex_facility_reservation_rel_scheduler_technical</field>
-        <field name="model_id" ref="facility_management.model_facility_complex_facility_reservation_rel" />
-        <field name="group_id" ref="facility_management.facility_group_monitor"/>
-        <field name="perm_create" eval="True" />
-        <field name="perm_read" eval="True" />
-        <field name="perm_write" eval="True" />
-        <field name="perm_unlink" eval="True" />
-        <field name="active" eval="True" />
-    </record>
+  <record id="access_model_facility_complex_facility_reservation_rel_scheduler_technical"
+    model="ir.model.access">
+    <field name="name"
+      >access_model_facility_complex_facility_reservation_rel_scheduler_technical</field>
+    <field name="model_id" ref="facility_management.model_facility_complex_facility_reservation_rel"/>
+    <field name="group_id" ref="facility_management.facility_group_monitor"/>
+    <field name="perm_create" eval="True"/>
+    <field name="perm_read" eval="True"/>
+    <field name="perm_write" eval="True"/>
+    <field name="perm_unlink" eval="True"/>
+    <field name="active" eval="True"/>
+  </record>
 
-    <record id="access_model_facility_complex_facility_reservation_rel_scheduler_manager" model="ir.model.access">
-        <field name="name">access_model_facility_complex_facility_reservation_rel_scheduler_manager</field>
-        <field name="model_id" ref="facility_management.model_facility_complex_facility_reservation_rel" />
-        <field name="group_id" ref="facility_management.facility_group_manager"/>
-        <field name="perm_create" eval="True" />
-        <field name="perm_read" eval="True" />
-        <field name="perm_write" eval="True" />
-        <field name="perm_unlink" eval="True" />
-        <field name="active" eval="True" />
-    </record>
+  <record id="access_model_facility_complex_facility_reservation_rel_scheduler_manager"
+    model="ir.model.access">
+    <field name="name"
+      >access_model_facility_complex_facility_reservation_rel_scheduler_manager</field>
+    <field name="model_id" ref="facility_management.model_facility_complex_facility_reservation_rel"/>
+    <field name="group_id" ref="facility_management.facility_group_manager"/>
+    <field name="perm_create" eval="True"/>
+    <field name="perm_read" eval="True"/>
+    <field name="perm_write" eval="True"/>
+    <field name="perm_unlink" eval="True"/>
+    <field name="active" eval="True"/>
+  </record>
 
-    <record id="facility_complex_facility_reservation_rel_multi_company_rule" model="ir.rule">
-        <field name="name">Facility Reservation: multi-company</field>
-        <field name="model_id" ref="facility_management.model_facility_complex_facility_reservation_rel"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-        <field name="active" eval="True" />
-    </record>
+  <record id="facility_complex_facility_reservation_rel_multi_company_rule" model="ir.rule">
+    <field name="name">Facility Reservation: multi-company</field>
+    <field name="model_id" ref="facility_management.model_facility_complex_facility_reservation_rel"/>
+    <field name="global" eval="True"/>
+    <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    <field name="active" eval="True"/>
+  </record>
 
 </odoo>

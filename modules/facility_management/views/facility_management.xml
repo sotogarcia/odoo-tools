@@ -2,33 +2,33 @@
 
 <odoo noupdate="0">
 
-    <record id="menu_facility_management" model="ir.ui.menu">
-        <field name="name">Facilities</field>
-        <field name="sequence" eval="36"/>
-        <field name="parent_id"/>
-        <field name="groups_id" eval="[(4, ref('facility_management.facility_group_consultant'))]"/>
-        <field name="web_icon">facility_management,static/description/icon.png</field>
-    </record>
+  <record id="menu_facility_management" model="ir.ui.menu">
+    <field name="name">Facilities</field>
+    <field name="sequence" eval="36"/>
+    <field name="parent_id"/>
+    <field name="groups_id" eval="[(4, ref('facility_management.facility_group_consultant'))]"/>
+    <field name="web_icon">facility_management,static/description/icon.png</field>
+  </record>
 
-    <record id="menu_facility_management_facilities" model="ir.ui.menu">
-        <field name="name">Facilities</field>
-        <field name="sequence" eval="36"/>
-        <field name="parent_id" ref="facility_management.menu_facility_management"/>
-        <field name="groups_id" eval="[(4, ref('facility_management.facility_group_consultant'))]"/>
-    </record>
+  <record id="menu_facility_management_facilities" model="ir.ui.menu">
+    <field name="name">Facilities</field>
+    <field name="sequence" eval="36"/>
+    <field name="parent_id" ref="facility_management.menu_facility_management"/>
+    <field name="groups_id" eval="[(4, ref('facility_management.facility_group_consultant'))]"/>
+  </record>
 
-    <record id="menu_facility_management_reservations" model="ir.ui.menu">
-        <field name="name">Reservations</field>
-        <field name="sequence" eval="36"/>
-        <field name="parent_id" ref="facility_management.menu_facility_management"/>
-        <field name="groups_id" eval="[(4, ref('facility_management.facility_group_consultant'))]"/>
-    </record>
+  <record id="menu_facility_management_reservations" model="ir.ui.menu">
+    <field name="name">Reservations</field>
+    <field name="sequence" eval="36"/>
+    <field name="parent_id" ref="facility_management.menu_facility_management"/>
+    <field name="groups_id" eval="[(4, ref('facility_management.facility_group_consultant'))]"/>
+  </record>
 
-    <record id="menu_facility_management_settings" model="ir.ui.menu">
-        <field name="name">Advanced</field>
-        <field name="sequence" eval="36"/>
-        <field name="parent_id" ref="facility_management.menu_facility_management"/>
-        <field name="groups_id" eval="[(4, ref('facility_management.facility_group_monitor'))]"/>
-    </record>
+  <record id="menu_facility_management_settings" model="ir.ui.menu">
+    <field name="name">Advanced</field>
+    <field name="sequence" eval="36"/>
+    <field name="parent_id" ref="facility_management.menu_facility_management"/>
+    <field name="groups_id" eval="[(4, ref('facility_management.facility_group_monitor'))]"/>
+  </record>
 
 </odoo>

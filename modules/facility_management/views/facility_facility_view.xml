@@ -2,7 +2,7 @@
 
 <odoo noupdate="0">
 
-    <!-- VIEWS: "Facilities"
+  <!-- VIEWS: "Facilities"
 
         - Model·········: facility
         - _rec_name·····: name
@@ -13,262 +13,222 @@
         - Action help···: There are no facilities yet
     - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-    <!-- List view for "facility.facility" -->
-    <record id="view_facility_tree" model="ir.ui.view">
-        <field name="name">view.facility.tree</field>
-        <field name="model">facility.facility</field>
-        <field name="type">list</field>
-        <field name="priority" eval="16"/>
-        <field name="active" eval="True"/>
-        <field name="arch" type="xml">
-            <list string="facility_tree" decoration-success="color == 10"
-                decoration-danger="color == 1" decoration-warning="color == 3">
-                <field name="color" class="oe_field_color" column_invisible="1"/>
-                <field name="name" class="oe_field_name"/>
-                <field name="code" class="oe_field_code"/>
-                <field name="type_id" class="oe_field_type_id"/>
-                <field name="complex_id" class="oe_field_complex_id"/>
-                <field name="users_str" class="oe_field_users_str" string="Seats"/>
-                <field name="next_use" class="oe_field_next_use"/>
-                <button name="view_reservations" string="Scheduled" type="object" icon="fa-calendar"
-                    help="Show related reservations"/>
-            </list>
-        </field>
-    </record>
+  <!-- List view for "facility.facility" -->
+  <record id="view_facility_tree" model="ir.ui.view">
+    <field name="name">view.facility.tree</field>
+    <field name="model">facility.facility</field>
+    <field name="type">list</field>
+    <field name="priority" eval="16"/>
+    <field name="active" eval="True"/>
+    <field name="arch" type="xml">
+      <list string="facility_tree" decoration-success="color == 10" decoration-danger="color == 1"
+        decoration-warning="color == 3">
+        <field name="color" class="oe_field_color" column_invisible="1"/>
+        <field name="code" class="oe_field_code" optional="hide" />
+        <field name="display_name" class="oe_field_display_name"/>
+        <field name="complex_id" class="oe_field_complex_id" optional="show" />
+        <field name="type_id" class="oe_field_type_id" optional="show" />
+        <field name="is_space" class="oe_field_is_space" optional="hide" />
+        <field name="users_str" class="oe_field_users_str" string="Seats" optional="show" />
+        <field name="next_use" class="oe_field_next_use" optional="show" />
+      </list>
+    </field>
+  </record>
 
-    <!-- Form view for "facility.facility" -->
-    <record id="view_facility_form" model="ir.ui.view">
-        <field name="name">view.facility.form</field>
-        <field name="model">facility.facility</field>
-        <field name="type">form</field>
-        <field name="priority" eval="16"/>
-        <field name="active" eval="True"/>
-        <field name="arch" type="xml">
-            <form string="facility_form">
-                <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="view_reservations" type="object"
-                            class="oe_stat_button oe_read_only" icon="fa-calendar"
-                            help="Show related reservations">
-                            <field name="reservation_count" widget="statinfo" string="Reservations"
-                            />
-                        </button>
-                    </div>
+  <!-- Form view for "facility.facility" -->
+  <record id="view_facility_form" model="ir.ui.view">
+    <field name="name">view.facility.form</field>
+    <field name="model">facility.facility</field>
+    <field name="type">form</field>
+    <field name="priority" eval="16"/>
+    <field name="active" eval="True"/>
+    <field name="arch" type="xml">
+      <form string="facility_form">
+        <sheet>
+          <div class="oe_button_box" name="button_box">
+            <button name="view_reservations" type="object" class="oe_stat_button oe_read_only"
+              icon="fa-calendar" help="Show related reservations">
+              <field name="reservation_count" widget="statinfo" string="Reservations"/>
+            </button>
+          </div>
 
-                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
-                        invisible="active"/>
+          <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
 
-                    <field name="image_1920" widget="image" class="oe_avatar"
-                        options="{'preview_image': 'image_128'}"/>
+          <field name="image_1920" widget="image" class="oe_avatar"
+            options="{'preview_image': 'image_128'}"/>
 
-                    <div class="oe_title">
-                        <field name="id" class="oe_field_id" invisible="1"/>
-                        <field name="active" invisible="1"/>
+          <div class="oe_title">
+            <field name="id" class="oe_field_id" invisible="1"/>
+            <field name="active" invisible="1"/>
 
-                        <label for="name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name" class="oe_field_name" placeholder="Enter new name"/>
-                        </h1>
-                    </div>
+            <label for="name" class="oe_edit_only"/>
+            <h1>
+              <field name="name" class="oe_field_name" placeholder="Enter new name"/>
+            </h1>
 
-                    <group col="2">
-                        <group col="2" class="my-0">
-                            <field name="code" class="oe_field_code"/>
-                            <field name="complex_id" class="oe_field_company_id"/>
-                            <field name="type_id" class="oe_field_type_id"/>
-                        </group>
-                        <group col="2" class="my-0">
-                            <field name="users" class="oe_field_users"/>
-                            <field name="excess" class="oe_field_excess"/>
-                        </group>
-                    </group>
+            <group>
+              <field name="complex_id" class="oe_field_company_id"/>
+              <field name="code" class="oe_field_code"/>
+            </group>
 
-                    <notebook>
-                        <page string="Description" class="oe_page_description" accesskey="D">
-                            <group col="2">
-                                <field name="description" class="oe_field_description"
-                                    placeholder="Enter new description" colspan="4" nolabel="1"/>
-                            </group>
-                        </page>
-                        <page id="setup" string="Setup" class="oe_page_setup" accesskey="S">
-                            <group col="4" groups="record_ownership.record_ownership_proxy">
-                                <field name="owner_id" class="oe_field_owner_id"/>
-                                <field name="subrogate_id" class="oe_field_subrogate_id"/>
-                            </group>
-                        </page>
-                    </notebook>
-                </sheet>
+          </div>
 
-                <chatter/>
+          <group col="2">
+            <group col="2" string="Type">
+              <field name="type_id" class="oe_field_type_id"/>
+              <field name="is_space" class="oe_field_is_space"/>
+            </group>
+            <group col="2" string="Capacity">
+              <field name="users" class="oe_field_users"/>
+              <field name="excess" class="oe_field_excess"/>
+            </group>
+          </group>
 
-            </form>
-        </field>
-    </record>
+          <notebook>
+            <page string="Description" class="oe_page_description" accesskey="D">
+              <group col="2">
+                <field name="description" class="oe_field_description"
+                  placeholder="Enter new description" colspan="4" nolabel="1"/>
+              </group>
+            </page>
+            <page id="setup" string="Setup" class="oe_page_setup" accesskey="S">
+              <group col="4" string="Ownership" groups="record_ownership.record_ownership_proxy">
+                <field name="owner_id" class="oe_field_owner_id"/>
+                <field name="subrogate_id" class="oe_field_subrogate_id"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
 
-    <record id="view_facility_kanban" model="ir.ui.view">
-        <field name="name">view.facility.kanban</field>
-        <field name="model">facility.facility</field>
-        <field name="type">kanban</field>
-        <field name="priority" eval="16"/>
-        <field name="active" eval="True"/>
-        <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" group_create="1" group_delete="1" group_edit="1"
-                archivable="1" quick_create="1" quick_create_view="view_facility_form">
+        <chatter/>
 
-                <field name="id"/>
-                <field name="active"/>
-                <field name="name"/>
-                <field name="code" class="oe_field_code"/>
-                <field name="description"/>
-                <field name="type_id"/>
-                <field name="complex_id"/>
-                <field name="next_use"/>
-                <field name="users_str"/>
-                <field name="color"/>
+      </form>
+    </field>
+  </record>
 
-                <templates>
-                    <t t-name="card">
-                        <div
-                            t-attf-class="{{'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) }} oe_kanban_global_click">
-                            <!-- <div class="o_kanban_image">
-                                <t t-if="record.image_128.raw_value">
-                                    <field name="image_128" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}' />
-                                </t>
-                                <t t-else="">
-                                    <img t-att-src="_s + '/facility_management/static/src/img/facility.png'" class="o_kanban_image" alt="Facility" />
-                                </t>
-                            </div> -->
-                            <div class="oe_kanban_details">
-                                <table class="table table-sm table-borderless">
-                                    <tbody>
-                                        <tr>
-                                            <th colspan="2">
-                                                <field name="name" class="oe_field_name"/>
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2" class="font-italic">
-                                                <field name="type_id" class="oe_field_type_id"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="pt-3">
-                                                <i class="fa fa-building-o" title="Complex"/>
-                                            </th>
-                                            <td class="w-100 pt-3">
-                                                <field name="complex_id"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">
-                                                <field name="users_str" class="oe_field_users_str"
-                                                  widget="facility_users"/>
-                                                <field name="next_use"
-                                                  class="oe_field_next_use ml-3"
-                                                  widget="facility_next_time"/>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+  <record id="view_facility_kanban" model="ir.ui.view">
+    <field name="name">view.facility.kanban</field>
+    <field name="model">facility.facility</field>
+    <field name="type">kanban</field>
+    <field name="priority" eval="16"/>
+    <field name="active" eval="True"/>
+    <field name="arch" type="xml">
+      <kanban highlight_color="color">
 
-                                <div name="kanban-box-toolbar" role="toolbar"
-                                    aria-label="Management"
-                                    class="btn-toolbar d-flex flex-row-reverse justify-content-start align-self-end mt-3">
+        <templates>
+          <t t-name="card" class="flex-row">
+            <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
 
-                                    <button name="view_reservations" type="object"
-                                        class="btn btn-sm btn-light oe_read_only"
-                                        title="Show related reservations">
-                                        <i class="fa fa-calendar d-inline-block mr-1"
-                                            aria-hidden="false" title="Scheduled"/> Scheduled </button>
+            <aside class="o_kanban_aside_full">
+              <div class="o_kanban_image_fill position-relative w-100 p-2">
+                <field name="image_128" class="w-100" widget="image"
+                  options="{'img_class': 'object-fit-contain w-100 h-100'}"/>
+              </div>
+            </aside>
 
-                                </div>
+            <main class="ps-2 ps-md-0">
+              <field name="display_name" class="mb-2 fw-bold fs-5 text-truncate"/>
 
-                            </div>
+              <table class="table-borderless w-100 small mb-0 mb-2">
+                <tbody>
+                  <tr>
+                    <th class="px-0">Complex:</th>
+                    <td class="px-0 text-truncate">
+                      <field name="complex_id"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="px-0">Type:</th>
+                    <td class="px-0 text-truncate">
+                      <field name="type_id" class="oe_field_type_id"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="px-0">Next use:</th>
+                    <td class="px-0 text-truncate">
+                      <field name="next_use" class="oe_field_next_use ml-3"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="px-0">Users:</th>
+                    <td class="px-0 text-truncate">
+                      <field name="users_str" class="oe_field_users_str"/>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
 
-                        </div>
-                    </t>
-                </templates>
+              <footer>
+                <div/>
+              </footer>
+            </main>
 
-            </kanban>
-        </field>
-    </record>
+          </t>
+          <!-- card -->
+        </templates>
+      </kanban>
+    </field>
+  </record>
 
-    <!-- Search view for "facility.facility" -->
-    <record id="view_facility_search" model="ir.ui.view">
-        <field name="name">view.facility.search</field>
-        <field name="model">facility.facility</field>
-        <field name="type">search</field>
-        <field name="priority" eval="16"/>
-        <field name="active" eval="True"/>
-        <field name="arch" type="xml">
-            <search string="facility_search">
-                <field name="name" class="oe_field_name"/>
-                <field name="type_id" class="oe_field_type_id"/>
-                <field name="complex_id" class="oe_field_complex_id"/>
-                <field name="users" class="oe_field_users"/>
-                <field name="excess" class="oe_field_users"/>
-                <field name="next_use" class="oe_field_next_use"/>
+  <!-- Search view for "facility.facility" -->
+  <record id="view_facility_search" model="ir.ui.view">
+    <field name="name">view.facility.search</field>
+    <field name="model">facility.facility</field>
+    <field name="type">search</field>
+    <field name="priority" eval="16"/>
+    <field name="active" eval="True"/>
+    <field name="arch" type="xml">
+      <search string="facility_search">
+        <field name="name" class="oe_field_name"/>
+        <field name="type_id" class="oe_field_type_id"/>
+        <field name="complex_id" class="oe_field_complex_id"/>
+        <field name="users" class="oe_field_users"/>
+        <field name="excess" class="oe_field_users"/>
+        <field name="next_use" class="oe_field_next_use"/>
 
-                <filter name="inactive" string="Archived" domain="[('active','=', False)]"/>
+        <filter name="inactive" string="Archived" domain="[('active','=', False)]"/>
 
-                <separator/>
-                <filter name="rooms" string="Classrooms" domain="[('users', '&gt;', 0)]"
-                    help="Is a room"/>
-                <filter name="equipment" string="Equipment" domain="[('users', '=', 0)]"
-                    help="Is equipment"/>
+        <separator/>
+        <filter name="rooms" string="Classrooms" domain="[('users', '&gt;', 0)]" help="Is a room"/>
+        <filter name="equipment" string="Equipment" domain="[('users', '=', 0)]" help="Is equipment"/>
 
-                <separator/>
-                <filter string="Available" name="available"
-                    domain="[                     '|',                     ('reservation_ids', '=', False),                     ('next_use', '&gt;', (context_today()+relativedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S'))                 ]"/>
+        <separator/>
+        <filter string="Available" name="available"
+          domain="[('is_available', '=', True)]"/>
 
-                <group expand="0" name="group_by" string="Group By">
-                    <filter name="group_by_type_id" string="Facility type" domain="[]"
-                        context="{'group_by' : 'type_id'}"/>
-                    <filter name="group_by_complex_id" string="Complex" domain="[]"
-                        context="{'group_by' : 'complex_id'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
+        <group expand="0" name="group_by" string="Group By">
+          <filter name="group_by_type_id" string="Facility type" domain="[]"
+            context="{'group_by' : 'type_id'}"/>
+          <filter name="group_by_complex_id" string="Complex" domain="[]"
+            context="{'group_by' : 'complex_id'}"/>
+        </group>
+      </search>
+    </field>
+  </record>
 
-    <!-- Main window action for model.name -->
-    <record id="action_facilities_act_window" model="ir.actions.act_window">
-        <field name="type">ir.actions.act_window</field>
-        <field name="name">Facilities</field>
-        <field name="res_model">facility.facility</field>
-        <field name="view_mode">kanban,list,form</field>
-        <field name="target">current</field>
-        <field name="domain">[]</field>
-        <field name="context">{}</field>
-        <field name="search_view_id" ref="view_facility_search"/>
-        <field name="help" type="html">
-            <p class="oe_view_nocontent_create"> Click to add new facilities </p>
-            <p> There are no facilities yet </p>
-        </field>
-    </record>
+  <!-- Main window action for model.name -->
+  <record id="action_facilities_act_window" model="ir.actions.act_window">
+    <field name="type">ir.actions.act_window</field>
+    <field name="name">Facilities</field>
+    <field name="res_model">facility.facility</field>
+    <field name="view_mode">kanban,list,form</field>
+    <field name="target">current</field>
+    <field name="domain">[]</field>
+    <field name="context">{}</field>
+    <field name="search_view_id" ref="view_facility_search"/>
+    <field name="help" type="html">
+      <p class="oe_view_nocontent_create"> Click to add new facilities </p>
+      <p> There are no facilities yet </p>
+    </field>
+  </record>
 
-    <!-- Main menu for model.name -->
-    <record id="menu_facilities" model="ir.ui.menu">
-        <field name="name">Facilities</field>
-        <field name="sequence" eval="15"/>
-        <field name="action" ref="action_facilities_act_window"/>
-        <field name="parent_id" ref="facility_management.menu_facility_management_facilities"/>
-        <field name="groups_id" eval="[(4, ref('facility_management.facility_group_consultant'))]"/>
-    </record>
-
-
-    <record id="view_facility_embed_tree" model="ir.ui.view">
-        <field name="name">view.facility.tree</field>
-        <field name="model">facility.facility</field>
-        <field name="type">list</field>
-        <field name="mode">primary</field>
-        <field name="priority" eval="32"/>
-        <field name="active" eval="True"/>
-        <field name="inherit_id" ref="facility_management.view_facility_tree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//button[@name='view_reservations']" position="replace"/>
-            <xpath expr="//field[@name='next_use']" position="replace"/>
-        </field>
-    </record>
+  <!-- Main menu for model.name -->
+  <record id="menu_facilities" model="ir.ui.menu">
+    <field name="name">Facilities</field>
+    <field name="sequence" eval="15"/>
+    <field name="action" ref="action_facilities_act_window"/>
+    <field name="parent_id" ref="facility_management.menu_facility_management_facilities"/>
+    <field name="groups_id" eval="[(4, ref('facility_management.facility_group_consultant'))]"/>
+  </record>
 
 </odoo>

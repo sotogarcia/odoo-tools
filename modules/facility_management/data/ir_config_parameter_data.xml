@@ -2,9 +2,9 @@
 
 <odoo noupdate="1">
 
-    <record id="ir_config_parameter_auto_archive_on_rejection" model="ir.config_parameter">
-        <field name="key">facility_management.auto_archive_on_rejection</field>
-        <field name="value" eval="True"/>
-    </record>
+  <record id="ir_config_parameter_auto_archive_on_rejection" model="ir.config_parameter">
+    <field name="key">facility_management.auto_archive_on_rejection</field>
+    <field name="value" eval="True"/>
+  </record>
 
 </odoo>
