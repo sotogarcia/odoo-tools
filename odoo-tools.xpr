@@ -5,6 +5,7 @@
         <options/>
     </meta>
     <projectTree name="odoo-tools.xpr">
+        <folder path="../odoo-academy/"/>
         <folder path="."/>
     </projectTree>
 </project>
