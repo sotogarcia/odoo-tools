@@ -237,8 +237,7 @@ class OwnershipMixin(models.AbstractModel):
         manager_xid = "record_ownership.record_ownership_manager"
         proxy_xid = "record_ownership.record_ownership_proxy"
 
-        uid = self.env.context.get("uid")
-        current_user = self.env["res.users"].browse(uid)
+        current_user = uid = self.env.user
         if not current_user.has_group(manager_xid):
             values.pop("owner_id", False)
 
@@ -272,14 +271,23 @@ class OwnershipMixin(models.AbstractModel):
         This method check if ``message_subscribe`` method exists
         """
 
+        current_partner = self.env.user.partner_id
         if "mail.thread" in self._inherit:
             for record in self:
                 subscribe = getattr(record.sudo(), "message_subscribe")
 
-                if "owner_id" in values.keys() and record.owner_id:
+                if (
+                    "owner_id" in values.keys()
+                    and record.owner_id
+                    and record.owner_id.partner_id != current_partner
+                ):
                     subscribe([record.owner_id.partner_id.id])
 
-                if "subrogate_id" in values.keys() and record.subrogate_id:
+                if (
+                    "subrogate_id" in values.keys()
+                    and record.subrogate_id
+                    and record.subrogate_id.partner_id != current_partner
+                ):
                     subscribe(partner_ids=[record.subrogate_id.partner_id.id])
 
     @api.model_create_multi

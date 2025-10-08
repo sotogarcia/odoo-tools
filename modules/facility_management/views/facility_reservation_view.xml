@@ -288,6 +288,7 @@
     <field name="name">Reservations</field>
     <field name="res_model">facility.reservation</field>
     <field name="view_mode">calendar,kanban,list,form</field>
+    <field name="path">facility-reservation</field>
     <field name="target">current</field>
     <field name="domain">[]</field>
     <field name="context">{}</field>

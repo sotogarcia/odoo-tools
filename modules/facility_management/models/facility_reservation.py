@@ -384,7 +384,7 @@ class FacilityReservation(models.Model):
         (
             "unique_facility_id",
             """EXCLUDE USING gist (
-                facility_id WITH =,
+                facility_id gist_int4_ops WITH =,
                 tsrange ( date_start, date_stop ) WITH &&
             ) WHERE (
                 active

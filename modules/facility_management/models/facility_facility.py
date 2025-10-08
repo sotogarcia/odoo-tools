@@ -493,17 +493,22 @@ class FacilityFacility(models.Model):
 
         return super(FacilityFacility, self).copy(default)
 
-    @api.depends("name", "complex_id", "complex_id.name")
     @api.depends_context("lang")
+    @api.depends("name", "complex_id", "complex_id.name")
     def _compute_display_name(self):
-        context = self.env.context
-        with_complex = context.get("facility_name_with_complex", False)
+        """Build display_name safely even when values are falsy in onchanges."""
+        with_complex = self.env.context.get(
+            "facility_name_with_complex", False
+        )
 
         for record in self:
-            parts = [record.complex_id.name] if with_complex else []
-            parts.append(record.name)
-
-            record.display_name = " / ".join(parts)
+            parts = []
+            if with_complex and record.complex_id and record.complex_id.name:
+                parts.append(record.complex_id.name)
+            if record.name:
+                parts.append(record.name)
+            # Ensure every piece is str and avoid TypeError on join
+            record.display_name = " / ".join(map(str, parts)) if parts else ""
 
     def view_reservations(self):
         self.ensure_one()

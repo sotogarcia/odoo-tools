@@ -6,6 +6,7 @@
     </meta>
     <projectTree name="odoo-tools.xpr">
         <folder path="../odoo-academy/"/>
+        <folder path="../odoo-normative/"/>
         <folder path="."/>
     </projectTree>
 </project>
