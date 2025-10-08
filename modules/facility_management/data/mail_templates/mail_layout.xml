@@ -56,7 +56,7 @@
                 <!-- CONTENT-BODY::Begin -->
                 <tr>
                   <td align="center" style="min-width:590px;">
-                    <t t-raw="body_html"/>
+                    <t t-out="body_html"/>
                   </td>
                 </tr>
                 <!-- CONTENT-BODY::End -->

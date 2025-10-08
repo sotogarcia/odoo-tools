@@ -18,7 +18,7 @@ _logger = getLogger(__name__)
 
 
 NOT_IMP_MSG = _lt(
-    "Abstract method «{}» not implemented in «{}» has been called"
+    'Abstract method "{}" not implemented in "{}" has been called'
 )
 
 

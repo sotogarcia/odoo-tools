@@ -146,73 +146,71 @@
             <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
 
             <aside class="o_kanban_aside_full">
-              <div class="o_kanban_image_fill position-relative w-100 p-2">
+              <t t-if="record.image_128.raw_value">
                 <field name="image_128" class="w-100" widget="image"
-                  options="{'img_class': 'object-fit-contain w-100 h-100'}"/>
-              </div>
+                  options="{'img_class': 'w-100 h-auto p-2 align-top'}"/>
+              </t>
+              <t t-if="!record.image_128.raw_value">
+                <img src="/facility_management/static/src/img/facility-complex-128.png" class="w-100 h-auto p-2"
+                  alt="Facility complex" title="Facility complex without image" />
+              </t>
             </aside>
 
-            <main class="ps-2 ps-md-0">
-              <field name="display_name" class="mb-2 fw-bold fs-5 text-truncate"/>
+            <div class="flex-fill d-flex flex-column justify-content-between overflow-hidden w-100 ps-2 ps-md-0">
+              <main class="d-flex flex-column justify-content-start align-items-start">
+                <h2 class="h4">
+                  <field name="display_name"/>
+                </h2>
 
-              <table class="table-borderless w-100 small mb-0 mb-2">
-                <tbody>
-                  <tr>
-                    <th class="px-0">Email:</th>
-                    <td colspan="3" class="px-0 text-truncate">
-                      <t t-if="record.email.raw_value">
+                <ul class="list-unstyled w-100 small">
+                  <li class="d-flex flex-row justify-content-start lh-lg text-truncate" title="Email address">
+                    <strong class="pe-2">Email:</strong>
+                    <t t-if="record.email.raw_value">
                         <a t-attf-href="mailto:{{ record.email.raw_value }}"
                           title="Contact by email">
                           <t t-esc="record.email.raw_value"/>
                         </a>
                       </t>
                       <t t-if="!record.email.raw_value"> --- </t>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th class="px-0">Phone:</th>
-                    <td colspan="3" class="px-0 text-truncate">
-                      <t t-if="record.phone_number.raw_value">
+                  </li>
+
+                  <li class="d-flex flex-row justify-content-start lh-lg text-truncate" title="Phone number">
+                    <strong class="pe-2">Phone:</strong>
+                    <t t-if="record.phone_number.raw_value">
                         <a t-attf-href="mailto:{{ record.phone_number.raw_value }}"
                           title="Contact by phone">
                           <t t-esc="record.phone_number.raw_value"/>
                         </a>
                       </t>
                       <t t-if="!record.phone_number.raw_value"> --- </t>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th class="px-0">Mgr.:</th>
-                    <td colspan="3" class="px-0 text-truncate">
-                      <field name="manager_id" class="oe_field_manager_id text-truncate"/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th class="px-0">Spaces:</th>
-                    <td class="px-0">
-                      <field name="space_count" class="oe_field_space_count"/>
-                    </td>
-                    <th class="px-0 text-end">Capacity:</th>
-                    <td class="ps-3">
-                      <field name="users" class="oe_field_users"/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="pt-2 small text-muted" style="white-space: pre-line; pt-2"
-                      colspan="4">
-                      <field name="display_address" class="oe_field_display_address"/>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                  </li>
 
-              <footer>
-                <div/>
-              </footer>
-            </main>
+                  <li class="d-flex flex-row justify-content-start lh-lg text-truncate" title="Complex manager">
+                    <strong class="pe-2">Head:</strong>
+                    <field name="manager_id" class="oe_field_manager_id text-truncate"/>
+                  </li>
+
+                  <li class="d-flex flex-row justify-content-start lh-lg text-truncate" title="Total number of spaces">
+                    <strong class="pe-2">Spaces:</strong>
+                    <field name="space_count" class="oe_field_space_count"/>
+                  </li>
+
+                  <li class="d-flex flex-row justify-content-start lh-lg text-truncate" title="User capacity">
+                    <strong class="pe-2">Capacity:</strong>
+                    <field name="users" class="oe_field_users"/>
+                  </li>
+
+                </ul>
+
+              </main>
+
+              <!-- footer: begin -->
+              <footer class="d-flex justify-content-end align-items-start mt-2" />
+              <!-- footer: end -->
+
+            </div>
 
           </t>
-          <!-- card -->
         </templates>
 
       </kanban>
@@ -248,6 +246,7 @@
     <field name="name">Facility complex</field>
     <field name="res_model">facility.complex</field>
     <field name="view_mode">kanban,list,form</field>
+    <field name="path">facility-complex</field>
     <field name="target">current</field>
     <field name="domain">[]</field>
     <field name="context">{}</field>

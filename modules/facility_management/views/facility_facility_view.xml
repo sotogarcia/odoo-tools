@@ -114,58 +114,61 @@
     <field name="active" eval="True"/>
     <field name="arch" type="xml">
       <kanban highlight_color="color">
-
         <templates>
           <t t-name="card" class="flex-row">
             <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
 
             <aside class="o_kanban_aside_full">
-              <div class="o_kanban_image_fill position-relative w-100 p-2">
+              <t t-if="record.image_128.raw_value">
                 <field name="image_128" class="w-100" widget="image"
-                  options="{'img_class': 'object-fit-contain w-100 h-100'}"/>
-              </div>
+                  options="{'img_class': 'w-100 h-auto p-2 align-top'}"/>
+              </t>
+              <t t-if="!record.image_128.raw_value">
+                <img src="/facility_management/static/src/img/facility-facility-128.png" class="w-100 h-auto p-2"
+                  alt="Facility" title="Facility without image" />
+              </t>
             </aside>
 
-            <main class="ps-2 ps-md-0">
-              <field name="display_name" class="mb-2 fw-bold fs-5 text-truncate"/>
+            <div class="flex-fill d-flex flex-column justify-content-between overflow-hidden w-100 ps-2 ps-md-0">
+              <main class="d-flex flex-column justify-content-start align-items-start">
+                <h2 class="h4">
+                  <field name="display_name"/>
+                </h2>
 
-              <table class="table-borderless w-100 small mb-0 mb-2">
-                <tbody>
-                  <tr>
-                    <th class="px-0">Complex:</th>
-                    <td class="px-0 text-truncate">
-                      <field name="complex_id"/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th class="px-0">Type:</th>
-                    <td class="px-0 text-truncate">
-                      <field name="type_id" class="oe_field_type_id"/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th class="px-0">Next use:</th>
-                    <td class="px-0 text-truncate">
-                      <field name="next_use" class="oe_field_next_use ml-3"/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th class="px-0">Users:</th>
-                    <td class="px-0 text-truncate">
-                      <field name="users_str" class="oe_field_users_str"/>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                <ul class="list-unstyled w-100 small">
+                  <li class="d-flex flex-row justify-content-start lh-lg text-truncate" title="Facility complex">
+                    <strong class="pe-2">Complex:</strong>
+                    <field name="complex_id"/>
+                  </li>
 
-              <footer>
-                <div/>
-              </footer>
-            </main>
+                  <li class="d-flex flex-row justify-content-start lh-lg text-truncate" title="Facility type">
+                    <strong class="pe-2">Type:</strong>
+                    <field name="type_id" class="oe_field_type_id"/>
+                  </li>
+
+                  <li class="d-flex flex-row justify-content-start lh-lg text-truncate" title="Next use">
+                    <strong class="pe-2">Next use:</strong>
+                    <field name="next_use" class="oe_field_next_use ml-3"/>
+                  </li>
+
+                  <li class="d-flex flex-row justify-content-start lh-lg text-truncate" title="Number of users">
+                    <strong class="pe-2">Users:</strong>
+                    <field name="users_str" class="oe_field_users_str"/>
+                  </li>
+
+                </ul>
+
+              </main>
+
+              <!-- footer: begin -->
+              <footer class="d-flex justify-content-end align-items-start mt-2" />
+              <!-- footer: end -->
+
+            </div>
 
           </t>
-          <!-- card -->
         </templates>
+
       </kanban>
     </field>
   </record>
@@ -212,6 +215,7 @@
     <field name="name">Facilities</field>
     <field name="res_model">facility.facility</field>
     <field name="view_mode">kanban,list,form</field>
+    <field name="path">facility-facility</field>
     <field name="target">current</field>
     <field name="domain">[]</field>
     <field name="context">{}</field>

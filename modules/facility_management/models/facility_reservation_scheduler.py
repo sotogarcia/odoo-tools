@@ -6,8 +6,8 @@
 
 from odoo import models, fields, api
 from odoo.tools.translate import _
-from odoo.osv.expression import TRUE_DOMAIN, FALSE_DOMAIN
 from odoo.tools.safe_eval import safe_eval
+from odoo.osv.expression import TRUE_DOMAIN, FALSE_DOMAIN
 from ..utils.helpers import OPERATOR_MAP, one2many_count
 
 from logging import getLogger
