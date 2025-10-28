@@ -31,7 +31,7 @@ class FacilityFacility(models.Model):
     _rec_name = "name"
     _order = "complex_id, name ASC"
 
-    _inherit = ["image.mixin", "ownership.mixin", "mail.thread"]
+    _inherit = ["ownership.mixin", "image.mixin", "mail.thread"]
 
     _check_company_auto = True
 

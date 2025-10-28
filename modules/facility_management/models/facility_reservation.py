@@ -457,6 +457,7 @@ class FacilityReservation(models.Model):
         _super = super(FacilityReservation, self)
 
         default = dict(default or {})
+        print(default)
 
         default["date_start"] = self.date_start + timedelta(days=7)
         default["date_stop"] = self.date_stop + timedelta(days=7)

@@ -30,7 +30,7 @@ class FacilityComplex(models.Model):
     _rec_name = "name"
     _order = "name ASC"
 
-    _inherit = ["image.mixin", "ownership.mixin", "mail.thread"]
+    _inherit = ["ownership.mixin", "image.mixin", "mail.thread"]
 
     _inherits = {"res.partner": "partner_id"}
 

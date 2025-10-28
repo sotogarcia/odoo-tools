@@ -80,3 +80,6 @@
 
 
 
+- [ ] Cambiar las vistas kanban por una similares a academy_base
+- [ ] Añadir a la botonera: sesiones, instalaciones
+- [ ] Vista predeterinada: complejos
