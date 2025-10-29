@@ -27,7 +27,6 @@ class OwnershipMixin(models.AbstractModel):
         required=True,
         readonly=False,
         index=True,
-        default=lambda self: self.default_owner_id(),
         help="Current record owner",
         comodel_name="res.users",
         domain=[],
@@ -39,19 +38,11 @@ class OwnershipMixin(models.AbstractModel):
         copy=False,
     )
 
-    def default_owner_id(self):
-        """Compute the default owner for new records; this will be
-        the current user or the root user.
-        @note: root user will be used only for background actions.
-        """
-        return self.env.user or self.env.ref("base.user_root")
-
     subrogate_id = fields.Many2one(
         string="Subrogate",
         required=False,
         readonly=False,
         index=True,
-        default=None,
         help="Person who assumes the obligations of the owner",
         comodel_name="res.users",
         domain=[],
@@ -70,7 +61,6 @@ class OwnershipMixin(models.AbstractModel):
         required=False,
         readonly=True,
         index=False,
-        default=None,
         help="Person in charge of this record",
         comodel_name="res.users",
         domain=[],
@@ -170,6 +160,34 @@ class OwnershipMixin(models.AbstractModel):
         _super = super(OwnershipMixin, self)
 
         return name in extra or _super._valid_field_parameter(field, name)
+
+    @api.model
+    def default_get(self, fields_list):
+        """Prefill owner/subrogate without overwriting pre-filled values.
+
+        - Does not coerce recordsets to ids.
+        - Provides sane fallbacks (env.user → base.user_root → SUPERUSER_ID).
+        """
+        parent = super(OwnershipMixin, self)
+        values = parent.default_get(fields_list)
+
+        def _need_update(fname):
+            return fname in fields_list and not values.get(fname, False)
+
+        if _need_update("owner_id"):
+            owner_id = self.env.context.get("default_owner_id", False)
+            if not owner_id:
+                user = self.env.user or self.env.ref(
+                    "base.user_root", raise_if_not_found=False
+                )
+                owner_id = user.id if user else SUPERUSER_ID
+            values["owner_id"] = owner_id
+
+        if _need_update("subrogate_id"):
+            subrogate_id = self.env.context.get("default_subrogate_id", None)
+            values["subrogate_id"] = subrogate_id or None
+
+        return values
 
     @api.model_create_multi
     def create(self, values_list):
