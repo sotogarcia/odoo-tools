@@ -4,7 +4,7 @@
 #    Odoo, Open Source Management Solution
 #
 #    Copyright (c) All rights reserved:
-#        (c) 2015  
+#        (c) Jorge Soto Garcia, 2025
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,11 +21,10 @@
 #
 ###############################################################################
 {
-    'name': 'Attachment Effective URL',
-    'summary': 'Adds a computed URL for accessing attachments, whether file or link',
-    'version': '13.0.1.0.0',
-
-    'description': """
+    "name": "Attachment Effective URL",
+    "summary": "Adds a computed URL for accessing attachments, whether file or link",
+    "version": "18.0.1.0.0",
+    "description": """
 Attachment Effective URL
 
 This module adds a computed field `effective_url` to `ir.attachment`, returning:
@@ -34,23 +33,15 @@ This module adds a computed field `effective_url` to `ir.attachment`, returning:
 
 Useful for unified link handling in portals, reports, and automation.
     """,
-
-    'author': 'Jorge Soto Garcia',
-    'maintainer': 'Jorge Soto Garcia',
-    'contributors': ['Jorge Soto Garcia <JorgeSotoGarcia@gmail.com>'],
-
-    'website': 'http://www.gitlab.com/sotogarcia',
-
-    'license': 'AGPL-3',
-    'category': 'Tools',
-
-    'depends': [
-        'base'
-    ],
-
-    'external_dependencies': {
-        'python': [],
+    "author": "Jorge Soto Garcia",
+    "maintainer": "Jorge Soto Garcia",
+    "contributors": ["Jorge Soto Garcia <JorgeSotoGarcia@gmail.com>"],
+    "website": "http://www.github.com/sotogarcia",
+    "license": "AGPL-3",
+    "category": "Tools",
+    "depends": ["base"],
+    "external_dependencies": {
+        "python": [],
     },
-
-    'installable': True,
+    "installable": True,
 }
