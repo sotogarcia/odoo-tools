@@ -7,6 +7,7 @@
     <projectTree name="odoo-tools.xpr">
         <folder path="../odoo-academy/"/>
         <folder path="../odoo-normative/"/>
+        <folder path="../odoo-postal/"/>
         <folder path="."/>
     </projectTree>
 </project>
