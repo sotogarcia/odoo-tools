@@ -37,7 +37,8 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         index=False,
         default=lambda self: self.env.ref(
-            "facility_management.facility_weekday_monday"
+            "facility_management.facility_weekday_monday",
+            raise_if_not_found=False,
         ),
         help="Day considered as the start of the week.",
         comodel_name="facility.weekday",
