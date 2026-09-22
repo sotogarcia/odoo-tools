@@ -1,22 +1,15 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #    License, author and contributors information in:                         #
-#    __openerp__.py file at the root folder of this module.                   #
+#    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-from odoo import models, fields, api
-from odoo.tools.translate import _
-from odoo.tools.safe_eval import safe_eval
-from odoo.osv.expression import TRUE_DOMAIN, FALSE_DOMAIN
-from ..utils.helpers import OPERATOR_MAP, one2many_count
-
-from logging import getLogger
+from odoo import api, fields, models
+from odoo.osv.expression import FALSE_DOMAIN, TRUE_DOMAIN
 from odoo.tools.misc import format_date, format_time
-import pytz
-from datetime import datetime, date, time, timedelta
+from odoo.tools.safe_eval import safe_eval
+from odoo.tools.translate import _
 
-
-_logger = getLogger(__name__)
+from ..utils.helpers import OPERATOR_MAP, one2many_count
 
 
 class FacilityReservationScheduler(models.Model):
@@ -25,7 +18,7 @@ class FacilityReservationScheduler(models.Model):
     _name = "facility.reservation.scheduler"
     _description = "Facility reservation scheduler"
 
-    _inherit = ["ownership.mixin", "facility.scheduler.mixin"]
+    _inherit = ["ownership.mixin", "facility.scheduler.mixin"]  # noqa: RUF012
 
     _rec_name = "id"
     _order = "create_date DESC"
@@ -411,20 +404,20 @@ class FacilityReservationScheduler(models.Model):
 
     @api.model_create_multi
     def create(self, value_list):
-        """Overridden method 'create'"""
+        """Overridden method 'create'."""
 
-        parent = super(FacilityReservationScheduler, self)
+        parent = super()
         result = parent.create(value_list)
 
-        result.make_reservations()
+        if not self.env.context.get("skip_make_reservations", False):
+            result.make_reservations()
 
         return result
 
     def write(self, values):
         """Overridden method 'write'"""
 
-        parent = super(FacilityReservationScheduler, self)
-        result = parent.write(values)
+        result = super().write(values)
 
         self.make_reservations()
 

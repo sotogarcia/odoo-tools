@@ -1,23 +1,25 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #    License, author and contributors information in:                         #
-#    __openerp__.py file at the root folder of this module.                   #
+#    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-from odoo import models, fields, api
-from odoo.tools.translate import _
-from odoo.tools.safe_eval import safe_eval
-from odoo.osv.expression import TRUE_DOMAIN, FALSE_DOMAIN
-from odoo.exceptions import UserError
-from ..utils.helpers import OPERATOR_MAP, one2many_count
-
 from datetime import datetime, timedelta
-
 from logging import getLogger
-from math import trunc, pow
+from math import pow, trunc
 from random import random
 from re import sub
 
+from odoo import api, fields, models
+from odoo.exceptions import UserError
+from odoo.osv.expression import FALSE_DOMAIN
+from odoo.tools.safe_eval import safe_eval
+from odoo.tools.translate import _
+
+from ..utils.helpers import (
+    get_available_copy_value,
+    one2many_count,
+    one2many_count_search_domain,
+)
 
 _logger = getLogger(__name__)
 
@@ -31,7 +33,11 @@ class FacilityFacility(models.Model):
     _rec_name = "name"
     _order = "complex_id, name ASC"
 
-    _inherit = ["ownership.mixin", "image.mixin", "mail.thread"]
+    _inherit = [  # noqa: RUF012
+        "ownership.mixin",
+        "image.mixin",
+        "mail.thread",
+    ]
 
     _check_company_auto = True
 
@@ -87,19 +93,14 @@ class FacilityFacility(models.Model):
         comodel_name="facility.type",
         domain=[],
         context={},
-        ondelete="cascade",
+        ondelete="restrict",
         auto_join=False,
     )
 
     is_space = fields.Boolean(
-        string="Is space",
-        required=False,
-        readonly=False,
-        index=True,
-        default=False,
-        help="Check this option if the record represents a physical space.",
         related="type_id.is_space",
         store=True,
+        index=True,
     )
 
     complex_id = fields.Many2one(
@@ -112,12 +113,14 @@ class FacilityFacility(models.Model):
         comodel_name="facility.complex",
         domain=[],
         context={},
-        ondelete="cascade",
+        ondelete="restrict",
         auto_join=False,
     )
 
     company_id = fields.Many2one(
-        string="Company", related="complex_id.company_id", store=True
+        related="complex_id.company_id",
+        store=True,
+        index=True,
     )
 
     users = fields.Integer(
@@ -126,10 +129,7 @@ class FacilityFacility(models.Model):
         readonly=False,
         index=True,
         default=0,
-        help=(
-            "Maximum number of students who can use this facility at the "
-            "same time"
-        ),
+        help="Maximum concurrent students for this facility",
     )
 
     @api.onchange("users")
@@ -142,10 +142,7 @@ class FacilityFacility(models.Model):
         readonly=False,
         index=False,
         default=0,
-        help=(
-            "Maximum number of students who can be invited to use this "
-            "feature at the same time"
-        ),
+        help="Max concurrent student invitations for this feature",
     )
 
     users_str = fields.Char(
@@ -166,17 +163,16 @@ class FacilityFacility(models.Model):
             if record.users <= 0:
                 record.users_str = ""
             elif record.excess > record.users:
-                record.users_str = "{} (+{})".format(
-                    record.users, record.excess - record.users
+                record.users_str = (
+                    f"{record.users} (+{record.excess - record.users})"
                 )
             else:
-                record.users_str = "{}".format(record.users)
+                record.users_str = f"{record.users}"
 
     reservation_ids = fields.One2many(
         string="Reservations",
         required=False,
-        readonly=False,
-        index=True,
+        readonly=True,
         default=None,
         help="Show related reservations",
         comodel_name="facility.reservation",
@@ -184,6 +180,8 @@ class FacilityFacility(models.Model):
         domain=[],
         context={},
         auto_join=False,
+        limit=None,
+        copy=False,
     )
 
     reservation_count = fields.Integer(
@@ -197,7 +195,10 @@ class FacilityFacility(models.Model):
         search="_search_reservation_count",
     )
 
-    @api.depends("reservation_ids")
+    @api.depends(
+        "reservation_ids",
+        "reservation_ids.active",
+    )
     def _compute_reservation_count(self):
         counts = one2many_count(self, "reservation_ids")
 
@@ -206,20 +207,12 @@ class FacilityFacility(models.Model):
 
     @api.model
     def _search_reservation_count(self, operator, value):
-        # Handle boolean-like searches Odoo may pass for required fields
-        if value is True:
-            return TRUE_DOMAIN if operator == "=" else FALSE_DOMAIN
-        if value is False:
-            return TRUE_DOMAIN if operator != "=" else FALSE_DOMAIN
-
-        cmp_func = OPERATOR_MAP.get(operator)
-        if not cmp_func:
-            return FALSE_DOMAIN  # unsupported operator
-
-        counts = one2many_count(self.search([]), "reservation_ids")
-        matched = [cid for cid, cnt in counts.items() if cmp_func(cnt, value)]
-
-        return [("id", "in", matched)] if matched else FALSE_DOMAIN
+        return one2many_count_search_domain(
+            self,
+            "reservation_ids",
+            operator,
+            value,
+        )
 
     next_use = fields.Datetime(
         string="Next use",
@@ -232,21 +225,38 @@ class FacilityFacility(models.Model):
         search="_search_next_use",
     )
 
-    @api.depends("reservation_ids")
+    @api.depends(
+        "reservation_ids",
+        "reservation_ids.active",
+        "reservation_ids.state",
+        "reservation_ids.date_start",
+        "reservation_ids.date_stop",
+    )
     def _compute_next_use(self):
         now = fields.Datetime.now()
 
-        for record in self:
-            reservation_set = record.reservation_ids
-            reservation_set = reservation_set.sorted(lambda x: x.date_start)
-            reservation_set = reservation_set.filtered(
-                lambda x: x.date_stop >= now
-            )
+        domain = [
+            ("facility_id", "in", self.ids),
+            ("active", "=", True),
+            ("state", "=", "confirmed"),
+            ("date_stop", ">=", now),
+        ]
+        reservation_obj = self.env["facility.reservation"]
+        grouped_data = reservation_obj.read_group(
+            domain=domain,
+            fields=["facility_id", "next_use:min(date_start)"],
+            groupby=["facility_id"],
+            lazy=False,
+        )
 
-            if not reservation_set:
-                record.next_use = None
-            else:
-                record.next_use = reservation_set[0].date_start
+        next_use_by_facility = {
+            row["facility_id"][0]: row["next_use"]
+            for row in grouped_data
+            if row.get("facility_id")
+        }
+
+        for record in self:
+            record.next_use = next_use_by_facility.get(record.id)
 
     @api.model
     def _search_next_use(self, operator, value):
@@ -430,7 +440,7 @@ class FacilityFacility(models.Model):
         # queremos no disponibles ⇒ incluir ocupados
         return [("id", "in", busy_ids)] if busy_ids else FALSE_DOMAIN
 
-    _sql_constraints = [
+    _sql_constraints = [  # noqa: RUF012
         (
             "UNIQUE_NAME_BY_COMPLEX",
             "UNIQUE(complex_id, name)",
@@ -458,40 +468,27 @@ class FacilityFacility(models.Model):
 
     @api.returns("self", lambda value: value.id)
     def copy(self, default=None):
+        self.ensure_one()
+
         default = dict(default or {})
 
-        rand = str(trunc(random() * pow(10, 15))).zfill(15)
-        cursor = self.env.cr
+        code = get_available_copy_value(
+            self,
+            field_name="code",
+            value=self.code,
+            max_length=36,
+        )
 
-        sql = """
-            SELECT
-                ( '{part}' || gs )::VARCHAR AS "value"
-            FROM
-                generate_series ( 1, 999999, 1 ) AS gs
-            LEFT JOIN facility_facility AS ff
-                ON ff."{field}" = ( '{part}' || gs ) {on}
-            WHERE
-                ff."id" IS NULL
-                LIMIT 1;
-        """
-
-        code = sub("[0-9]+$", "", self.code)
-        cursor.execute(sql.format(on="", part=code, field="code"))
-        row = cursor.dictfetchone()
-        if not row or len(row["value"]) > 30:
-            code = rand
-        else:
-            code = row["value"]
-
-        name = sub("[0-9]$", "", self.name)
-        on = "AND ff.complex_id = {}".format(self.complex_id.id)
-        cursor.execute(sql.format(on=on, part=name, field="name"))
-        row = cursor.dictfetchone()
-        name = rand if not row else row["value"]
+        name = get_available_copy_value(
+            self,
+            field_name="name",
+            value=self.name,
+            domain=[("complex_id", "=", self.complex_id.id)],
+        )
 
         default.update({"name": name, "code": code})
 
-        return super(FacilityFacility, self).copy(default)
+        return super().copy(default)
 
     @api.depends_context("lang")
     @api.depends("name", "complex_id", "complex_id.name")
@@ -553,13 +550,11 @@ class FacilityFacility(models.Model):
 
         reservation_obj = self.env["facility.reservation"]
         reservation_domain = [
-            "|",
-            "&",
-            ("date_start", ">=", date_start),
+            ("active", "=", True),
+            ("state", "=", "confirmed"),
+            ("validate", "=", True),
             ("date_start", "<", date_stop),
-            "&",
             ("date_stop", ">", date_start),
-            ("date_stop", "<", date_stop),
         ]
         reservation_set = reservation_obj.search(reservation_domain)
 

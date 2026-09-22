@@ -1,21 +1,20 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #    License, author and contributors information in:                         #
-#    __openerp__.py file at the root folder of this module.                   #
+#    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-from odoo import models, fields, api
-from odoo.tools.translate import _
-from odoo.exceptions import ValidationError, UserError
-from odoo.osv.expression import OR
 
+from datetime import date, datetime, time, timedelta
 from logging import getLogger
-from datetime import date, datetime, timedelta, time
-from dateutil.relativedelta import relativedelta
-from pytz import timezone, utc
-from num2words import num2words
 from math import ceil, floor
 
+from dateutil.relativedelta import relativedelta
+from num2words import num2words
+from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError
+from odoo.osv.expression import OR
+from odoo.tools.translate import _
+from pytz import timezone, utc
 
 _logger = getLogger(__name__)
 
@@ -56,8 +55,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
                 return self._warn(weekday_msg)
 
             # date_base less than or equal to finish_date
-            if self.date_base >= self.finish_date:
-                self.finish_date = self.date_base
+            self.finish_date = max(self.date_base, self.finish_date)
 
     time_start = fields.Float(
         string="Time start",
@@ -93,7 +91,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
                 return self._warn(out_msg)
 
     def default_time_start(self):
-        now = datetime.utcnow()
+        now = datetime.utcnow()  # noqa: DTZ003
 
         tz = self.env.user.tz or utc.zone
         tz = timezone(tz)
@@ -146,10 +144,10 @@ class FacilitySchedulerMixin(models.AbstractModel):
     def _onchange_full_day(self):
         out_msg = _("Schedule time out of training action timespan")
 
-        if self._field_changed("field_full_day"):
-            # date_base+time_start within the training action time range
-            if not self._in_time_range(which="both"):
-                return self._warn(out_msg)
+        if self._field_changed("field_full_day") and not self._in_time_range(
+            which="both"
+        ):
+            return self._warn(out_msg)
 
     date_delay = fields.Float(
         string="Duration",
@@ -232,10 +230,12 @@ class FacilitySchedulerMixin(models.AbstractModel):
             "Interval number must be greater than or equal to one"
         )
 
-        if self._field_changed("field_interval_number"):
-            if self.interval_number < 1:
-                self.interval_number = 1
-                return self._warn(min_interval_msg)
+        if (
+            self._field_changed("field_interval_number")
+            and self.interval_number < 1
+        ):
+            self.interval_number = 1
+            return self._warn(min_interval_msg)
 
     interval_type = fields.Selection(
         string="Interval type",
@@ -262,12 +262,13 @@ class FacilitySchedulerMixin(models.AbstractModel):
             "is not among the selected days of the week"
         )
 
-        if self._field_changed("field_interval_type"):
-            if self.interval_type == "week" and not self._match_weekday(
-                self.date_base
-            ):
-                self._ensure_weekday()
-                return self._warn(weekday_msg)
+        if (
+            self._field_changed("field_interval_type")
+            and self.interval_type == "week"
+            and not self._match_weekday(self.date_base)
+        ):
+            self._ensure_weekday()
+            return self._warn(weekday_msg)
 
     weekday_ids = fields.Many2many(
         string="Weekdays",
@@ -333,7 +334,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
             day_name = record.date_base.strftime("%A").title()
             nth = record.nth_weekday().title()
 
-            record.week_day_str = "{} ({})".format(day_name, nth)
+            record.week_day_str = f"{day_name} ({nth})"
 
     finish_type = fields.Selection(
         string="Finish",
@@ -420,7 +421,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
             date_cursor = record.date_base
             record.next_schedule = record._next_repetition_date(date_cursor)
 
-    _sql_constraints = [
+    _sql_constraints = [  # noqa: RUF012
         (
             "positive_interval",
             "CHECK(time_start < time_stop)",
@@ -482,7 +483,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
         weekday_index = (date_start.day + 6) // 7
 
         d_next = date_start
-        for month_index in range(0, months):
+        for month_index in range(months):
             d_next = d_next + timedelta(weeks=4)
             if ((d_next.day + 6) // 7) < weekday_index:
                 d_next += timedelta(weeks=1)
@@ -774,7 +775,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
         ms = 999999 if microseconds else 0
         d = date.min
         t = time(hour=23, minute=59, second=59, microsecond=ms)
-        dt = datetime.min
+        dt = datetime.min  # noqa: DTZ901
 
         return (datetime.combine(d, t) - dt).total_seconds() / 3600
 
@@ -810,7 +811,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
             hours (float): time offset given in hours
         """
 
-        if type(dt) is date:  # noqa: E721
+        if type(dt) is date:
             dt = datetime.combine(dt, time.min)
 
         return dt + timedelta(hours=hours)

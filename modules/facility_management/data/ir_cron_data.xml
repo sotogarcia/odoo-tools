@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<odoo noupdate="0">
+<odoo noupdate="1">
 
   <record id="ir_cron_notify_reservation_requests" model="ir.cron" forcecreate="True">
     <field name="name">Notify pending reservation requests</field>

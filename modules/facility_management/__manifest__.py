@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #
 #    Odoo, Open Source Management Solution
@@ -20,40 +19,33 @@
 #    along with this program.  If not, see http://www.gnu.org/licenses
 #
 ###############################################################################
-# -*- coding: utf-8 -*-
-{
+{  # noqa: B018
     "name": "Facility Management",
-    "summary": """
-        Small facility management module to be used in academies""",
+    "summary": "Facility and reservation management",
     "description": """
-Manage campuses, rooms, labs, and shared resources, and schedule reservations
-for training actions with conflict-free booking.
+Manage complexes, facilities and shared resources, and schedule reservations
+with conflict-free booking.
 
 Key features:
 
-- Facility catalog: campuses, buildings, rooms, labs, equipment and capacities.
-- Reservation engine: create, edit, cancel and batch operations via wizard;
-  prevents overlaps and enforces capacity and availability rules.
-- Scheduler views: day/week/month timelines for quick allocation.
-- Action linking: bind facilities to training actions and sessions to ensure rooms,
-  equipment and seating are secured for each event.
-- Policies & constraints: opening hours, blackout dates, prep/cleanup buffers,
-  priority rules and ownership controls.
-- Integrations:
-
-  - Extends ``facility_management`` and leverages ``academy_base`` catalogs.
-  - Shows reservations from training actions/enrolments and vice versa.
-- Security: fine-grained access rules for managers, staff and readers.
-- UX: mass actions, smart buttons, and list/kanban/calendar views.
-
-This module centralizes how facilities are described, reserved and audited across
-the academy, ensuring reliable planning and zero double-booking.
+- Facility catalog: complexes, facilities, types, equipment and capacities.
+- Reservation management with conflict and availability controls.
+- Reservation scheduling for recurring and individual allocations.
+- Availability searches and reservation reporting.
+- Configurable scheduling and reservation parameters.
+- Ownership and access control.
+- Email notifications for reservation management.
     """,
     "author": "Jorge Soto Garcia",
-    "website": "https://github.com/sotogarcia",
+    "website": "https://github.com/sotogarcia/odoo-tools",
     "category": "Tools",
     "version": "18.0.1.0.0",
-    "depends": ["base", "mail", "record_ownership", "base_field_m2m_view"],
+    "depends": [
+        "base",
+        "mail",
+        "record_ownership",
+        "base_field_m2m_view",
+    ],
     "data": [
         "data/res_groups_data.xml",
         "data/ir_config_parameter_data.xml",
@@ -73,7 +65,6 @@ the academy, ensuring reliable planning and zero double-booking.
         "security/facility_reservation.xml",
         "security/facility_weekday.xml",
         "security/facility_reservation_scheduler.xml",
-        "security/facility_complex_reservation_rel.xml",
         "security/facility_search_available_wizard.xml",
         "security/facility_reporting_wizard.xml",
         "views/facility_weekday_view.xml",
