@@ -7,10 +7,11 @@
 from operator import eq, ge, gt, le, lt, ne
 from re import sub
 
+from odoo.exceptions import ValidationError
 from odoo.osv.expression import AND, FALSE_DOMAIN, TRUE_DOMAIN
 from odoo.tools import SQL
 from odoo.tools.safe_eval import safe_eval
-from odoo.tools.translate import _lt
+from odoo.tools.translate import _, _lt
 
 INVALID_DOMAIN = _lt("Given domain expression %r is not a valid ORM domain")
 INVALID_CTX = _lt("Given context expression %r is not a valid context mapping")
@@ -553,3 +554,251 @@ def get_available_copy_value(
             return candidate
 
         index += 1
+
+
+def check_unique_value(
+    record,
+    field_name,
+    value=None,
+    domain=None,
+    operator="=",
+    message=None,
+):
+    """Ensure a field value is unique within an optional record scope.
+
+    The helper searches for another record of the same model whose
+    ``field_name`` matches ``value`` according to the supplied Odoo domain
+    ``operator``. The current record is always excluded from the search.
+
+    An additional ``domain`` can be supplied to restrict the scope in which
+    uniqueness must be enforced. The domain is evaluated through
+    ``evaluate_domain()`` using ``record`` as its evaluation recordset.
+    Consequently, it may be provided as a list, tuple, string expression or
+    callable, following the same rules supported by that helper.
+
+    A callable domain is particularly useful when the uniqueness scope depends
+    on values of the record being checked. For example, to require a facility
+    name to be unique only within its complex:
+
+        domain=lambda record: [
+            ("complex_id", "=", record.complex_id.id),
+        ]
+
+    If ``value`` is not explicitly provided, the current value of
+    ``field_name`` is obtained from ``record``.
+
+    The comparison operator defaults to ``"="``. Callers can use another
+    valid Odoo domain operator when different comparison semantics are
+    required. For example, ``"=ilike"`` can be used to enforce
+    case-insensitive uniqueness for textual values.
+
+    The search is performed using the environment and context of ``record``.
+    The helper therefore preserves access rights, record rules and
+    context-dependent ORM behavior. It does not implicitly apply ``sudo()``
+    or modify ``active_test``. Callers requiring those semantics must prepare
+    the record beforehand, for example:
+
+        check_unique_value(
+            record.sudo().with_context(active_test=False),
+            field_name="name",
+        )
+
+    This also allows the helper to work with translated fields. If ``record``
+    contains a specific ``lang`` in its context, both the value lookup and the
+    duplicate search use Odoo's normal translated-field semantics, including
+    translation fallback.
+
+    Args:
+        record (odoo.models.Model): Single record whose field value must be
+            checked. Its environment and context are preserved for the
+            duplicate search.
+        field_name (str): Name of the field whose value must be unique.
+        value (Any | None, optional): Value to compare against existing
+            records. If None, the current value of ``field_name`` is read from
+            ``record``. Defaults to None.
+        domain (list | tuple | str | callable | None, optional): Additional
+            domain restricting the records among which uniqueness is checked.
+            Callable domains receive ``record`` as their argument. Defaults
+            to None.
+        operator (str, optional): Odoo domain operator used to compare
+            ``field_name`` with ``value``. Defaults to ``"="``.
+        message (str | None, optional): Error message used when a duplicate is
+            found. If omitted, a generic duplicate-record message is used.
+
+    Returns:
+        None: The function returns normally when no duplicate record exists.
+
+    Raises:
+        ValueError: If ``field_name`` does not exist on the record model, or
+            if the additional domain cannot be evaluated.
+        TypeError: If ``domain`` has an unsupported type or does not evaluate
+            to a valid domain structure.
+        ValidationError: If another record matching the uniqueness criteria
+            exists.
+
+    Notes:
+        This helper provides ORM-level uniqueness validation. It does not
+        provide the concurrency guarantees of a PostgreSQL ``UNIQUE``
+        constraint. Two concurrent transactions could theoretically pass the
+        validation before either transaction is committed.
+    """
+    record.ensure_one()
+
+    if field_name not in record._fields:
+        pattern = _lt("Field {} does not exist on model {}")
+        raise ValueError(pattern.format(field_name, record._name))
+
+    if value is None:
+        value = getattr(record, field_name)
+
+    message = message or _lt("Duplicate record found")
+
+    domain = evaluate_domain(record, domain, default=[])
+
+    domain = list(domain or [])
+    domain.extend([("id", "!=", record.id), (field_name, operator, value)])
+
+    if record.search_count(domain, limit=1):
+        error_message = f"{message}. ({field_name} = {value})"
+        raise ValidationError(error_message)
+
+
+def check_unique_translation(
+    recordset,
+    field_name,
+    domain=None,
+    operator="=ilike",
+    message=None,
+):
+    """Ensure a translated field is unique in every installed language.
+
+    The uniqueness check is performed using the effective value returned by
+    Odoo for each installed language, not only the translation explicitly
+    stored for that language.
+
+    For every record and every installed language, the record is evaluated
+    with that language set in the context. The helper then delegates the
+    duplicate lookup to ``check_unique_value()``, passing the language-specific
+    record, the effective translated value, the optional uniqueness domain and
+    the requested comparison operator.
+
+    An additional ``domain`` can be supplied to restrict the scope in which
+    translated values must be unique. The domain is passed unchanged to
+    ``check_unique_value()``, which evaluates it for each individual record
+    through ``evaluate_domain()``.
+
+    This allows dynamic scopes based on the record being checked. For example,
+    to require a facility name to be unique only within its complex:
+
+        domain=lambda record: [
+            ("complex_id", "=", record.complex_id.id),
+        ]
+
+    By default, ``operator="=ilike"`` is used. This makes uniqueness
+    case-insensitive, so values such as ``"Monday"``, ``"MONDAY"`` and
+    ``"monday"`` are considered duplicates within the same effective language
+    and uniqueness scope.
+
+    Callers can provide another valid Odoo domain operator when different
+    comparison semantics are required.
+
+    Odoo translated ``Char`` fields use ``en_US`` as fallback when no explicit
+    value is stored for the requested language. Consequently, fallback values
+    also participate in the uniqueness check.
+
+    For example, given:
+
+        Record A:
+            en_US = "Monday"
+            es_ES = False
+
+        Record B:
+            en_US = "Other"
+            es_ES = "Monday"
+
+    both records have the effective value ``"Monday"`` when evaluated with
+    ``lang="es_ES"``. The helper therefore considers them duplicates in
+    Spanish, even though Record A has no explicit Spanish translation stored.
+
+    Uniqueness is enforced independently for each installed language context.
+    Values are not compared across different languages. Therefore, the same
+    textual value may exist in different languages as long as it is unique
+    within each language's effective values and within the supplied domain.
+
+    Archived records are included in the duplicate search because each
+    language-specific record is evaluated with ``active_test=False``. This
+    prevents archived records from releasing translated values that are
+    expected to remain unique.
+
+    The helper does not apply ``sudo()``. Access rights and record rules are
+    inherited from ``recordset``. If duplicate detection must ignore record
+    rules, callers should pass a sudoed recordset, for example:
+
+        check_unique_translation(
+            recordset.sudo(),
+            field_name="name",
+        )
+
+    Args:
+        recordset (odoo.models.Model): Recordset whose translated field values
+            must be checked. Its environment and access mode are preserved.
+        field_name (str): Name of the translated field to validate.
+        domain (list | tuple | str | callable | None, optional): Additional
+            domain restricting the records among which each translated value
+            must be unique. Callable domains are evaluated for each individual
+            record. Defaults to None.
+        operator (str, optional): Odoo domain operator used to determine
+            whether two effective translated values are duplicates. Defaults
+            to ``"=ilike"`` for case-insensitive comparison.
+        message (str | None, optional): Error message used when a duplicate is
+            found. If omitted, ``check_unique_value()`` uses its default
+            duplicate-record message.
+
+    Returns:
+        None: The function returns normally when no duplicate translated value
+        exists in any installed language.
+
+    Raises:
+        ValueError: If ``field_name`` does not exist on the model, if the
+            referenced field is not translatable, or if the supplied domain
+            cannot be evaluated.
+        TypeError: If ``domain`` has an unsupported type or does not evaluate
+            to a valid domain structure.
+        ValidationError: If another record has the same effective translated
+            value in any installed language according to ``operator`` and the
+            supplied uniqueness domain.
+
+    Notes:
+        This helper provides ORM-level uniqueness validation. It does not
+        provide the concurrency guarantees of a PostgreSQL ``UNIQUE``
+        constraint. Two concurrent transactions could theoretically pass the
+        validation before either transaction is committed.
+    """
+    field = recordset._fields.get(field_name)
+
+    if not field:
+        pattern = _lt("Field {} does not exist on model {}")
+        raise ValueError(pattern.format(field_name, recordset._name))
+
+    if not field.translate:
+        pattern = _lt("Field {} on model {} is not translatable")
+        raise ValueError(pattern.format(field_name, recordset._name))
+
+    language_list = recordset.env["res.lang"].get_installed()
+
+    for record in recordset:
+        for code, _name in language_list:
+            record_ctx = record.with_context(lang=code, active_test=False)
+
+            value = getattr(record_ctx, field_name)
+            if not value:
+                continue
+
+            check_unique_value(
+                record_ctx,
+                field_name=field_name,
+                value=value,
+                domain=domain,
+                operator=operator,
+                message=message,
+            )

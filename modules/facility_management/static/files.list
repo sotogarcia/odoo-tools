@@ -22,8 +22,8 @@
 - [x] .\models\facility_reservation.py
 - [ ] .\models\facility_reservation_scheduler.py
 - [ ] .\models\facility_scheduler_mixin.py
-- [ ] .\models\facility_type.py
-- [ ] .\models\facility_weekday.py
+- [x] .\models\facility_type.py
+- [x] .\models\facility_weekday.py
 - [ ] .\models\ir_actions_report.py
 - [ ] .\models\res_config_settings.py
 - [ ] .\models\__init__.py

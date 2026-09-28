@@ -1,15 +1,12 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #    License, author and contributors information in:                         #
-#    __openerp__.py file at the root folder of this module.                   #
+#    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-from odoo import models, fields
-from logging import getLogger
+from odoo import api, fields, models
 from odoo.tools.translate import _
 
-
-_logger = getLogger(__name__)
+from ..utils.helpers import check_unique_translation, get_available_copy_value
 
 
 class FacilityType(models.Model):
@@ -60,10 +57,25 @@ class FacilityType(models.Model):
         help="Check this option if the record represents a physical space.",
     )
 
-    _sql_constraints = [
-        (
-            "unique_facility_type_name",
-            'UNIQUE("name")',
-            "Facility type already exists",
+    @api.returns("self", lambda value: value.id)
+    def copy(self, default=None):
+        self.ensure_one()
+
+        default = dict(default or {})
+
+        if "name" not in default:
+            default["name"] = get_available_copy_value(
+                self,
+                field_name="name",
+                value=self.name,
+            )
+
+        return super().copy(default)
+
+    @api.constrains("name")
+    def _check_name(self):
+        check_unique_translation(
+            self,
+            field_name="name",
+            message=_("There is already a facility type with this name"),
         )
-    ]

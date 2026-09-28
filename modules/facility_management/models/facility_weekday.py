@@ -1,15 +1,14 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #    License, author and contributors information in:                         #
-#    __openerp__.py file at the root folder of this module.                   #
+#    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-from odoo import models, fields
+
+from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
-from logging import getLogger
 
-
-_logger = getLogger(__name__)
+from ..utils.helpers import check_unique_translation, get_available_copy_value
 
 
 class FacilityWeekday(models.Model):
@@ -50,16 +49,7 @@ class FacilityWeekday(models.Model):
         help="Check if this weekday is considered a working day",
     )
 
-    active = fields.Boolean(
-        string="Active",
-        required=False,
-        readonly=False,
-        index=False,
-        default=True,
-        help="Enables/disables the record",
-    )
-
-    _sql_constraints = [
+    _sql_constraints = [  # noqa: RUF012
         (
             "weekday_sequence_range",
             "CHECK(sequence BETWEEN 1 AND 7)",
@@ -70,9 +60,12 @@ class FacilityWeekday(models.Model):
             "UNIQUE(sequence)",
             "There is already a weekday with this sequence",
         ),
-        (
-            "weekday_name_unique",
-            "UNIQUE(name)",
-            "There is already a weekday with this name",
-        ),
     ]
+
+    @api.constrains("name")
+    def _check_name(self):
+        check_unique_translation(
+            self,
+            field_name="name",
+            message=_("There is already a weekday with this name"),
+        )

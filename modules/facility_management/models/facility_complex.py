@@ -9,12 +9,13 @@ from re import sub
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.osv.expression import AND, FALSE_DOMAIN, TRUE_DOMAIN
+from odoo.osv.expression import AND, TRUE_DOMAIN
 from odoo.tools import formataddr
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.translate import _
 
 from ..utils.helpers import (
+    check_unique_value,
     get_available_copy_value,
     one2many_count,
     one2many_count_search_domain,
@@ -217,7 +218,6 @@ class FacilityComplex(models.Model):
         domain=[],
         context={},
         auto_join=False,
-        limit=None,
         copy=False,
     )
 
@@ -256,7 +256,6 @@ class FacilityComplex(models.Model):
         domain=[("state", "=", "requested")],
         context={},
         auto_join=False,
-        limit=None,
         copy=False,
     )
 
@@ -428,23 +427,22 @@ class FacilityComplex(models.Model):
     @api.constrains("partner_id", "name", "company_id")
     def _check_unique_name_by_company(self):
         msg_1 = _("Complex must have a name")
-        msg_2 = _(
-            "There is already a complex with the same name in this company"
-        )
+        msg_2 = _("A complex with this name already exists in this company")
 
         for record in self:
             name = (record.name or "").strip()
+
             if not name:
                 raise ValidationError(msg_1)
 
-            domain = [
-                ("id", "!=", record.id),
-                ("company_id", "=", record.company_id.id),
-                ("name", "=ilike", name),
-            ]
-
-            if self.sudo().search_count(domain, limit=1):
-                raise ValidationError(msg_2)
+            check_unique_value(
+                record.sudo(),
+                field_name="name",
+                value=name,
+                domain=[("company_id", "=", record.company_id.id)],
+                operator="=ilike",
+                message=msg_2,
+            )
 
     @api.returns("self", lambda value: value.id)
     def copy(self, default=None):

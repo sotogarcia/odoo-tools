@@ -11,7 +11,7 @@
     <field name="code">action = record.view_scheduler(force=True)</field>
     <field name="binding_model_id" ref="facility_management.model_facility_reservation"/>
     <field name="binding_view_types">form</field>
-    <field name="group_ids"
+    <field name="groups_id"
       eval="[(4, ref('facility_management.facility_group_monitor'))]"/>
   </record>
 

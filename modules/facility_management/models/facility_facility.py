@@ -16,6 +16,7 @@ from odoo.tools.safe_eval import safe_eval
 from odoo.tools.translate import _
 
 from ..utils.helpers import (
+    check_unique_translation,
     get_available_copy_value,
     one2many_count,
     one2many_count_search_domain,
@@ -180,7 +181,6 @@ class FacilityFacility(models.Model):
         domain=[],
         context={},
         auto_join=False,
-        limit=None,
         copy=False,
     )
 
@@ -367,7 +367,7 @@ class FacilityFacility(models.Model):
 
     @api.depends("next_use")
     def _compute_color(self):
-        now = datetime.now()
+        now = fields.Datetime.now()
 
         margin = self._get_availability_margin()
         next_hour = now + timedelta(minutes=margin)
@@ -465,6 +465,15 @@ class FacilityFacility(models.Model):
             ),
         ),
     ]
+
+    @api.constrains("name", "complex_id")
+    def _check_unique_name_by_complex(self):
+        check_unique_translation(
+            self.sudo(),
+            field_name="name",
+            domain=lambda record: [("complex_id", "=", record.complex_id.id)],
+            message=_("Duplicate facility name in this complex"),
+        )
 
     @api.returns("self", lambda value: value.id)
     def copy(self, default=None):
@@ -589,12 +598,9 @@ class FacilityFacility(models.Model):
         try:
             param_value = config.get_param(param_xid, "60")
             param_value = int(param_value)
-        except (TypeError, ValueError) as ex:
-            _logger.error(
-                "Invalid availability margin configuration: %s",
-                ex,
-                exc_info=True,
-            )
+        except (TypeError, ValueError):
+            message = _("Invalid availability margin configuration")
+            _logger.exception(message)
             param_value = 60
 
         return param_value
