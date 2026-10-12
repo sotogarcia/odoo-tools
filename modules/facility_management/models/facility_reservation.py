@@ -141,7 +141,7 @@ class FacilityReservation(models.Model):
         required=True,
         readonly=False,
         index=False,
-        default=0.0,
+        default=None,
         digits=(16, 2),
         help="Time length of the reservation",
         store=True,
