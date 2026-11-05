@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 # License, author and contributors information in:                            #
 # __manifest__.py file at the root folder of this module.                     #
 ###############################################################################
 
-from odoo import models, fields, api
-from odoo import SUPERUSER_ID
 from logging import getLogger
+
+from odoo import SUPERUSER_ID, api, fields, models
 
 # pylint: disable=locally-disabled, C0103
 _logger = getLogger(__name__)
