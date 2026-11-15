@@ -72,11 +72,34 @@ class TestSchedulerTimezone(TransactionCase):
         )
 
     def test_timezone_does_not_depend_on_user(self):
-        scheduler = self._scheduler("Europe/Madrid").with_context(
-            tz="Atlantic/Canary"
+        users = self.env["res.users"]
+        madrid_user = users.create(
+            {
+                "name": "Madrid timezone test",
+                "login": "facility_tz_madrid_test",
+                "tz": "Europe/Madrid",
+            }
+        )
+        canary_user = users.create(
+            {
+                "name": "Canary timezone test",
+                "login": "facility_tz_canary_test",
+                "tz": "Atlantic/Canary",
+            }
         )
 
+        scheduler = self._scheduler("Europe/Madrid")
+        expected = datetime(2027, 7, 15, 7, 0)
+
         self.assertEqual(
-            scheduler.join_datetime(date(2027, 7, 15), 9.0),
-            datetime(2027, 7, 15, 7, 0),
+            scheduler.with_user(madrid_user).join_datetime(
+                date(2027, 7, 15), 9.0
+            ),
+            expected,
+        )
+        self.assertEqual(
+            scheduler.with_user(canary_user).join_datetime(
+                date(2027, 7, 15), 9.0
+            ),
+            expected,
         )
