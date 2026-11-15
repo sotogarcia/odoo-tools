@@ -12,7 +12,7 @@
     <field name="date_base"
       eval="(DateTime.today() + timedelta(days=7 - DateTime.today().weekday())).strftime('%Y-%m-%d')"/>
     <field name="time_start" eval="9.0"/>
-    <field name="time_stop" eval="11.0"/>
+    <field name="date_delay" eval="2.0"/>
     <field name="weekday_ids" eval="[
         (4, ref('facility_management.facility_weekday_monday'), 0),
         (4, ref('facility_management.facility_weekday_wednesday'), 0),
