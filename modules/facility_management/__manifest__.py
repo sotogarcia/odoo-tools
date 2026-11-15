@@ -39,7 +39,7 @@ Key features:
     "author": "Jorge Soto Garcia",
     "website": "https://github.com/sotogarcia/odoo-tools",
     "category": "Tools",
-    "version": "18.0.1.0.0",
+    "version": "18.0.1.1.0",
     "depends": [
         "base",
         "mail",
