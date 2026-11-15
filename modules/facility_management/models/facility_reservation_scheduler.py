@@ -90,6 +90,7 @@ class FacilityReservationScheduler(models.Model):
         "interval_type",
         "weekday_ids",
         "month_type",
+        "tz",
     )
     def _compute_available_facility_ids(self):
         """Compute dynamic set used to filter the facility selector."""
@@ -128,6 +129,35 @@ class FacilityReservationScheduler(models.Model):
         ondelete="cascade",
         auto_join=False,
     )
+
+    @staticmethod
+    def _facility_timezone(facility):
+        complex_record = facility.complex_id
+
+        return (
+            complex_record.partner_id.tz
+            or complex_record.company_id.partner_id.tz
+            or complex_record.manager_id.partner_id.tz
+            or "UTC"
+        )
+
+    @api.onchange("facility_id")
+    def _onchange_facility_id_timezone(self):
+        for record in self:
+            if record.facility_id:
+                record.tz = record._facility_timezone(record.facility_id)
+
+    @api.model
+    def default_get(self, fields_list):
+        values = super().default_get(fields_list)
+
+        if "tz" in fields_list and "default_tz" not in self.env.context:
+            facility_id = values.get("facility_id")
+            if facility_id:
+                facility = self.env["facility.facility"].browse(facility_id)
+                values["tz"] = self._facility_timezone(facility)
+
+        return values
 
     # all image fields are base64 encoded and PIL-supported
     image_1920 = fields.Image("Image", related="facility_id.image_1920")
@@ -406,6 +436,12 @@ class FacilityReservationScheduler(models.Model):
     def create(self, value_list):
         """Overridden method 'create'."""
 
+        facility_obj = self.env["facility.facility"]
+        for values in value_list:
+            if values.get("facility_id") and not values.get("tz"):
+                facility = facility_obj.browse(values["facility_id"])
+                values["tz"] = self._facility_timezone(facility)
+
         parent = super()
         result = parent.create(value_list)
 
@@ -416,6 +452,12 @@ class FacilityReservationScheduler(models.Model):
 
     def write(self, values):
         """Overridden method 'write'"""
+
+        if values.get("facility_id") and "tz" not in values:
+            facility = self.env["facility.facility"].browse(
+                values["facility_id"]
+            )
+            values = dict(values, tz=self._facility_timezone(facility))
 
         result = super().write(values)
 

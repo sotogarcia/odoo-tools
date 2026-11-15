@@ -79,6 +79,7 @@
                 <field name="weekday" class="oe_field_week_day text-info font-italic" colspan="2"
                   nolabel="1" context="{'field_weekday': True}"/>
                 <field name="full_day" class="oe_field_full_day" context="{'field_full_day': True}"/>
+                <field name="tz" class="oe_field_tz"/>
 
                 <field name="time_start" class="oe_field_time_start" widget="float_time"
                   invisible="full_day" context="{'field_time_start': True}"/>

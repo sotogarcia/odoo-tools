@@ -20,6 +20,7 @@ from dateutil.rrule import (
     weekday,
 )
 from num2words import num2words
+from odoo.addons.base.models.res_partner import _tz_get
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv.expression import AND, OR
@@ -39,6 +40,12 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
     _name = "facility.scheduler.mixin"
     _description = "Provides the necessary functionality to schedule dates"
+
+    # =============================================================================
+    # Schedule configuration
+    # =============================================================================
+
+    # -- Date and timezone ------------------------------------------------------
 
     date_base = fields.Date(
         string="Date",
@@ -71,6 +78,18 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
             # date_base less than or equal to finish_date
             self.finish_date = max(self.date_base, self.finish_date)
+
+    tz = fields.Selection(
+        string="Timezone",
+        required=True,
+        readonly=False,
+        index=False,
+        default=lambda self: self.env.user.tz or "UTC",
+        help="Timezone used to interpret the schedule's local dates and times",
+        selection=_tz_get,
+    )
+
+    # -- Time and duration ------------------------------------------------------
 
     time_start = fields.Float(
         string="Time start",
@@ -201,6 +220,8 @@ class FacilitySchedulerMixin(models.AbstractModel):
             ):
                 record.time_stop = record.time_start + record.date_delay
 
+    # -- Day descriptions -------------------------------------------------------
+
     weekday = fields.Char(
         string="Weekday",
         required=False,
@@ -220,6 +241,12 @@ class FacilitySchedulerMixin(models.AbstractModel):
                 record.weekday = record.date_base.strftime("%A").title()
             else:
                 record.weekday = None
+
+    # =============================================================================
+    # Recurrence configuration
+    # =============================================================================
+
+    # -- Frequency and weekdays ------------------------------------------------
 
     repeat = fields.Boolean(
         string="Repeat",
@@ -321,6 +348,8 @@ class FacilitySchedulerMixin(models.AbstractModel):
                 if not record._match_weekday(record.date_base):
                     raise ValidationError(msg2)
 
+    # -- Monthly recurrence -----------------------------------------------------
+
     month_type = fields.Selection(
         string="Month type",
         required=True,
@@ -350,6 +379,8 @@ class FacilitySchedulerMixin(models.AbstractModel):
             nth = record.nth_weekday().title()
 
             record.week_day_str = f"{day_name} ({nth})"
+
+    # -- Recurrence limits ------------------------------------------------------
 
     finish_type = fields.Selection(
         string="Finish",
@@ -407,6 +438,8 @@ class FacilitySchedulerMixin(models.AbstractModel):
                 self.finish_number = 1
                 return self._warn(min_finish_number_msg)
 
+    # -- Next scheduled occurrence ---------------------------------------------
+
     next_schedule = fields.Datetime(
         string="Next schedule",
         required=False,
@@ -430,6 +463,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
         "finish_number",
         "weekday_ids",
         "month_type",
+        "tz",
     )
     def _compute_next_schedule(self):
         for record in self:
@@ -444,6 +478,10 @@ class FacilitySchedulerMixin(models.AbstractModel):
                 )
             else:
                 record.next_schedule = False
+
+    # =============================================================================
+    # Constraints
+    # =============================================================================
 
     _sql_constraints = [  # noqa: RUF012
         (
@@ -468,6 +506,12 @@ class FacilitySchedulerMixin(models.AbstractModel):
         ),
     ]
 
+    # =============================================================================
+    # Recurrence calculation
+    # =============================================================================
+
+    # -- Date and weekday helpers ----------------------------------------------
+
     def _next_month(self):
         return fields.Date.context_today(self) + relativedelta(months=1)
 
@@ -486,6 +530,8 @@ class FacilitySchedulerMixin(models.AbstractModel):
         lang = mixin.get_lang() or "es_ES"
 
         return num2words(cardinal, to="ordinal", lang=lang)
+
+    # -- Rule definition --------------------------------------------------------
 
     def _get_recurrence_rule(self):
         self.ensure_one()
@@ -542,6 +588,8 @@ class FacilitySchedulerMixin(models.AbstractModel):
             **params,
         )
 
+    # -- Weekday matching -------------------------------------------------------
+
     def _match_weekday(self, date_cursor):
         sequences = self.mapped("weekday_ids.sequence")
         return date_cursor.isoweekday() in sequences
@@ -574,6 +622,8 @@ class FacilitySchedulerMixin(models.AbstractModel):
             if weekday and weekday not in self.weekday_ids:
                 record.weekday_ids = [(4, weekday.id, 0)]
 
+    # -- Occurrence generation --------------------------------------------------
+
     @staticmethod
     def _loop_security_break(index, limit=1024):
         if index >= limit:
@@ -603,6 +653,12 @@ class FacilitySchedulerMixin(models.AbstractModel):
             self._loop_security_break(1024)
 
         return dates
+
+    # =============================================================================
+    # Reservation interval matching
+    # =============================================================================
+
+    # -- Overlap domain ---------------------------------------------------------
 
     def _overlapped_domain(self, f1, f2, v1, v2, inverse=False):
         """Create a valid Odoo domain to search reservations whose time
@@ -638,10 +694,17 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
         return [op1, (f1, op2, v2), (f2, op3, v1)]
 
+    # =============================================================================
+    # Timezone conversion
+    # =============================================================================
+
     @api.model
-    def _get_scheduler_timezone(self):
-        tz_name = self.env.user.tz or "UTC"
-        return timezone(tz_name)
+    def _get_scheduler_timezone(self, tz_name=None):
+        if not tz_name:
+            self.ensure_one()
+            tz_name = self.tz
+
+        return timezone(tz_name or "UTC")
 
     @api.model
     def join_datetime(self, dt, tm=0.0, day_limit=False):
@@ -677,7 +740,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
         return localized_dt.astimezone(utc).replace(tzinfo=None)
 
     @api.model
-    def split_datetime(self, dt):
+    def split_datetime(self, dt, tz_name=None):
         """Convert a UTC datetime into a local date and float time."""
 
         if isinstance(dt, str):
@@ -686,7 +749,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
         if dt.tzinfo is None:
             dt = utc.localize(dt)
 
-        tz = self._get_scheduler_timezone()
+        tz = self._get_scheduler_timezone(tz_name=tz_name)
         local_dt = dt.astimezone(tz)
 
         local_date = local_dt.date()
@@ -698,6 +761,12 @@ class FacilitySchedulerMixin(models.AbstractModel):
         )
 
         return local_date, local_time
+
+    # =============================================================================
+    # Reservation scheduling and availability
+    # =============================================================================
+
+    # -- Scheduled dates --------------------------------------------------------
 
     def scheduled_dates(self):
         """Return all the dates, whithout time, that will be resulting from
@@ -713,6 +782,8 @@ class FacilitySchedulerMixin(models.AbstractModel):
             return self._compute_repetition_dates()
         else:
             return [self.date_base]
+
+    # -- Reservation search -----------------------------------------------------
 
     def matching_reservations(self, not_confirmed=False):
         """Search for reservations search for reservations that match the
@@ -769,6 +840,10 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
         return reservation_set
 
+    # =============================================================================
+    # Context and extension hooks
+    # =============================================================================
+
     def as_context_default(self):
         """Builds a dictionary that allows to pass by context the values have
         been set for the scheduler attributes. This dictionary will be used to
@@ -782,6 +857,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
         return {
             "default_date_base": self.date_base.strftime("%Y-%m-%d"),
+            "default_tz": self.tz,
             "default_time_start": self.time_start,
             "default_time_stop": self.time_stop,
             "default_full_day": self.full_day,
@@ -814,6 +890,10 @@ class FacilitySchedulerMixin(models.AbstractModel):
         """
 
         return True
+
+    # =============================================================================
+    # Date and time utilities
+    # =============================================================================
 
     @staticmethod
     def _max_day_time(microseconds=False):
@@ -860,6 +940,8 @@ class FacilitySchedulerMixin(models.AbstractModel):
             dt = datetime.combine(dt, time.min)
 
         return dt + timedelta(hours=hours)
+
+    # -- Reservation interval ---------------------------------------------------
 
     def compute_interval(self, dt):
         """Rreturns the combination of the given date with the ``time_start``

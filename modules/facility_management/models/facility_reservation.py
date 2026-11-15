@@ -475,14 +475,20 @@ class FacilityReservation(models.Model):
             return self.scheduler_id
 
         mixin = self.env["facility.scheduler.mixin"]
+        tz_name = self.get_tz().zone
 
         date_start = self.date_start.strftime("%Y-%m-%d %H:%M:%S")
-        date_base, time_start = mixin.split_datetime(date_start)
+        date_base, time_start = mixin.split_datetime(
+            date_start, tz_name=tz_name
+        )
 
         date_stop = self.date_stop.strftime("%Y-%m-%d %H:%M:%S")
-        time_stop = mixin.split_datetime(date_stop)[1]
+        time_stop = mixin.split_datetime(
+            date_stop, tz_name=tz_name
+        )[1]
 
         scheduler_values = {
+            "tz": tz_name,
             "date_base": date_base,
             "time_start": time_start,
             "time_stop": time_stop,
@@ -854,6 +860,9 @@ class FacilityReservation(models.Model):
         """
 
         self.ensure_one()
+
+        if self.scheduler_id and self.scheduler_id.tz:
+            return pytz.timezone(self.scheduler_id.tz)
 
         tz = self.mapped("facility_id.complex_id.partner_id.tz")
         if not tz:
