@@ -139,13 +139,25 @@ class TimeSpanReportMixin(models.AbstractModel):
 
         tz = timezone(self.env.user.tz or utc.zone)
 
-        def local_midnight_utc(day):
-            midnight = tz.localize(datetime.combine(day, time.min), is_dst=None)
-            return midnight.astimezone(utc).replace(tzinfo=None)
+        def local_day_start(day):
+            # Search on the UTC timeline: local midnight may not exist or
+            # may be ambiguous when a timezone changes its offset.
+            base = datetime.combine(day, time.min)
+            lower = base - timedelta(days=2)
+            upper = base + timedelta(days=2)
+
+            while upper - lower > timedelta(seconds=1):
+                middle = lower + (upper - lower) // 2
+                if utc.localize(middle).astimezone(tz).date() < day:
+                    lower = middle
+                else:
+                    upper = middle
+
+            return upper
 
         return (
-            local_midnight_utc(target_date),
-            local_midnight_utc(target_date + timedelta(days=1)),
+            local_day_start(target_date),
+            local_day_start(target_date + timedelta(days=1)),
         )
 
     # ----------------------------- format helpers ---------------------------
