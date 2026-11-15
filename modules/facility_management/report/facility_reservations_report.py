@@ -65,6 +65,11 @@ class ReportFacilityReservations(models.AbstractModel):
         if isinstance(date_stop, str):
             date_stop = fields.Datetime.to_datetime(date_stop)
 
+        if isinstance(date_start, datetime):
+            date_start = date_start.date()
+        if isinstance(date_stop, datetime):
+            date_stop = date_stop.date()
+
         facility_obj = self.env["facility.facility"]
         facility_set = facility_obj.browse(docids)
 
@@ -73,7 +78,9 @@ class ReportFacilityReservations(models.AbstractModel):
         self._fill_weeks(
             datasheet, date_start, date_stop, first_day, full_weeks
         )
-        self._fill_reservations(datasheet, facility_set, date_start, date_stop)
+        self._fill_reservations(
+            datasheet, facility_set, date_start, date_stop, first_day, full_weeks
+        )
 
         docargs = {
             "doc_ids": facility_set.ids,
@@ -143,8 +150,13 @@ class ReportFacilityReservations(models.AbstractModel):
 
     @api.model
     def _fill_reservations(
-        self, datasheet, facility_set, date_start, date_stop
+        self, datasheet, facility_set, date_start, date_stop,
+        first_day, full_weeks
     ):
+        if full_weeks:
+            date_start = self.week_start(date_start, first_day)
+            date_stop = self.week_end(date_stop, first_day)
+
         reservation_set = self._search_reservations(
             facility_set, date_start, date_stop
         )
@@ -195,7 +207,13 @@ class ReportFacilityReservations(models.AbstractModel):
         if isinstance(facilities, models.Model):
             facilities = facilities.ids
 
-        domain = [("facility_id", "in", facilities)]
+        utc_start, _ = self.day_bounds_utc(date_start)
+        _, utc_stop = self.day_bounds_utc(date_stop)
+        domain = [
+            ("facility_id", "in", facilities),
+            ("date_start", "<", utc_stop),
+            ("date_stop", ">", utc_start),
+        ]
         order = "date_start ASC, id ASC"
         reservation_set = reservation_obj.search(domain, order=order)
 
@@ -234,16 +252,13 @@ class ReportFacilityReservations(models.AbstractModel):
 
         return weeks
 
-    @classmethod
-    def _daily_reservations(cls, reservation_set, facility_id, day):
-        target = day["date_start"]
-
-        if isinstance(target, date):
-            target = datetime.combine(target, time.min)
+    def _daily_reservations(self, reservation_set, facility_id, day):
+        utc_start, utc_stop = self.day_bounds_utc(day["date_start"])
 
         return reservation_set.filtered(
             lambda r: r.facility_id.id == facility_id
-            and cls.date_in(r, target, True)
+            and r.date_start < utc_stop
+            and r.date_stop > utc_start
         )
 
     @staticmethod
