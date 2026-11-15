@@ -56,6 +56,49 @@ class TestReservationsReportTimezone(TransactionCase):
             (autumn_stop - autumn_start).total_seconds(), 25 * 3600
         )
 
+    def test_midnight_transition_in_santiago(self):
+        user = self.report.env.user
+        user.tz = "America/Santiago"
+        self.assertEqual(
+            self.report.day_bounds_utc(date(2026, 9, 6)),
+            (
+                datetime(2026, 9, 6, 4, 0),
+                datetime(2026, 9, 7, 3, 0),
+            ),
+        )
+
+    def test_skipped_civil_day_has_empty_utc_interval(self):
+        self.report.env.user.tz = "Pacific/Apia"
+        start, stop = self.report.day_bounds_utc(date(2011, 12, 30))
+        self.assertEqual(start, stop)
+
+    def test_wizard_dates_are_calendar_dates(self):
+        wizard = self.env["facility.reporting.wizard"].with_user(
+            self.report.env.user
+        ).new(
+            {
+                "date_start": date(2027, 7, 15),
+                "date_stop": date(2027, 7, 17),
+                "full_weeks": False,
+            }
+        )
+        self.assertEqual(wizard._fields["date_start"].type, "date")
+        self.assertEqual(wizard._fields["date_stop"].type, "date")
+        start, stop, first_day, full_weeks = self.report._get_options(
+            {
+                "date_start": wizard.date_start,
+                "date_stop": wizard.date_stop,
+                "full_weeks": wizard.full_weeks,
+            }
+        )
+        self.assertFalse(full_weeks)
+        self.assertEqual(
+            self.report._generate_weeks(start, stop, first_day, full_weeks)[0][
+                "days"
+            ][0]["date_start"],
+            date(2027, 7, 15),
+        )
+
     def test_reservation_is_grouped_by_local_day(self):
         reservation = SimpleNamespace(
             facility_id=SimpleNamespace(id=5),
