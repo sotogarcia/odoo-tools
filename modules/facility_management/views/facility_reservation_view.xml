@@ -239,7 +239,7 @@
 
         <separator/>
         <filter string="Current week" name="current_week"
-          domain="[                     ('date_start', '&lt;=', ((context_today() + relativedelta(weeks=0, weekday=-1)).strftime('%Y-%m-%d'))),                     ('date_stop', '&gt;=', ((context_today() - relativedelta(weeks=1, weekday=0)).strftime('%Y-%m-%d')))                 ]"/>
+          domain="[('date_start', '&lt;', (context_today() + relativedelta(days=-context_today().weekday(), weeks=1)).strftime('%Y-%m-%d')), ('date_stop', '&gt;', (context_today() - relativedelta(days=context_today().weekday())).strftime('%Y-%m-%d'))]"/>
 
         <filter string="Current month" name="current_month"
           domain="[                     ('date_start', '&lt;', (context_today()+relativedelta(months=1)).strftime('%Y-%m-01')),                     ('date_stop','&gt;=', context_today().strftime('%Y-%m-01'))                 ]"/>
