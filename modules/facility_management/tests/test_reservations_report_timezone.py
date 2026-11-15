@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from types import SimpleNamespace
 
 from odoo.tests.common import TransactionCase
@@ -84,5 +84,5 @@ class TestReservationsReportTimezone(TransactionCase):
     def test_timezone_offset_accepts_utc_naive_datetime(self):
         self.assertEqual(
             self.report.get_timezone_offset(datetime(2027, 7, 15, 12)),
-            __import__("datetime").timedelta(hours=2),
+            timedelta(hours=2),
         )
