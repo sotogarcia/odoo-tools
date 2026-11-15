@@ -108,3 +108,63 @@ class TestSchedulerOvernight(TransactionCase):
         scheduler = self._scheduler(date_delay=0.0)
         with self.assertRaises(ValidationError):
             scheduler._check_date_delay()
+
+    def test_overnight_overlap_and_reservation_conversion(self):
+        partner = self.env["res.partner"].sudo().create(
+            {
+                "name": "Overnight test complex",
+                "type": "other",
+                "is_company": False,
+                "company_id": self.env.company.id,
+                "tz": "Europe/Madrid",
+            }
+        )
+        complex_record = self.env["facility.complex"].sudo().create(
+            {
+                "partner_id": partner.id,
+                "code": "OVERNIGHT-TEST-COMPLEX",
+            }
+        )
+        facility_type = self.env["facility.type"].sudo().create(
+            {
+                "name": "Overnight test facility type",
+                "is_space": True,
+            }
+        )
+        facility = self.env["facility.facility"].sudo().create(
+            {
+                "name": "Overnight test room",
+                "code": "OVERNIGHT-TEST-ROOM",
+                "type_id": facility_type.id,
+                "complex_id": complex_record.id,
+                "users": 0,
+                "excess": 0,
+            }
+        )
+        reservation = self.env["facility.reservation"].sudo().create(
+            {
+                "facility_id": facility.id,
+                "state": "confirmed",
+                "date_start": datetime(2027, 1, 15, 21, 0),
+                "date_stop": datetime(2027, 1, 16, 1, 0),
+                "validate": True,
+            }
+        )
+
+        scheduler = self._scheduler()
+        self.assertIn(reservation, scheduler.matching_reservations())
+        self.assertNotIn(
+            facility,
+            facility.available(
+                date_start=datetime(2027, 1, 15, 23, 30),
+                date_stop=datetime(2027, 1, 16, 0, 30),
+            ),
+        )
+
+        linked_scheduler = reservation._ensure_scheduler()
+        self.assertEqual(linked_scheduler.date_delay, 4.0)
+        self.assertEqual(linked_scheduler.time_stop, 2.0)
+        self.assertEqual(
+            linked_scheduler.compute_interval(linked_scheduler.date_base),
+            (reservation.date_start, reservation.date_stop),
+        )
