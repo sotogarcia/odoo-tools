@@ -20,8 +20,8 @@ from dateutil.rrule import (
     weekday,
 )
 from num2words import num2words
-from odoo.addons.base.models.res_partner import _tz_get
 from odoo import api, fields, models
+from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv.expression import AND, OR
 from odoo.tools.translate import _
@@ -430,13 +430,12 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
     @api.onchange("finish_number")
     def _onchange_finish_number(self):
-        min_finish_number_msg = _(
-            "Finish number must be greater than or equal to one"
-        )
-        if self._field_changed("field_finish_number"):
-            if self.finish_number < 1:
-                self.finish_number = 1
-                return self._warn(min_finish_number_msg)
+        message = _("Finish number must be greater than or equal to one")
+
+        finish_number_changed = self._field_changed("field_finish_number")
+        if finish_number_changed and self.finish_number < 1:
+            self.finish_number = 1
+            return self._warn(message)
 
     # -- Next scheduled occurrence ---------------------------------------------
 
