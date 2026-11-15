@@ -151,7 +151,7 @@ class FacilityReservationScheduler(models.Model):
     def default_get(self, fields_list):
         values = super().default_get(fields_list)
 
-        if "tz" in fields_list:
+        if "tz" in fields_list and "default_tz" not in self.env.context:
             facility_id = values.get("facility_id")
             if facility_id:
                 facility = self.env["facility.facility"].browse(facility_id)
