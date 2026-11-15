@@ -3,11 +3,9 @@
 #    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 from logging import getLogger
-from math import pow, trunc
-from random import random
-from re import sub
+from operator import eq, ge, gt, le, lt, ne
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
@@ -231,6 +229,7 @@ class FacilityFacility(models.Model):
         "reservation_ids.state",
         "reservation_ids.date_start",
         "reservation_ids.date_stop",
+        "reservation_ids.validate",
     )
     def _compute_next_use(self):
         now = fields.Datetime.now()
@@ -239,8 +238,10 @@ class FacilityFacility(models.Model):
             ("facility_id", "in", self.ids),
             ("active", "=", True),
             ("state", "=", "confirmed"),
-            ("date_stop", ">=", now),
+            ("date_stop", ">", now),
+            ("validate", "=", True),
         ]
+
         reservation_obj = self.env["facility.reservation"]
         grouped_data = reservation_obj.read_group(
             domain=domain,
@@ -260,100 +261,69 @@ class FacilityFacility(models.Model):
 
     @api.model
     def _search_next_use(self, operator, value):
-        """This uses SQL ``tsrange`` to search valid facilities. Returns a
-        domain with valid IDs.
+        operators = {
+            "=": eq,
+            "!=": ne,
+            "<": lt,
+            "<=": le,
+            ">": gt,
+            ">=": ge,
+        }
 
-        All the operators compare the user-supplied date/time value with any of
-        the values in the date/time range of the reservation used to calculate
-        the value of ``next_use`` field.
+        if operator not in operators:
+            raise UserError(_("Operator not implemented"))
 
-        NOTE: the behavior of the method for those cases where the user selects
-        "between" may be abnormal.
+        now = fields.Datetime.now()
 
-        NOTE: Only active and confirmed reservations will be used.
+        domain = [
+            ("active", "=", True),
+            ("state", "=", "confirmed"),
+            ("date_stop", ">", now),
+            ("validate", "=", True),
+        ]
 
-        Args:
-            operator (str): the operator that has been chosen by the user
-            value (datetime|bool): value that has been given by the user
+        reservation_obj = self.env["facility.reservation"]
+        grouped_data = reservation_obj.read_group(
+            domain=domain,
+            fields=["facility_id", "next_use:min(date_start)"],
+            groupby=["facility_id"],
+            lazy=False,
+        )
 
-        Returns:
-            list: domain like [('id', 'in', facility_ids)]
+        next_use_by_facility = {
+            row["facility_id"][0]: fields.Datetime.to_datetime(row["next_use"])
+            for row in grouped_data
+            if row.get("facility_id") and row.get("next_use")
+        }
 
-        Raises:
-            UserError: if the given operator has not been considered for this
-            implementation.
-        """
-
-        sql = self._search_next_use_sql
-        TSR = """
-            {nq} date_range
-            {op} tsrange(\'{dt}\'::TIMESTAMP, \'{dt}\'::TIMESTAMP, \'[]\')
-        """
-
-        domain = FALSE_DOMAIN
-
-        # '=', '!=', '<=', '<', '>', '>='
         if value is False:
-            if operator == "=":  # next_use is not set
-                clausule = "date_range IS NULL"
-            else:  # next_use is set
-                clausule = "date_range IS NOT NULL"
-        elif operator == "=":
-            clausule = TSR.format(nq="", dt=value, op="@>")
-        elif operator == "!=":
-            clausule = TSR.format(nq="NOT", dt=value, op="@>")
-        elif operator == "<":
-            clausule = TSR.format(nq="", dt=value, op="<<")
-        elif operator == "<=":
-            clausule = TSR.format(nq="", dt=value, op="&<")
-        elif operator == ">":
-            clausule = TSR.format(nq="", dt=value, op=">>")
-        elif operator == ">=":
-            clausule = TSR.format(nq="", dt=value, op="&>")
-        else:
-            raise UserError("Operator not implemented")
+            facility_ids = list(next_use_by_facility)
 
-        sql = sql.format(clausule=clausule)
-        self.env.cr.execute(sql)
-        rows = self.env.cr.dictfetchall()
+            if operator == "=":
+                return [("id", "not in", facility_ids)]
 
-        if rows:
-            facility_ids = [row["facility_id"] for row in (rows or [])]
-            domain = [("id", "in", facility_ids)]
+            if operator == "!=":
+                return [("id", "in", facility_ids)]
 
-        return domain
+            raise UserError(_("Operator not implemented for empty dates"))
 
-    _search_next_use_sql = """
-        WITH active_reservations AS (
-            SELECT
-                "id" AS reservation_id,
-                facility_id,
-                date_start,
-                date_stop
-            FROM
-                facility_reservation
-            WHERE
-                active
-                AND STATE = 'confirmed'
-                AND date_stop >= CURRENT_TIMESTAMP AT TIME ZONE 'utc'
-        ), targets AS (
-            SELECT
-                aef."id" AS facility_id,
-                CASE WHEN date_start IS NOT NULL AND date_stop IS NOT NULL
-                    THEN tsrange(date_start, date_stop, '[]')
-                    ELSE NULL
-                END AS date_range
-            FROM
-                facility_facility AS aef
-            LEFT JOIN active_reservations AS ar
-                ON aef."id" = ar.facility_id
-            WHERE
-                aef.active
-        ) SELECT
-            *
-        FROM targets
-        WHERE {clausule}
-    """
+        date_value = fields.Datetime.to_datetime(value)
+        compare = operators[operator]
+
+        facility_ids = [
+            facility_id
+            for facility_id, next_use in next_use_by_facility.items()
+            if compare(next_use, date_value)
+        ]
+
+        if operator == "!=":
+            return [
+                "|",
+                ("id", "in", facility_ids),
+                ("id", "not in", list(next_use_by_facility)),
+            ]
+
+        return [("id", "in", facility_ids)]
 
     color = fields.Integer(
         string="Color",
@@ -394,6 +364,9 @@ class FacilityFacility(models.Model):
 
     @api.depends(
         "reservation_ids",
+        "reservation_ids.active",
+        "reservation_ids.state",
+        "reservation_ids.validate",
         "reservation_ids.date_start",
         "reservation_ids.date_stop",
     )
@@ -406,6 +379,9 @@ class FacilityFacility(models.Model):
 
         domain = [
             ("facility_id", "in", facility_ids),
+            ("active", "=", True),
+            ("state", "=", "confirmed"),
+            ("validate", "=", True),
             ("date_start", "<", ubound),
             ("date_stop", ">", now),
         ]
@@ -422,11 +398,17 @@ class FacilityFacility(models.Model):
 
     @api.model
     def _search_available(self, operator, value):
-        print("_search_available")
         now = fields.Datetime.now()
-        ubound = now + timedelta(hours=1)
+        margin = self._get_availability_margin()
+        ubound = now + timedelta(minutes=margin)
         groups = self.env["facility.reservation"].read_group(
-            [("date_start", "<", ubound), ("date_stop", ">", now)],
+            [
+                ("active", "=", True),
+                ("state", "=", "confirmed"),
+                ("validate", "=", True),
+                ("date_start", "<", ubound),
+                ("date_stop", ">", now),
+            ],
             ["facility_id"],
             ["facility_id"],
         )
@@ -499,7 +481,7 @@ class FacilityFacility(models.Model):
 
         return super().copy(default)
 
-    @api.depends_context("lang")
+    @api.depends_context("lang", "facility_name_with_complex")
     @api.depends("name", "complex_id", "complex_id.name")
     def _compute_display_name(self):
         """Build display_name safely even when values are falsy in onchanges."""
@@ -547,7 +529,13 @@ class FacilityFacility(models.Model):
         return serialized
 
     @api.model
-    def available(self, date_start=None, date_stop=None, type_ids=None):
+    def available(
+        self,
+        date_start=None,
+        date_stop=None,
+        type_ids=None,
+        exclude_reservation_ids=None,
+    ):
         if not date_start:
             if not date_stop:
                 date_start = fields.Datetime.now()
@@ -565,6 +553,12 @@ class FacilityFacility(models.Model):
             ("date_start", "<", date_stop),
             ("date_stop", ">", date_start),
         ]
+
+        if exclude_reservation_ids:
+            reservation_domain.append(
+                ("id", "not in", exclude_reservation_ids)
+            )
+
         reservation_set = reservation_obj.search(reservation_domain)
 
         facility_obj = self.env["facility.facility"]

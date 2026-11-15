@@ -5,16 +5,31 @@
 
 
 from datetime import date, datetime, time, timedelta
+from itertools import islice
 from logging import getLogger
 from math import ceil, floor
 
 from dateutil.relativedelta import relativedelta
+from dateutil.rrule import (
+    DAILY,
+    MO,
+    MONTHLY,
+    WEEKLY,
+    YEARLY,
+    rrule,
+    weekday,
+)
 from num2words import num2words
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.osv.expression import OR
+from odoo.osv.expression import AND, OR
 from odoo.tools.translate import _
-from pytz import timezone, utc
+from pytz import (
+    AmbiguousTimeError,
+    NonExistentTimeError,
+    timezone,
+    utc,
+)
 
 _logger = getLogger(__name__)
 
@@ -418,8 +433,17 @@ class FacilitySchedulerMixin(models.AbstractModel):
     )
     def _compute_next_schedule(self):
         for record in self:
-            date_cursor = record.date_base
-            record.next_schedule = record._next_repetition_date(date_cursor)
+            next_date = record._next_repetition_date(record.date_base)
+
+            if next_date:
+                time_start = 0.0 if record.full_day else record.time_start
+                record.next_schedule = record.join_datetime(
+                    next_date,
+                    time_start,
+                    day_limit=True,
+                )
+            else:
+                record.next_schedule = False
 
     _sql_constraints = [  # noqa: RUF012
         (
@@ -434,7 +458,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
         ),
         (
             "positive_finish_number",
-            "CHECK(finish_type <> 'total' or finish_number > 0)",
+            "CHECK(finish_type <> 'number' or finish_number > 0)",
             "The total number of repetitions must be greater than zero",
         ),
         (
@@ -463,32 +487,60 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
         return num2words(cardinal, to="ordinal", lang=lang)
 
-    @staticmethod
-    def _week_day_position(date_start, months=1):
-        """Compute the same weekday for the next month (ex: third tuesday)
-            See: https://stackoverflow.com/questions/7025984
+    def _get_recurrence_rule(self):
+        self.ensure_one()
 
-            the method also works correctly when the given ``date_start`` param
-            is of type ``date`` insted of type ``datetime``. Result type will
-            then be the same as the given ``date_start`` parameter.
+        frequencies = {
+            "day": DAILY,
+            "week": WEEKLY,
+            "month": MONTHLY,
+            "year": YEARLY,
+        }
 
-        Args:
-            date_start (datetime): Date from which the next is to be calculated
-            months (int, optional): number of months to advance
+        if self.interval_number < 1:
+            raise ValidationError(
+                _("Interval number must be greater than zero")
+            )
 
-        Returns:
-            datetime:  same weekday for the next month
-        """
+        if self.finish_type == "number" and self.finish_number < 1:
+            raise ValidationError(_("Finish number must be greater than zero"))
 
-        weekday_index = (date_start.day + 6) // 7
+        params = {
+            "dtstart": datetime.combine(self.date_base, time.min),
+            "interval": self.interval_number,
+        }
 
-        d_next = date_start
-        for month_index in range(months):
-            d_next = d_next + timedelta(weeks=4)
-            if ((d_next.day + 6) // 7) < weekday_index:
-                d_next += timedelta(weeks=1)
+        if self.interval_type == "week":
+            weekdays = self.weekday_ids.mapped("sequence")
 
-        return d_next
+            if not weekdays:
+                raise ValidationError(
+                    _("You must choose at least one day of the week")
+                )
+
+            params["byweekday"] = [weekday(day - 1) for day in weekdays]
+            params["wkst"] = MO
+
+        elif self.interval_type == "month":
+            if self.month_type == "month":
+                params["bymonthday"] = self.date_base.day
+
+            else:
+                position = (self.date_base.day - 1) // 7 + 1
+                day = self.date_base.weekday()
+
+                params["byweekday"] = weekday(day, position)
+
+        if self.finish_type == "number":
+            params["count"] = self.finish_number
+
+        else:
+            params["until"] = datetime.combine(self.finish_date, time.max)
+
+        return rrule(
+            frequencies[self.interval_type],
+            **params,
+        )
 
     def _match_weekday(self, date_cursor):
         sequences = self.mapped("weekday_ids.sequence")
@@ -531,51 +583,24 @@ class FacilitySchedulerMixin(models.AbstractModel):
         return index + 1
 
     def _next_repetition_date(self, date_cursor):
-        interval = self.interval_number
+        self.ensure_one()
 
-        if self.interval_type == "year":
-            result = date_cursor + relativedelta(years=interval)
+        rule = self._get_recurrence_rule()
 
-        elif self.interval_type == "month":
-            if self.month_type == "month":
-                result = date_cursor + relativedelta(months=interval)
-            else:
-                result = self._week_day_position(date_cursor, months=interval)
+        current = datetime.combine(date_cursor, time.min)
+        result = rule.after(current, inc=False)
 
-        elif self.interval_type == "week":
-            result = date_cursor + timedelta(days=1)
-
-            while not self._match_weekday(result):
-                result += timedelta(days=1)
-        else:
-            result = date_cursor + timedelta(days=interval)
-
-        return result
-
-    def _reached_last_repetition_date(self, dates, date_cursor):
-        if self.finish_type == "number":
-            return len(dates) >= self.finish_number
-        else:  # date
-            return date_cursor > self.finish_date
+        return result.date() if result else False
 
     def _compute_repetition_dates(self):
         self.ensure_one()
 
-        loop_index = 0
+        rule = self._get_recurrence_rule()
 
-        date_cursor = self.date_base
-        dates = []
+        dates = [dt.date() for dt in islice(rule, 1025)]
 
-        while not self._reached_last_repetition_date(dates, date_cursor):
-            loop_index = self._loop_security_break(loop_index)
-
-            # Check match for weekday if applicable before append new date
-            if self.interval_type != "week" or self._match_weekday(
-                date_cursor
-            ):
-                dates.append(date_cursor)
-
-            date_cursor = self._next_repetition_date(date_cursor)
+        if len(dates) > 1024:
+            self._loop_security_break(1024)
 
         return dates
 
@@ -614,26 +639,13 @@ class FacilitySchedulerMixin(models.AbstractModel):
         return [op1, (f1, op2, v2), (f2, op3, v1)]
 
     @api.model
-    def _get_timezone_offset(self, dt):
-        tz = self.env.user.tz or utc.zone
-        tz = timezone(tz)
-        return tz.fromutc(dt).utcoffset()
+    def _get_scheduler_timezone(self):
+        tz_name = self.env.user.tz or "UTC"
+        return timezone(tz_name)
 
     @api.model
     def join_datetime(self, dt, tm=0.0, day_limit=False):
-        """Joins in a datetime value using a given date and a float value
-
-        Args:
-            dt (date): date to jon
-            tm (float, optional): floa time interval to join
-            day_limit (bool, optional): if True a maximum of 24 hours will be
-            joined to the given date
-
-        Returns:
-            datetime: joined datetime value
-        """
-
-        zero_time = datetime.min.time()
+        """Combine a local date and time, returning a UTC datetime."""
 
         dt = dt or date.min
         tm = tm or 0.0
@@ -641,34 +653,51 @@ class FacilitySchedulerMixin(models.AbstractModel):
         if day_limit:
             tm = min(tm, 24)
 
-        base = datetime.combine(dt, zero_time)
-        offset = timedelta(seconds=tm * 3600.0)
+        local_dt = datetime.combine(dt, time.min) + timedelta(
+            seconds=tm * 3600.0
+        )
 
-        tz_offset = self._get_timezone_offset(base)
+        tz = self._get_scheduler_timezone()
 
-        return base + offset - tz_offset
+        try:
+            localized_dt = tz.localize(local_dt, is_dst=None)
+        except NonExistentTimeError as exc:
+            raise ValidationError(
+                _(
+                    "The selected local time does not exist due to a daylight saving time change."
+                )
+            ) from exc
+        except AmbiguousTimeError as exc:
+            raise ValidationError(
+                _(
+                    "The selected local time is ambiguous due to a daylight saving time change."
+                )
+            ) from exc
+
+        return localized_dt.astimezone(utc).replace(tzinfo=None)
 
     @api.model
     def split_datetime(self, dt):
-        """Splits a datetime value in a date and a float time interval
-
-        Args:
-            dt (datetime): datetime to split
-
-        Returns:
-            tuple: date and float time interval
-        """
+        """Convert a UTC datetime into a local date and float time."""
 
         if isinstance(dt, str):
             dt = fields.Datetime.from_string(dt)
 
-        tz_offset = self._get_timezone_offset(dt)
-        dt += tz_offset
+        if dt.tzinfo is None:
+            dt = utc.localize(dt)
 
-        d = dt.replace(hour=0, minute=0, second=0)
-        t = (dt - d).total_seconds() / 3600.0
+        tz = self._get_scheduler_timezone()
+        local_dt = dt.astimezone(tz)
 
-        return d.date(), t
+        local_date = local_dt.date()
+        local_time = (
+            local_dt.hour
+            + local_dt.minute / 60.0
+            + local_dt.second / 3600.0
+            + local_dt.microsecond / 3600000000.0
+        )
+
+        return local_date, local_time
 
     def scheduled_dates(self):
         """Return all the dates, whithout time, that will be resulting from
@@ -705,7 +734,8 @@ class FacilitySchedulerMixin(models.AbstractModel):
         time_start = 0.0 if self.full_day else self.time_start
         time_stop = 24.0 if self.full_day else self.time_stop
 
-        domains = [("state", "<>", "rejected")] if not_confirmed else []
+        domains = []
+
         for dt in dates:
             v1 = self.join_datetime(dt, time_start, day_limit=True)
             v2 = self.join_datetime(dt, time_stop, day_limit=True)
@@ -718,7 +748,22 @@ class FacilitySchedulerMixin(models.AbstractModel):
             )
             domains.append(domain)
 
-        reservation_domain = OR(domains)
+        state_domain = (
+            [("state", "in", ["requested", "confirmed"])]
+            if not_confirmed
+            else [("state", "=", "confirmed")]
+        )
+
+        reservation_domain = AND(
+            [
+                [
+                    ("active", "=", True),
+                    ("validate", "=", True),
+                ],
+                state_domain,
+                OR(domains),
+            ]
+        )
         reservation_obj = self.env["facility.reservation"]
         reservation_set = reservation_obj.search(reservation_domain)
 

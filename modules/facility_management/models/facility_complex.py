@@ -5,7 +5,6 @@
 
 from datetime import datetime
 from logging import getLogger
-from re import sub
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
@@ -43,6 +42,12 @@ class FacilityComplex(models.Model):
 
     _check_company_auto = True
 
+    # =============================================================================
+    # Fields
+    # =============================================================================
+
+    # -- Identification and contact --------------------------------------------
+
     partner_id = fields.Many2one(
         string="Partner",
         required=True,
@@ -63,13 +68,8 @@ class FacilityComplex(models.Model):
         required=True,
         readonly=True,
         index=True,
-        default=lambda self: self.env.company,
-        help="The company this record belongs to",
-        comodel_name="res.company",
-        domain=[],
-        context={},
-        ondelete="cascade",
-        auto_join=False,
+        related="partner_id.company_id",
+        store=True,
     )
 
     code = fields.Char(
@@ -88,6 +88,8 @@ class FacilityComplex(models.Model):
         help="Enter new description",
         related="partner_id.comment",
     )
+
+    # -- Facilities and capacity -----------------------------------------------
 
     facility_ids = fields.One2many(
         string="Facilities",
@@ -114,23 +116,6 @@ class FacilityComplex(models.Model):
         search="_search_facility_count",
     )
 
-    @api.depends("facility_ids", "facility_ids.active")
-    def _compute_facility_count(self):
-        """Compute count of *active* facilities per complex (batch)."""
-        counts = one2many_count(self, "facility_ids")
-
-        for record in self:
-            record.facility_count = counts.get(record.id, 0)
-
-    @api.model
-    def _search_facility_count(self, operator, value):
-        return one2many_count_search_domain(
-            self,
-            "facility_ids",
-            operator,
-            value,
-        )
-
     space_ids = fields.One2many(
         string="Spaces",
         required=False,
@@ -155,18 +140,6 @@ class FacilityComplex(models.Model):
         compute="_compute_space_count",
     )
 
-    @api.depends(
-        "space_ids",
-        "space_ids.active",
-        "space_ids.is_space",
-    )
-    def _compute_space_count(self):
-        """Compute count of *active* facilities per complex (batch)."""
-        counts = one2many_count(self, "space_ids")
-
-        for record in self:
-            record.space_count = counts.get(record.id, 0)
-
     users = fields.Integer(
         string="Seats",
         required=False,
@@ -177,15 +150,7 @@ class FacilityComplex(models.Model):
         compute="_compute_users",
     )
 
-    @api.depends(
-        "facility_ids",
-        "facility_ids.active",
-        "facility_ids.users",
-    )
-    def _compute_users(self):
-        for record in self:
-            vals = record.facility_ids.mapped("users")
-            record.users = sum((v or 0) for v in vals)
+    # -- Supervision -----------------------------------------------------------
 
     supervisor_ids = fields.Many2many(
         string="Supervisors",
@@ -193,11 +158,7 @@ class FacilityComplex(models.Model):
         readonly=False,
         index=False,
         default=None,
-        help=(
-            "Preferred supervisors are primarily designated to approve room "
-            "reservations within this complex. Keep in mind users should "
-            "have the appropriate permissions"
-        ),
+        help="Supervisors designated to approve complex room reservations.",
         comodel_name="res.users",
         relation="facility_complex_res_users_preferred_supervisor_rel",
         column1="complex_id",
@@ -205,6 +166,8 @@ class FacilityComplex(models.Model):
         domain=lambda self: self._build_supervisor_ids_domain(),
         context={},
     )
+
+    # -- Reservations ----------------------------------------------------------
 
     reservation_ids = fields.One2many(
         string="Reservations",
@@ -231,19 +194,6 @@ class FacilityComplex(models.Model):
         compute="_compute_reservation_count",
     )
 
-    @api.depends(
-        "reservation_ids",
-        "reservation_ids.active",
-    )
-    def _compute_reservation_count(self):
-        counts = one2many_count(
-            self,
-            "reservation_ids",
-        )
-
-        for record in self:
-            record.reservation_count = counts.get(record.id, 0)
-
     unconfirmed_reservation_ids = fields.One2many(
         string="Unconfirmed reservations",
         required=False,
@@ -269,6 +219,90 @@ class FacilityComplex(models.Model):
         compute="_compute_unconfirmed_reservation_count",
     )
 
+    # -- Contact information ---------------------------------------------------
+
+    display_address = fields.Char(
+        string="Display address",
+        required=False,
+        readonly=True,
+        index=False,
+        default=None,
+        help="Formatted postal address of the complex (without company)",
+        compute="_compute_display_address",
+        store=False,
+    )
+
+    phone_number = fields.Char(
+        string="Phone number",
+        required=False,
+        readonly=True,
+        index=False,
+        default=None,
+        help="Primary phone for the complex (partner phone or mobile)",
+        compute="_compute_phone_number",
+        store=False,
+    )
+
+    # =============================================================================
+    # Computed fields and searches
+    # =============================================================================
+
+    # -- Facility and capacity calculations -----------------------------------
+
+    @api.depends("facility_ids", "facility_ids.active")
+    def _compute_facility_count(self):
+        """Compute count of *active* facilities per complex (batch)."""
+        counts = one2many_count(self, "facility_ids")
+
+        for record in self:
+            record.facility_count = counts.get(record.id, 0)
+
+    @api.model
+    def _search_facility_count(self, operator, value):
+        return one2many_count_search_domain(
+            self,
+            "facility_ids",
+            operator,
+            value,
+        )
+
+    @api.depends(
+        "space_ids",
+        "space_ids.active",
+        "space_ids.is_space",
+    )
+    def _compute_space_count(self):
+        """Compute count of *active* facilities per complex (batch)."""
+        counts = one2many_count(self, "space_ids")
+
+        for record in self:
+            record.space_count = counts.get(record.id, 0)
+
+    @api.depends(
+        "facility_ids",
+        "facility_ids.active",
+        "facility_ids.users",
+    )
+    def _compute_users(self):
+        for record in self:
+            vals = record.facility_ids.mapped("users")
+            record.users = sum((v or 0) for v in vals)
+
+    # -- Reservation calculations ---------------------------------------------
+
+    @api.depends(
+        "reservation_ids",
+        "reservation_ids.active",
+    )
+    def _compute_reservation_count(self):
+        counts = one2many_count(
+            self,
+            "reservation_ids",
+        )
+
+        for record in self:
+            record.reservation_count = counts.get(record.id, 0)
+
     @api.depends(
         "unconfirmed_reservation_ids",
         "unconfirmed_reservation_ids.active",
@@ -283,16 +317,7 @@ class FacilityComplex(models.Model):
         for record in self:
             record.unconfirmed_reservation_count = counts.get(record.id, 0)
 
-    display_address = fields.Char(
-        string="Display address",
-        required=False,
-        readonly=True,
-        index=False,
-        default=None,
-        help="Formatted postal address of the complex (without company)",
-        compute="_compute_display_address",
-        store=False,
-    )
+    # -- Contact information calculations -------------------------------------
 
     @api.depends(
         "partner_id",
@@ -315,22 +340,17 @@ class FacilityComplex(models.Model):
                 or False
             )
 
-    phone_number = fields.Char(
-        string="Phone number",
-        required=False,
-        readonly=True,
-        index=False,
-        default=None,
-        help="Primary phone for the complex (partner phone or mobile)",
-        compute="_compute_phone_number",
-        store=False,
-    )
-
     @api.depends("phone", "mobile")
     def _compute_phone_number(self):
         for record in self:
             partner = record.partner_id
             record.phone_number = partner.phone or partner.mobile or False
+
+    # =============================================================================
+    # Supervision
+    # =============================================================================
+
+    # -- Supervisor selection -------------------------------------------------
 
     def _build_supervisor_ids_domain(self):
         """
@@ -352,6 +372,8 @@ class FacilityComplex(models.Model):
             leafs.append(group_leaf)
 
         return "[ {leafs} ]".format(leafs=", ".join(leafs))
+
+    # -- Supervisor authorization ---------------------------------------------
 
     def get_allowed_supervisors(self):
         self.ensure_one()
@@ -411,6 +433,12 @@ class FacilityComplex(models.Model):
 
         return user in self.get_allowed_supervisors()
 
+    # =============================================================================
+    # Constraints
+    # =============================================================================
+
+    # -- SQL constraints -------------------------------------------------------
+
     _sql_constraints = [  # noqa: RUF012
         (
             "unique_partner_id",
@@ -423,6 +451,8 @@ class FacilityComplex(models.Model):
             "A complex with this code already exists",
         ),
     ]
+
+    # -- Python constraints ----------------------------------------------------
 
     @api.constrains("partner_id", "name", "company_id")
     def _check_unique_name_by_company(self):
@@ -443,6 +473,68 @@ class FacilityComplex(models.Model):
                 operator="=ilike",
                 message=msg_2,
             )
+
+    @api.constrains("partner_id", "employee", "type", "is_company")
+    def _check_partner_values(self):
+        for record in self:
+            partner = record.partner_id
+
+            if (
+                (partner.employee if "employee" in partner._fields else False)
+                or partner.type != "other"
+                or partner.is_company
+            ):
+                raise ValidationError(
+                    _(
+                        "The contact associated with a facility complex must "
+                        "not be an employee or a company, and its address "
+                        "type must be 'Other'."
+                    )
+                )
+
+    # =============================================================================
+    # ORM
+    # =============================================================================
+
+    # -- Defaults and creation ------------------------------------------------
+
+    @api.model
+    def default_get(self, fields_list):
+        values = super().default_get(fields_list)
+
+        if "company_id" in fields_list:
+            values["company_id"] = self.env.company.id
+
+        if "employee" in fields_list and "employee" in self._fields:
+            values["employee"] = False
+
+        if "type" in fields_list:
+            values["type"] = "other"
+
+        if "is_company" in fields_list:
+            values["is_company"] = False
+
+        return values
+
+    def _ensure_attribute_coherence(self, value_list):
+        required_values = {
+            "company_id": self.env.company.id,
+            "employee": False,
+            "type": "other",
+            "is_company": False,
+        }
+
+        for values in value_list:
+            if values.get("partner_id"):
+                continue
+            values.update(required_values)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        self._ensure_attribute_coherence(vals_list)
+        return super().create(vals_list)
+
+    # -- Duplication ----------------------------------------------------------
 
     @api.returns("self", lambda value: value.id)
     def copy(self, default=None):
@@ -468,23 +560,11 @@ class FacilityComplex(models.Model):
 
         return super().copy(default)
 
-    @api.model
-    def default_get(self, fields):
-        parent = super()
-        values = parent.default_get(fields)
+    # =============================================================================
+    # Actions and navigation
+    # =============================================================================
 
-        company = self.env.company or self.env.ref("base.main_company")
-        values["company_id"] = company.id
-
-        # Keep compatibility across versions: only set if field exists
-        if "employee" in self.env["res.partner"]._fields:
-            values["employee"] = False
-
-        values["type"] = "other"
-        values["is_company"] = False
-        # values['company_type'] = 'company'
-
-        return values
+    # -- Facility and reservation actions -------------------------------------
 
     def view_facilities(self):
         self.ensure_one()
@@ -535,14 +615,45 @@ class FacilityComplex(models.Model):
 
         return serialized
 
+    # -- Navigation URLs -------------------------------------------------------
+
+    @api.model
+    def _get_form_view_base_url(self, model, menu_xid):
+        param = self.env["ir.config_parameter"]
+        base_url = param.sudo().get_param("web.base.url")
+
+        menu = self.env.ref(menu_xid)
+        action = menu.action
+
+        # Get top menu
+        while menu.parent_id:
+            menu = menu.parent_id
+
+        url = "{}/web?#menu_id={}&action={}&model={}&view_type=form&id={{}}"
+        return url.format(base_url, menu.id, action.id, model)
+
+    def get_form_view_url(self):
+        self.ensure_one()
+
+        menu_xid = "facility_management.menu_facility_complex"
+        base_url = self._get_form_view_base_url(self._name, menu_xid)
+
+        return base_url.format(self.id)
+
+    # =============================================================================
+    # Reservation notifications
+    # =============================================================================
+
+    # -- Reservation selection ------------------------------------------------
+
     @api.model
     def _compute_cron_lastcall_domain(self):
         """
         Get the domain based on the last call of a scheduled cron task.
 
-        The domain is used to filter out records before the last call of the
-        associated cron task, to ensure we're only processing new or updated
-        records since the last task run.
+        The domain is used to filter out records before the last cron job run
+        time, to ensure we're only processing new or updated records since
+        the last task run.
 
         Returns:
             list: domain based on the last call of a scheduled cron task
@@ -550,9 +661,7 @@ class FacilityComplex(models.Model):
 
         xmlid = "facility_management.ir_cron_notify_reservation_requests"
         cron_task = self.env.ref(xmlid, raise_if_not_found=False)
-        lastcall = (
-            cron_task and cron_task.lastcall or datetime.min  # noqa: DTZ901
-        )
+        lastcall = cron_task and cron_task.lastcall or datetime.min
 
         cron_domain = [
             "|",
@@ -599,6 +708,8 @@ class FacilityComplex(models.Model):
         reservation_set = reservation_obj.search(reservation_domain)
 
         return reservation_set
+
+    # -- Notification content -------------------------------------------------
 
     @staticmethod
     def _compute_row(reservation, facility_url, reservation_url):
@@ -672,6 +783,42 @@ class FacilityComplex(models.Model):
 
         return rows
 
+    # -- Notification recipients ----------------------------------------------
+
+    @staticmethod
+    def format_email(recipient):
+        """Return the recipient email in RFC-compliant formatted form."""
+
+        if not recipient or not recipient.email:
+            return False
+
+        recipient.ensure_one()
+
+        return formataddr((recipient.name or "", recipient.email))
+
+    def _compute_notify_requests_recipients(self):
+        """Retrieve recipients for pending reservation notifications."""
+        self.ensure_one()
+
+        email_to_list = []
+        partner_set = self.env["res.partner"]
+
+        if self.partner_id.email:
+            partner_set |= self.partner_id
+            email_to_list.append(self.format_email(self.partner_id))
+
+        if self.manager_id and self.manager_id.email:
+            partner_set |= self.manager_id.partner_id
+            email_to_list.append(self.format_email(self.manager_id))
+
+        if not email_to_list and self.company_id.email:
+            partner_set |= self.company_id.partner_id
+            email_to_list.append(self.format_email(self.company_id))
+
+        return partner_set, email_to_list
+
+    # -- Notification dispatch ------------------------------------------------
+
     def notify_reservation_requests(self, filter_domain=False, is_cron=False):
         """Send notifications about pending facility reservation requests.
 
@@ -682,10 +829,10 @@ class FacilityComplex(models.Model):
         Args:
             filter_domain (list, optional): additional filtering constraints
                                             on the reservations.
-            is_cron (bool, optional): True to notify all pending reservation
-                                      requests since the last cron task call
-                                      or False to notify pending reservations
-                                      related with the current recordset.
+            is_cron (bool, optional): True to notify all pending facility
+                                     requests since the last cron task call
+                                     or False to notify pending reservations
+                                     related with the current recordset.
 
         Returns:
             bool: always True
@@ -732,58 +879,3 @@ class FacilityComplex(models.Model):
                 )
 
         return True
-
-    @api.model
-    def _get_form_view_base_url(self, model, menu_xid):
-        param = self.env["ir.config_parameter"]
-        base_url = param.sudo().get_param("web.base.url")
-
-        menu = self.env.ref(menu_xid)
-        action = menu.action
-
-        # Get top menu
-        while menu.parent_id:
-            menu = menu.parent_id
-
-        url = "{}/web?#menu_id={}&action={}&model={}&view_type=form&id={{}}"
-        return url.format(base_url, menu.id, action.id, model)
-
-    def get_form_view_url(self):
-        self.ensure_one()
-
-        menu_xid = "facility_management.menu_facility_complex"
-        base_url = self._get_form_view_base_url(self._name, menu_xid)
-
-        return base_url.format(self.id)
-
-    @staticmethod
-    def format_email(recipient):
-        """Return the recipient email in RFC-compliant formatted form."""
-
-        if not recipient or not recipient.email:
-            return False
-
-        recipient.ensure_one()
-
-        return formataddr((recipient.name or "", recipient.email))
-
-    def _compute_notify_requests_recipients(self):
-        """Retrieve recipients for pending reservation notifications."""
-        self.ensure_one()
-
-        email_to_list = []
-        partner_set = self.env["res.partner"]
-
-        if self.partner_id.email:
-            partner_set |= self.partner_id
-            email_to_list.append(self.format_email(self.partner_id))
-
-        if self.manager_id and self.manager_id.email:
-            partner_set |= self.manager_id.partner_id
-            email_to_list.append(self.format_email(self.manager_id))
-
-        if not email_to_list and self.company_id.email:
-            partner_set |= self.company_id.partner_id
-            email_to_list.append(self.format_email(self.company_id))
-
-        return partner_set, email_to_list
