@@ -83,10 +83,10 @@
 
                 <field name="time_start" class="oe_field_time_start" widget="float_time"
                   invisible="full_day" context="{'field_time_start': True}"/>
-                <field name="time_stop" class="oe_field_time_stop" widget="float_time"
-                  invisible="full_day" context="{'field_time_stop': True}"/>
                 <field name="date_delay" class="oe_field_date_delay" widget="float_time"
                   invisible="full_day" context="{'field_date_delay': True}"/>
+                <field name="time_stop" class="oe_field_time_stop" widget="float_time"
+                  invisible="full_day" readonly="1"/>
               </group>
 
               <group col="2" id="repeat" string="Repeat">
