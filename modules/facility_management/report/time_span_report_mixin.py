@@ -129,7 +129,24 @@ class TimeSpanReportMixin(models.AbstractModel):
         if dt.tzinfo is None:
             dt = utc.localize(dt)
 
-        return tz.fromutc(dt).utcoffset()
+        return dt.astimezone(tz).utcoffset()
+
+    @api.model
+    def day_bounds_utc(self, target_date):
+        """Return UTC-naive bounds for one day in the user's timezone."""
+        if isinstance(target_date, datetime):
+            target_date = target_date.date()
+
+        tz = timezone(self.env.user.tz or utc.zone)
+
+        def local_midnight_utc(day):
+            midnight = tz.localize(datetime.combine(day, time.min), is_dst=None)
+            return midnight.astimezone(utc).replace(tzinfo=None)
+
+        return (
+            local_midnight_utc(target_date),
+            local_midnight_utc(target_date + timedelta(days=1)),
+        )
 
     # ----------------------------- format helpers ---------------------------
 
