@@ -147,6 +147,18 @@ class FacilityReservationScheduler(models.Model):
             if record.facility_id:
                 record.tz = record._facility_timezone(record.facility_id)
 
+    @api.model
+    def default_get(self, fields_list):
+        values = super().default_get(fields_list)
+
+        if "tz" in fields_list:
+            facility_id = values.get("facility_id")
+            if facility_id:
+                facility = self.env["facility.facility"].browse(facility_id)
+                values["tz"] = self._facility_timezone(facility)
+
+        return values
+
     # all image fields are base64 encoded and PIL-supported
     image_1920 = fields.Image("Image", related="facility_id.image_1920")
     image_1024 = fields.Image("Image 1024", related="facility_id.image_1024")
