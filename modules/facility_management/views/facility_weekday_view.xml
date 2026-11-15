@@ -21,7 +21,7 @@
     <field name="priority" eval="16"/>
     <field name="active" eval="True"/>
     <field name="arch" type="xml">
-      <list string="facility_weekday_tree" editable="bottom">
+      <list string="facility_weekday_tree" create="0" delete="0" edit="1">
         <field name="name" class="oe_field_name"/>
         <field name="workday" class="oe_field_workday"/>
       </list>

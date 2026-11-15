@@ -177,7 +177,7 @@
                   <li class="d-flex flex-row justify-content-start lh-lg text-truncate" title="Phone number">
                     <strong class="pe-2">Phone:</strong>
                     <t t-if="record.phone_number.raw_value">
-                        <a t-attf-href="mailto:{{ record.phone_number.raw_value }}"
+                        <a t-attf-href="tel:{{ record.phone_number.raw_value }}"
                           title="Contact by phone">
                           <t t-esc="record.phone_number.raw_value"/>
                         </a>
