@@ -114,12 +114,6 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
             self.time_start = self.round_m(self.time_start, (1 / 60), "down")
 
-            # Less than time_stop
-            if self.time_start > self.time_stop:
-                self.time_stop = self.round_m(
-                    self.time_start + (1 / 60), (1 / 60), "down"
-                )
-
             # date_base+time_start within the training action time range
             if not self._in_time_range(which="left"):
                 return self._warn(out_msg)
@@ -910,10 +904,10 @@ class FacilitySchedulerMixin(models.AbstractModel):
     # -- Reservation interval ---------------------------------------------------
 
     def compute_interval(self, dt):
-        """Rreturns the combination of the given date with the ``time_start``
-        and with the ``time_stop`` field values.
+        """Compute the UTC interval from local start and elapsed duration.
 
-        IMPORTANT: This method keep in mind ``full_day`` could be set to True.
+        Full-day reservations cover the entire local calendar day, including
+        daylight-saving days of 23 or 25 elapsed hours.
 
         Args:
             dt (datetime): date or datetime to combine
