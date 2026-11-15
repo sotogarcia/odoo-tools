@@ -60,15 +60,10 @@ class ReportFacilityReservations(models.AbstractModel):
         docids = data.pop("docids", docids)
         date_start, date_stop, first_day, full_weeks = self._get_options(data)
 
-        if isinstance(date_start, str):
-            date_start = fields.Datetime.to_datetime(date_start)
-        if isinstance(date_stop, str):
-            date_stop = fields.Datetime.to_datetime(date_stop)
-
-        if isinstance(date_start, datetime):
-            date_start = date_start.date()
-        if isinstance(date_stop, datetime):
-            date_stop = date_stop.date()
+        # The wizard supplies calendar dates, not UTC instants. Preserve
+        # the selected day; only reservation intervals are converted to UTC.
+        date_start = fields.Date.to_date(date_start)
+        date_stop = fields.Date.to_date(date_stop)
 
         facility_obj = self.env["facility.facility"]
         facility_set = facility_obj.browse(docids)
@@ -101,7 +96,7 @@ class ReportFacilityReservations(models.AbstractModel):
         data = data or {}
         context = self.env.context or {}
 
-        today = date.today()
+        today = fields.Date.context_today(self)
         first_day = self.get_week_start_day(default=0, iso=False)
 
         values = dict(
