@@ -591,8 +591,8 @@ class FacilitySchedulerMixin(models.AbstractModel):
     def _ensure_weekday(self):
         """Ensure date_base weekday is choosen in weekday_ids"""
         for record in self:
-            weekday = self._search_weekday_for(record.date_base)
-            if weekday and weekday not in self.weekday_ids:
+            weekday = record._search_weekday_for(record.date_base)
+            if weekday and weekday not in record.weekday_ids:
                 record.weekday_ids = [(4, weekday.id, 0)]
 
     # -- Occurrence generation --------------------------------------------------
