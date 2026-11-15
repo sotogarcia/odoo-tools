@@ -309,16 +309,7 @@ class FacilityReservationScheduler(models.Model):
     def _uid_is_manager(self):
         technical_group = "facility_management.facility_group_manager"
 
-        result = False
-
-        uid = self.env.context.get("uid", False)
-        if uid:
-            user_obj = self.env["res.users"]
-            user_set = user_obj.browse(uid)
-            if user_set and user_set.has_group(technical_group):
-                result = True
-
-        return result
+        return self.env.user.has_group(technical_group)
 
     def _compute_facility_domain(self, as_string=False):
         self.ensure_one()
@@ -326,7 +317,7 @@ class FacilityReservationScheduler(models.Model):
         if self.validate:
             reservation_set = self.matching_reservations()
 
-            domain = [("reservation_ids", "<>", reservation_set.mapped("id"))]
+            domain = [("reservation_ids", "not in", reservation_set.ids)]
 
         else:
             domain = TRUE_DOMAIN
@@ -425,7 +416,7 @@ class FacilityReservationScheduler(models.Model):
         if target_set:
             if no_track:
                 context = {"tracking_disable": True}
-                reservation_set = reservation_set.with_context(context)
+                target_set = target_set.with_context(context)
 
             values = {"active": bool(status)}
             target_set.write(values)
