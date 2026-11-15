@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #    License, author and contributors information in:                         #
 #    __openerp__.py file at the root folder of this module.                   #
@@ -7,16 +6,11 @@
 from odoo import models, fields, api
 from odoo.tools.translate import _
 
-from logging import getLogger
-
-
-_logger = getLogger(__name__)
-
 
 class ResConfigSettings(models.TransientModel):
     """Module configuration attributes"""
 
-    _inherit = ["res.config.settings"]
+    _inherit = ["res.config.settings"]  # noqa: RUF012
 
     auto_archive_on_rejection = fields.Boolean(
         string="Auto archive",
@@ -24,10 +18,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         index=False,
         default=False,
-        help=(
-            "If enabled, records will be automatically archived when they "
-            "are rejected"
-        ),
+        help="Automatically archive records upon rejection.",
         config_parameter="facility_management.auto_archive_on_rejection",
     )
 
@@ -36,11 +27,8 @@ class ResConfigSettings(models.TransientModel):
         required=True,
         readonly=False,
         index=False,
-        default=lambda self: self.env.ref(
-            "facility_management.facility_weekday_monday",
-            raise_if_not_found=False,
-        ),
-        help="Day considered as the start of the week.",
+        default=lambda self: self._default_first_weekday(),
+        help="Day designated as the start of the week.",
         comodel_name="facility.weekday",
         domain=[],
         context={},
@@ -55,7 +43,11 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         index=False,
         default=60,
-        help="Number of minutes after now during which future reservations "
-        "will mark a facility as unavailable.",
+        help="Minutes after current time marking reservations unavailable.",
         config_parameter="facility_management.availability_margin_minutes",
     )
+
+    @api.model
+    def _default_first_weekday(self):
+        external_id = "facility_management.facility_weekday_monday"
+        return self.env.ref(external_id, raise_if_not_found=False)

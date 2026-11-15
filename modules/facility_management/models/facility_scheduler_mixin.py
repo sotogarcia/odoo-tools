@@ -524,12 +524,21 @@ class FacilitySchedulerMixin(models.AbstractModel):
             weekdays = self.weekday_ids.mapped("sequence")
 
             if not weekdays:
-                raise ValidationError(
-                    _("You must choose at least one day of the week")
-                )
+                message = _("You must choose at least one day of the week")
+                raise ValidationError(message)
+
+            config = self.env["ir.config_parameter"].sudo()
+            param_xid = "facility_management.week_start_day"
+            week_start_day_id = config.get_param(param_xid)
+
+            weekday_obj = self.env["facility.weekday"]
+            weekday_id = int(week_start_day_id or 0)
+            week_start_day = weekday_obj.browse(weekday_id).exists()
+
+            week_start = week_start_day.sequence - 1 if week_start_day else 0
 
             params["byweekday"] = [weekday(day - 1) for day in weekdays]
-            params["wkst"] = MO
+            params["wkst"] = weekday(week_start)
 
         elif self.interval_type == "month":
             if self.month_type == "month":

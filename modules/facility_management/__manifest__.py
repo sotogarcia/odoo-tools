@@ -97,6 +97,6 @@ Key features:
             "facility_management/static/src/css/facility_management_report.css"
         ],
     },
-    "external_dependencies": {"python": ["num2words"]},
+    "external_dependencies": {"python": ["num2words", "slugify"]},
     "license": "AGPL-3",
 }
