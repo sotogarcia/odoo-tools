@@ -477,21 +477,18 @@ class FacilityReservation(models.Model):
         mixin = self.env["facility.scheduler.mixin"]
         tz_name = self.get_tz().zone
 
-        date_start = self.date_start.strftime("%Y-%m-%d %H:%M:%S")
         date_base, time_start = mixin.split_datetime(
-            date_start, tz_name=tz_name
+            self.date_start, tz_name=tz_name
         )
-
-        date_stop = self.date_stop.strftime("%Y-%m-%d %H:%M:%S")
-        time_stop = mixin.split_datetime(
-            date_stop, tz_name=tz_name
-        )[1]
+        date_delay = (
+            self.date_stop - self.date_start
+        ).total_seconds() / 3600.0
 
         scheduler_values = {
             "tz": tz_name,
             "date_base": date_base,
             "time_start": time_start,
-            "time_stop": time_stop,
+            "date_delay": date_delay,
             "name": self.name,
             "description": self.description,
             "active": self.active,
