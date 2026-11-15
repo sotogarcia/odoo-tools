@@ -148,7 +148,7 @@ class TimeSpanReportMixin(models.AbstractModel):
 
             while upper - lower > timedelta(seconds=1):
                 middle = lower + timedelta(
-                    seconds=(upper - lower).seconds // 2
+                    seconds=int((upper - lower).total_seconds()) // 2
                 )
                 if utc.localize(middle).astimezone(tz).date() < day:
                     lower = middle
