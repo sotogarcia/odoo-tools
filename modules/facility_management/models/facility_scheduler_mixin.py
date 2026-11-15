@@ -114,12 +114,6 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
             self.time_start = self.round_m(self.time_start, (1 / 60), "down")
 
-            # Less than time_stop
-            if self.time_start > self.time_stop:
-                self.time_stop = self.round_m(
-                    self.time_start + (1 / 60), (1 / 60), "down"
-                )
-
             # date_base+time_start within the training action time range
             if not self._in_time_range(which="left"):
                 return self._warn(out_msg)
@@ -135,35 +129,25 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
     time_stop = fields.Float(
         string="Time stop",
-        required=True,
-        readonly=False,
+        required=False,
+        readonly=True,
         index=False,
-        default=lambda self: self.default_time_start() + 1.0,
+        default=None,
         digits=(16, 2),
-        help="Time of reservation stop",
+        help="Local time at which the reservation finishes",
+        compute="_compute_time_stop",
     )
 
-    @api.onchange("time_stop")
-    def _onchange_time_stop(self):
-        out_msg = _("Schedule time out of training action timespan")
-        min_date_delay = _("Session must last at least one minute")
+    @api.depends("date_base", "time_start", "date_delay", "full_day", "tz")
+    def _compute_time_stop(self):
+        for record in self:
+            if not record.date_base:
+                record.time_stop = 0.0
+                continue
 
-        if self._field_changed("field_time_stop") and not self.full_day:
-            # Within the day
-            if self.time_stop < 0:
-                self.time_stop = self.time_start + (1 / 60)
-            elif self.time_stop >= 24:
-                self.time_stop = 23 + (59 / 60)
-
-            self.time_stop = self.round_m(self.time_stop, (1 / 3600), "down")
-
-            # Less than time_start
-            if self.time_stop < self.time_start + (1 / 60):
-                return self._warn(min_date_delay)
-
-            # fisnish_date+time_stop within the training action time range
-            if not self._in_time_range(which="right"):
-                return self._warn(out_msg)
+            _date_start, date_stop = record.compute_interval(record.date_base)
+            _stop_date, time_stop = record.split_datetime(date_stop)
+            record.time_stop = time_stop
 
     full_day = fields.Boolean(
         string="Full day",
@@ -188,37 +172,18 @@ class FacilitySchedulerMixin(models.AbstractModel):
         required=True,
         readonly=False,
         index=False,
-        default=0.0,
+        default=1.0,
         digits=(16, 2),
-        help="Time length of the reservation",
-        store=False,
-        compute="_compute_date_delay",
+        help="Actual elapsed reservation time in hours",
     )
 
-    @api.depends("full_day", "date_base", "time_start", "time_stop")
-    def _compute_date_delay(self):
+    @api.constrains("date_delay", "full_day")
+    def _check_date_delay(self):
         for record in self:
-            if record.full_day:
-                record.date_delay = 24.0
-            else:
-                start = record.join_datetime(
-                    record.date_base, record.time_start, day_limit=True
+            if not record.full_day and record.date_delay <= 0:
+                raise ValidationError(
+                    _("Reservation duration must be greater than zero")
                 )
-
-                stop = record.join_datetime(
-                    record.date_base, record.time_stop, day_limit=True
-                )
-
-                record.date_delay = self._float_interval(start, stop)
-
-    @api.onchange("date_delay")
-    def _onchange_date_delay(self):
-        for record in self:
-            if (
-                not record.full_day
-                and record._origin.date_delay != record.date_delay
-            ):
-                record.time_stop = record.time_start + record.date_delay
 
     # -- Day descriptions -------------------------------------------------------
 
@@ -452,7 +417,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
     @api.depends(
         "date_base",
         "time_start",
-        "time_stop",
+        "date_delay",
         "full_day",
         "repeat",
         "interval_number",
@@ -485,8 +450,8 @@ class FacilitySchedulerMixin(models.AbstractModel):
     _sql_constraints = [  # noqa: RUF012
         (
             "positive_interval",
-            "CHECK(time_start < time_stop)",
-            "Reservation cannot finish before it starts",
+            "CHECK(full_day OR date_delay > 0)",
+            "Reservation duration must be greater than zero",
         ),
         (
             "positive_interval_number",
@@ -801,14 +766,10 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
         dates = self.scheduled_dates()
 
-        time_start = 0.0 if self.full_day else self.time_start
-        time_stop = 24.0 if self.full_day else self.time_stop
-
         domains = []
 
         for dt in dates:
-            v1 = self.join_datetime(dt, time_start, day_limit=True)
-            v2 = self.join_datetime(dt, time_stop, day_limit=True)
+            v1, v2 = self.compute_interval(dt)
 
             v1 = v1.strftime("%Y-%m-%d %H:%M:%S")
             v2 = v2.strftime("%Y-%m-%d %H:%M:%S")
@@ -858,7 +819,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
             "default_date_base": self.date_base.strftime("%Y-%m-%d"),
             "default_tz": self.tz,
             "default_time_start": self.time_start,
-            "default_time_stop": self.time_stop,
+            "default_date_delay": self.date_delay,
             "default_full_day": self.full_day,
             "default_repeat": self.repeat,
             "default_interval_number": self.interval_number,
@@ -943,10 +904,10 @@ class FacilitySchedulerMixin(models.AbstractModel):
     # -- Reservation interval ---------------------------------------------------
 
     def compute_interval(self, dt):
-        """Rreturns the combination of the given date with the ``time_start``
-        and with the ``time_stop`` field values.
+        """Compute the UTC interval from local start and elapsed duration.
 
-        IMPORTANT: This method keep in mind ``full_day`` could be set to True.
+        Full-day reservations cover the entire local calendar day, including
+        daylight-saving days of 23 or 25 elapsed hours.
 
         Args:
             dt (datetime): date or datetime to combine
@@ -957,9 +918,15 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
         self.ensure_one()
 
-        time_start = 0.0 if self.full_day else self.time_start
-        time_stop = 24.0 if self.full_day else self.time_stop
-        date_start = self.join_datetime(dt, time_start, day_limit=True)
-        date_stop = self.join_datetime(dt, time_stop, day_limit=True)
+        if self.full_day:
+            date_start = self.join_datetime(dt, 0.0, day_limit=True)
+            date_stop = self.join_datetime(
+                dt + timedelta(days=1), 0.0, day_limit=True
+            )
+        else:
+            date_start = self.join_datetime(
+                dt, self.time_start, day_limit=True
+            )
+            date_stop = date_start + timedelta(hours=self.date_delay)
 
         return date_start, date_stop

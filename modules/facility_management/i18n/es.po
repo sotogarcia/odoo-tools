@@ -3024,3 +3024,25 @@ msgstr ""
 #: code:addons/facility_management/models/facility_facility.py:0
 msgid "{} - Reservations"
 msgstr "{} - Reservas"
+
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_scheduler_mixin__date_delay
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__date_delay
+#: model:ir.model.fields,help:facility_management.field_facility_search_available_wizard__date_delay
+msgid "Actual elapsed reservation time in hours"
+msgstr "Duración real transcurrida de la reserva, en horas"
+
+#. module: facility_management
+#: model:ir.model.fields,help:facility_management.field_facility_scheduler_mixin__time_stop
+#: model:ir.model.fields,help:facility_management.field_facility_reservation_scheduler__time_stop
+#: model:ir.model.fields,help:facility_management.field_facility_search_available_wizard__time_stop
+msgid "Local time at which the reservation finishes"
+msgstr "Hora local a la que finaliza la reserva"
+
+#. module: facility_management
+#. odoo-python
+#: code:addons/facility_management/models/facility_scheduler_mixin.py:0
+msgid "Reservation duration must be greater than zero"
+msgstr "La duración de la reserva debe ser mayor que cero"
+
