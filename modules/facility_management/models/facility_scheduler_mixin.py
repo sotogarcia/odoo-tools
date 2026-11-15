@@ -20,6 +20,7 @@ from dateutil.rrule import (
     weekday,
 )
 from num2words import num2words
+from odoo.addons.base.models.res_partner import _tz_get
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv.expression import AND, OR
@@ -71,6 +72,16 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
             # date_base less than or equal to finish_date
             self.finish_date = max(self.date_base, self.finish_date)
+
+    tz = fields.Selection(
+        string="Timezone",
+        required=True,
+        readonly=False,
+        index=False,
+        default=lambda self: self.env.user.tz or "UTC",
+        help="Timezone used to interpret the schedule's local dates and times",
+        selection=_tz_get,
+    )
 
     time_start = fields.Float(
         string="Time start",
@@ -430,6 +441,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
         "finish_number",
         "weekday_ids",
         "month_type",
+        "tz",
     )
     def _compute_next_schedule(self):
         for record in self:
@@ -639,9 +651,12 @@ class FacilitySchedulerMixin(models.AbstractModel):
         return [op1, (f1, op2, v2), (f2, op3, v1)]
 
     @api.model
-    def _get_scheduler_timezone(self):
-        tz_name = self.env.user.tz or "UTC"
-        return timezone(tz_name)
+    def _get_scheduler_timezone(self, tz_name=None):
+        if not tz_name:
+            self.ensure_one()
+            tz_name = self.tz
+
+        return timezone(tz_name or "UTC")
 
     @api.model
     def join_datetime(self, dt, tm=0.0, day_limit=False):
@@ -677,7 +692,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
         return localized_dt.astimezone(utc).replace(tzinfo=None)
 
     @api.model
-    def split_datetime(self, dt):
+    def split_datetime(self, dt, tz_name=None):
         """Convert a UTC datetime into a local date and float time."""
 
         if isinstance(dt, str):
@@ -686,7 +701,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
         if dt.tzinfo is None:
             dt = utc.localize(dt)
 
-        tz = self._get_scheduler_timezone()
+        tz = self._get_scheduler_timezone(tz_name=tz_name)
         local_dt = dt.astimezone(tz)
 
         local_date = local_dt.date()
@@ -782,6 +797,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
 
         return {
             "default_date_base": self.date_base.strftime("%Y-%m-%d"),
+            "default_tz": self.tz,
             "default_time_start": self.time_start,
             "default_time_stop": self.time_stop,
             "default_full_day": self.full_day,
