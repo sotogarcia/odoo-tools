@@ -76,7 +76,7 @@ Key features:
         "demo/facility_type_demo.xml",
         "demo/facility_facility_demo.xml",
         "demo/facility_reservation_demo.xml",
-        # "demo/facility_reservation_scheduler_demo.xml",
+        "demo/facility_reservation_scheduler_demo.xml",
     ],
     "assets": {
         "web.assets_backend": [

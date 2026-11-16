@@ -10,7 +10,8 @@
       on Monday, Wednesday and Friday.
     </field>
     <field name="date_base"
-      eval="(DateTime.today() + timedelta(days=7 - DateTime.today().weekday())).strftime('%Y-%m-%d')"/>
+      eval="'2020-01-06'"/>
+    <field name="tz">Europe/Madrid</field>
     <field name="time_start" eval="9.0"/>
     <field name="date_delay" eval="2.0"/>
     <field name="weekday_ids" eval="[
@@ -23,6 +24,7 @@
     <field name="interval_number" eval="2"/>
     <field name="interval_type">week</field>
     <field name="finish_type">number</field>
+    <field name="finish_date">2020-02-03</field>
     <field name="finish_number" eval="7"/>
     <field name="facility_id"
       ref="facility_management.facility_classroom_3"/>
