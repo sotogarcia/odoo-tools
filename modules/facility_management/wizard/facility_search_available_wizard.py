@@ -122,8 +122,8 @@ class FacilitySearchAvailableWizard(models.TransientModel):
 
         reservation_set = self.matching_reservations()
         if reservation_set:
-            reservation_ids = reservation_set.mapped("id")
-            not_reserved = [("reservation_ids", "<>", reservation_ids)]
+            reservation_ids = reservation_set.ids
+            not_reserved = [("reservation_ids", "not in", reservation_ids)]
             domains.append(not_reserved)
 
         if self.type_ids:
