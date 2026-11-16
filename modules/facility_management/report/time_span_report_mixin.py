@@ -196,8 +196,9 @@ class TimeSpanReportMixin(models.AbstractModel):
     def time_str(self, reservation):
         """Return time span in user's timezone like 'HH:MM-HH:MM'."""
 
-        start = fields.Datetime.context_timestamp(self, reservation.date_start)
-        stop = fields.Datetime.context_timestamp(self, reservation.date_stop)
+        tz = timezone(self.env.user.tz or utc.zone)
+        start = utc.localize(reservation.date_start).astimezone(tz)
+        stop = utc.localize(reservation.date_stop).astimezone(tz)
 
         return "{}-{}".format(start.strftime("%H:%M"), stop.strftime("%H:%M"))
 
