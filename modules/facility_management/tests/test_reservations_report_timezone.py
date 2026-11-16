@@ -234,7 +234,27 @@ class TestReservationsReportTimezone(TransactionCase):
                 for row in day["reservations"]
             }
             self.assertEqual(actual_ids, expected_ids)
+            query_start, query_stop = expected_days[0], expected_days[-1]
+            self.assertEqual(
+                set(
+                    report._search_reservations(
+                        facility, query_start, query_stop
+                    ).ids
+                ),
+                expected_ids,
+            )
             self.assertNotIn(after_week.id, actual_ids)
+            if thursday.id in expected_ids:
+                thursday_rows = [
+                    row
+                    for day in days
+                    for row in day["reservations"]
+                    if row["id"] == thursday.id
+                ]
+                self.assertEqual(
+                    [row["time_str"] for row in thursday_rows],
+                    ["00:30-01:30"],
+                )
             self.assertEqual(
                 sum(week["reservation_count"] for week in weeks),
                 len(expected_ids),
