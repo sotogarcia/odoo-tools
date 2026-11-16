@@ -31,7 +31,7 @@
               <t t-foreach="daily_reservations" t-as="reservation_row">
                 <t t-set="reservation" t-value="reservation_row['item']"/>
                 <t t-set="reservation_id"
-                  t-value="make_html_id(reservation.id, prefix='reservation')"/>
+                  t-value="make_html_id(reservation.id, day_row['date_start'], prefix='reservation')"/>
                 <tr t-att-id="reservation_id"
                   t-attf-class="td-time reservation {{ 'reservation-first' if (reservation_row_first) else '' }} {{ 'reservation-last' if (reservation_row_last) else '' }} {{ 'reservation-middle' if (not reservation_row_first and not reservation_row_last) else '' }} {{ 'day-even' if day_row_index % 2 == 0 else 'day-odd' }}">
                   <td style="width: 12%">

@@ -129,7 +129,38 @@ class TimeSpanReportMixin(models.AbstractModel):
         if dt.tzinfo is None:
             dt = utc.localize(dt)
 
-        return tz.fromutc(dt).utcoffset()
+        return dt.astimezone(tz).utcoffset()
+
+    @api.model
+    def day_bounds_utc(self, target_date):
+        """Return UTC-naive bounds for one day in the user's timezone."""
+        if isinstance(target_date, datetime):
+            target_date = target_date.date()
+
+        tz = timezone(self.env.user.tz or utc.zone)
+
+        def local_day_start(day):
+            # Search on the UTC timeline: local midnight may not exist or
+            # may be ambiguous when a timezone changes its offset.
+            base = datetime.combine(day, time.min)
+            lower = base - timedelta(days=2)
+            upper = base + timedelta(days=2)
+
+            while upper - lower > timedelta(seconds=1):
+                middle = lower + timedelta(
+                    seconds=int((upper - lower).total_seconds()) // 2
+                )
+                if utc.localize(middle).astimezone(tz).date() < day:
+                    lower = middle
+                else:
+                    upper = middle
+
+            return upper
+
+        return (
+            local_day_start(target_date),
+            local_day_start(target_date + timedelta(days=1)),
+        )
 
     # ----------------------------- format helpers ---------------------------
 
@@ -165,8 +196,9 @@ class TimeSpanReportMixin(models.AbstractModel):
     def time_str(self, reservation):
         """Return time span in user's timezone like 'HH:MM-HH:MM'."""
 
-        start = fields.Datetime.context_timestamp(self, reservation.date_start)
-        stop = fields.Datetime.context_timestamp(self, reservation.date_stop)
+        tz = timezone(self.env.user.tz or utc.zone)
+        start = utc.localize(reservation.date_start).astimezone(tz)
+        stop = utc.localize(reservation.date_stop).astimezone(tz)
 
         return "{}-{}".format(start.strftime("%H:%M"), stop.strftime("%H:%M"))
 

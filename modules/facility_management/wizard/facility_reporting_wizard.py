@@ -22,13 +22,13 @@ class FacilityReportingWizard(models.TransientModel):
     _rec_name = "id"
     _order = "id DESC"
 
-    date_start = fields.Datetime(
+    date_start = fields.Date(
         string="Beginning",
         required=True,
         readonly=False,
         index=True,
         default=lambda self: self.week_start(),
-        help="Date/time of session start",
+        help="First date of the report",
     )
 
     @api.onchange("date_start")
@@ -37,13 +37,13 @@ class FacilityReportingWizard(models.TransientModel):
             if record.date_stop <= record.date_start:
                 record.date_stop = record.date_start
 
-    date_stop = fields.Datetime(
+    date_stop = fields.Date(
         string="Ending",
         required=True,
         readonly=False,
         index=True,
         default=lambda self: self.week_start() + timedelta(days=6),
-        help="Date/time of session end",
+        help="Last date of the report",
     )
 
     full_weeks = fields.Boolean(
@@ -113,12 +113,10 @@ class FacilityReportingWizard(models.TransientModel):
         help="Check it to close wizard on report download",
     )
 
-    @staticmethod
-    def week_start():
-        present = fields.Datetime.now()
-        today = present.replace(hour=0, minute=0, second=0, microsecond=0)
-
-        return today - timedelta(today.weekday())
+    @api.model
+    def week_start(self):
+        today = fields.Date.context_today(self)
+        return today - timedelta(days=today.weekday())
 
     @api.model
     def _get_from_context(self):
