@@ -3192,11 +3192,47 @@ msgid "Facility reservations"
 msgstr "Reservas de instalaciones"
 
 #. module: facility_management
-#: model:mail.notification,email_title:facility_management.facility_reservation_state_changed_notification
+#: model_terms:ir.ui.view,name:facility_management.facility_reservation_state_changed_email
 msgid "Facility reservation state changed"
 msgstr "Estado de la reserva de instalación modificado"
 
 #. module: facility_management
-#: model:mail.notification,email_title:facility_management.facility_reservation_has_changed_notification
+#: model_terms:ir.ui.view,name:facility_management.facility_reservation_has_changed_email
 msgid "Facility reservation has changed"
 msgstr "La reserva de instalación ha cambiado"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.facility_reservation_state_changed_email
+#: model_terms:ir.ui.view,arch_db:facility_management.facility_reservation_has_changed_email
+msgid "Hello."
+msgstr "Hola."
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.facility_reservation_has_changed_email
+msgid "The details of these changes are reflected below."
+msgstr "Los detalles de estos cambios se muestran a continuación."
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.facility_reservation_has_changed_email
+msgid "Thank you for your understanding and flexibility."
+msgstr "Gracias por su comprensión y flexibilidad."
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.facility_reservation_state_changed_email
+msgid "If you encounter any issues or have questions, please don't hesitate to contact the complex administrator. This person will be available to assist you."
+msgstr "Si tiene alguna incidencia o pregunta, no dude en ponerse en contacto con la persona responsable del complejo. Estará disponible para ayudarle."
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.facility_reservation_has_changed_email
+msgid "I would like to inform you that changes have been made to one of your facility reservations. Please review the updated details when you can, and let me know if you have any questions or concerns."
+msgstr "Le informamos de que se han realizado cambios en una de sus reservas de instalaciones. Revise los datos actualizados cuando pueda y comuníquenos cualquier pregunta o duda."
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.facility_reservation_state_changed_email
+msgid "The status of the facility reservation"
+msgstr "El estado de la reserva de instalación"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.facility_reservation_state_changed_email
+msgid "you previously requested has undergone a change. I kindly ask you to review the details to ensure you're fully aware of the current situation and any implications it might have for your plans."
+msgstr "que solicitó anteriormente ha cambiado. Le rogamos que revise los detalles para conocer la situación actual y cualquier posible consecuencia para sus planes."
