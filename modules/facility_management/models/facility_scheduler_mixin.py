@@ -173,7 +173,7 @@ class FacilitySchedulerMixin(models.AbstractModel):
         readonly=False,
         index=False,
         default=1.0,
-        digits=(16, 2),
+        digits=(16, 6),
         help="Actual elapsed reservation time in hours",
     )
 

@@ -59,7 +59,7 @@ class FacilityFacility(models.Model):
         index=False,
         default=None,
         help="Facility internal code",
-        size=36,
+        size=64,
         translate=False,
     )
 

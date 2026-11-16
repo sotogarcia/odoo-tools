@@ -142,7 +142,7 @@ class FacilityReservation(models.Model):
         readonly=False,
         index=False,
         default=None,
-        digits=(16, 2),
+        digits=(16, 6),
         help="Time length of the reservation",
         store=True,
         compute="_compute_date_delay",

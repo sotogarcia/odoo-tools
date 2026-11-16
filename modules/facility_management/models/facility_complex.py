@@ -79,7 +79,7 @@ class FacilityComplex(models.Model):
         index=False,
         default=None,
         help="Enter new internal code",
-        size=36,
+        size=64,
         translate=False,
     )
 
