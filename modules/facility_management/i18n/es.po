@@ -3236,3 +3236,23 @@ msgstr "El estado de la reserva de instalación"
 #: model_terms:ir.ui.view,arch_db:facility_management.facility_reservation_state_changed_email
 msgid "you previously requested has undergone a change. I kindly ask you to review the details to ensure you're fully aware of the current situation and any implications it might have for your plans."
 msgstr "que solicitó anteriormente ha cambiado. Le rogamos que revise los detalles para conocer la situación actual y cualquier posible consecuencia para sus planes."
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.view_facility_form
+msgid "Capacity"
+msgstr "Capacidad"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.res_config_settings_view_form
+msgid "Week"
+msgstr "Semana"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.res_config_settings_view_form
+msgid "Update"
+msgstr "Actualizar"
+
+#. module: facility_management
+#: model_terms:ir.ui.view,arch_db:facility_management.email_body_reservation_requests
+msgid "Please confirm these reservations as soon as possible, as they are crucial for the proper performance of those who request them."
+msgstr "Confirme estas reservas lo antes posible, ya que son importantes para el correcto desarrollo de las actividades de quienes las solicitan."
