@@ -160,7 +160,7 @@ msgstr "Acción"
 #: model:ir.model.fields,field_description:facility_management.field_facility_facility__message_needaction
 #: model:ir.model.fields,field_description:facility_management.field_facility_reservation__message_needaction
 msgid "Action Needed"
-msgstr "Accion necesaria"
+msgstr "Acción necesaria"
 
 #. module: facility_management
 #: model:ir.model.fields,help:facility_management.field_facility_reservation_massive_actions_wizard__action
@@ -531,7 +531,7 @@ msgstr "Etiqueta del ID de la empresa"
 #. module: facility_management
 #: model:ir.model.fields,field_description:facility_management.field_facility_complex__company_name
 msgid "Company Name"
-msgstr "Nombre de companía"
+msgstr "Nombre de compañía"
 
 #. module: facility_management
 #: model:ir.model.fields,field_description:facility_management.field_facility_complex__commercial_company_name
@@ -779,7 +779,7 @@ msgstr "Días de la semana en que se repite"
 #: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_form
 #: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_form
 msgid "Description"
-msgstr "Descripcion"
+msgstr "Descripción"
 
 #. module: facility_management
 #: model_terms:ir.ui.view,arch_db:facility_management.view_facility_reservation_scheduler_form
@@ -1569,7 +1569,7 @@ msgstr "Lunes"
 #. module: facility_management
 #: model:res.groups,name:facility_management.facility_group_monitor
 msgid "Monitor"
-msgstr ""
+msgstr "Supervisor"
 
 #. module: facility_management
 #: model:ir.model.fields.selection,name:facility_management.selection__facility_reservation_scheduler__month_type__month
@@ -3046,3 +3046,268 @@ msgstr "Hora local a la que finaliza la reserva"
 msgid "Reservation duration must be greater than zero"
 msgstr "La duración de la reserva debe ser mayor que cero"
 
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_complex.py:0
+msgid "A complex with this name already exists in this company"
+msgstr "Ya existe un complejo con este nombre en esta empresa"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_complex.py:0
+msgid "Spaces"
+msgstr "Espacios"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_complex.py:0
+msgid "Spaces in this complex"
+msgstr "Espacios de este complejo"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_complex.py:0
+msgid "Space count"
+msgstr "Número de espacios"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_complex.py:0
+msgid "Number of active spaces in this complex"
+msgstr "Número de espacios activos en este complejo"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_complex.py:0
+msgid "Total user capacity across all facilities in this complex"
+msgstr "Capacidad total de usuarios de las instalaciones de este complejo"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_complex.py:0
+msgid "Supervisors designated to approve complex room reservations."
+msgstr "Supervisores designados para aprobar las reservas de salas del complejo."
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_complex.py:0
+msgid "Reservations linked to this complex"
+msgstr "Reservas vinculadas a este complejo"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_complex.py:0
+msgid "Reservations awaiting confirmation for this complex"
+msgstr "Reservas pendientes de confirmación en este complejo"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_complex.py:0
+msgid "Total unconfirmed reservations for this facility complex"
+msgstr "Número total de reservas sin confirmar en este complejo"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_complex.py:0
+msgid "Display address"
+msgstr "Dirección mostrada"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_complex.py:0
+msgid "Formatted postal address of the complex (without company)"
+msgstr "Dirección postal formateada del complejo (sin la empresa)"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_complex.py:0
+msgid "Phone number"
+msgstr "Número de teléfono"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_complex.py:0
+msgid "Primary phone for the complex (partner phone or mobile)"
+msgstr "Teléfono principal del complejo (fijo o móvil del contacto)"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_facility.py:0
+msgid "Operator not implemented"
+msgstr "Operador no implementado"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_facility.py:0
+msgid "Operator not implemented for empty dates"
+msgstr "Operador no implementado para fechas vacías"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_facility.py:0
+msgid "Duplicate facility name in this complex"
+msgstr "Nombre de instalación duplicado en este complejo"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_facility.py:0
+msgid "Invalid availability margin configuration"
+msgstr "Configuración incorrecta del margen de disponibilidad"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_facility.py:0
+msgid "Complex the facility belongs to"
+msgstr "Complejo al que pertenece la instalación"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_facility.py:0
+msgid "Maximum concurrent students for this facility"
+msgstr "Número máximo de alumnos simultáneos en esta instalación"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_facility.py:0
+msgid "Max concurrent student invitations for this feature"
+msgstr "Número máximo de alumnos invitados simultáneamente a esta instalación"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_facility.py:0
+msgid "Users / Excess users"
+msgstr "Usuarios / Usuarios adicionales"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_facility.py:0
+msgid "True if there are no reservations now or within the next hour."
+msgstr "Verdadero si no hay reservas ahora ni durante la próxima hora."
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_reservation.py:0
+msgid "A short description for this reservation"
+msgstr "Descripción breve de esta reserva"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_reservation.py:0
+msgid "A long description for this reservation"
+msgstr "Descripción detallada de esta reserva"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_reservation.py:0
+msgid "Check this if the reservation has a related scheduler"
+msgstr "Marque esta opción si la reserva tiene un planificador asociado"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_reservation_scheduler.py:0
+msgid "New scheduler"
+msgstr "Nuevo planificador"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_reservation_scheduler.py:0
+msgid "Last update"
+msgstr "Última actualización"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_scheduler_mixin.py:0
+msgid "Finish number must be greater than zero"
+msgstr "El número de repeticiones debe ser mayor que cero"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_scheduler_mixin.py:0
+msgid "The selected local time does not exist due to a daylight saving time change."
+msgstr "La hora local seleccionada no existe debido al cambio de horario de verano."
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_scheduler_mixin.py:0
+msgid "The selected local time is ambiguous due to a daylight saving time change."
+msgstr "La hora local seleccionada es ambigua debido al cambio de horario de verano."
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_scheduler_mixin.py:0
+msgid "Timezone used to interpret the schedule's local dates and times"
+msgstr "Zona horaria utilizada para interpretar las fechas y horas locales de la programación"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_type.py:0
+msgid "There is already a facility type with this name"
+msgstr "Ya existe un tipo de instalación con este nombre"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_type.py:0
+msgid "Name of the facility type"
+msgstr "Nombre del tipo de instalación"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_type.py:0
+msgid "Additional details or notes about this facility type"
+msgstr "Detalles o notas adicionales sobre este tipo de instalación"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_type.py:0
+msgid "Is space"
+msgstr "Es un espacio"
+
+#. module: facility_management
+#: code:addons/facility_management/models/facility_type.py:0
+msgid "Check this option if the record represents a physical space."
+msgstr "Marque esta opción si el registro representa un espacio físico."
+
+#. module: facility_management
+#: code:addons/facility_management/models/res_config_settings.py:0
+msgid "Automatically archive records upon rejection."
+msgstr "Archivar automáticamente los registros al rechazarlos."
+
+#. module: facility_management
+#: code:addons/facility_management/models/res_config_settings.py:0
+msgid "Week start day"
+msgstr "Primer día de la semana"
+
+#. module: facility_management
+#: code:addons/facility_management/models/res_config_settings.py:0
+msgid "Day designated as the start of the week."
+msgstr "Día establecido como inicio de la semana."
+
+#. module: facility_management
+#: code:addons/facility_management/models/res_config_settings.py:0
+msgid "Availability margin (minutes)"
+msgstr "Margen de disponibilidad (minutos)"
+
+#. module: facility_management
+#: code:addons/facility_management/models/res_config_settings.py:0
+msgid "Minutes after current time marking reservations unavailable."
+msgstr "Minutos a partir de la hora actual durante los cuales no se permiten reservas."
+
+#. module: facility_management
+#: code:addons/facility_management/wizard/facility_reporting_wizard.py:0
+msgid "First date of the report"
+msgstr "Fecha inicial del informe"
+
+#. module: facility_management
+#: code:addons/facility_management/wizard/facility_reporting_wizard.py:0
+msgid "Last date of the report"
+msgstr "Fecha final del informe"
+
+#. module: facility_management
+#: code:addons/facility_management/wizard/facility_reporting_wizard.py:0
+msgid "Report presentation"
+msgstr "Formato del informe"
+
+#. module: facility_management
+#: code:addons/facility_management/wizard/facility_reporting_wizard.py:0
+msgid "Close wizard"
+msgstr "Cerrar asistente"
+
+#. module: facility_management
+#: code:addons/facility_management/wizard/facility_reporting_wizard.py:0
+msgid "Check it to close wizard on report download"
+msgstr "Marque esta opción para cerrar el asistente al descargar el informe"
+
+#. module: facility_management
+#: code:addons/facility_management/report/time_span_report_mixin.py:0
+msgid "Week from {} to {}"
+msgstr "Semana del {} al {}"
+
+#. module: facility_management
+#: code:addons/facility_management/report/facility_reservations_report.xml:0
+msgid "TYPE"
+msgstr "TIPO"
+
+#. module: facility_management
+#: code:addons/facility_management/report/facility_reservations_report.xml:0
+msgid "MANAGER"
+msgstr "RESPONSABLE"
+
+#. module: facility_management
+#: code:addons/facility_management/wizard/facility_search_available_wizard_view.xml:0
+msgid "Show found facilities in the whole window"
+msgstr "Mostrar las instalaciones encontradas en una ventana completa"
+
+#. module: facility_management
+#: code:addons/facility_management/wizard/facility_search_available_wizard_view.xml:0
+msgid "Cerrar"
+msgstr "Cerrar"
+
+#. module: facility_management
+#: code:addons/facility_management/data/mail_template_data.xml:0
+msgid "{{ object.name }} - Reservation requests awaiting confirmation"
+msgstr "{{ object.name }} - Solicitudes de reserva pendientes de confirmación"
