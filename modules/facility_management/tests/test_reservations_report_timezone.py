@@ -129,3 +129,113 @@ class TestReservationsReportTimezone(TransactionCase):
             self.report.get_timezone_offset(datetime(2027, 7, 15, 12)),
             timedelta(hours=2),
         )
+
+    def test_report_time_ignores_timezone_from_context(self):
+        report = self.report.with_context(tz="UTC")
+        reservation = SimpleNamespace(
+            date_start=datetime(2027, 7, 14, 22, 30),
+            date_stop=datetime(2027, 7, 14, 23, 30),
+            facility_id=SimpleNamespace(id=5),
+        )
+        self.assertEqual(report.time_str(reservation), "00:30-01:30")
+        self.assertEqual(
+            report._daily_reservations(
+                FakeReservations([reservation]),
+                5,
+                {"date_start": date(2027, 7, 15)},
+            ),
+            [reservation],
+        )
+
+    def _create_report_facility(self):
+        partner = self.env["res.partner"].sudo().create(
+            {
+                "name": "Report test complex",
+                "type": "other",
+                "is_company": False,
+                "company_id": self.env.company.id,
+            }
+        )
+        complex_record = self.env["facility.complex"].sudo().create(
+            {
+                "partner_id": partner.id,
+                "code": "REPORT-TEST-COMPLEX",
+            }
+        )
+        facility_type = self.env["facility.type"].sudo().create(
+            {"name": "Report test type", "is_space": True}
+        )
+        return self.env["facility.facility"].sudo().create(
+            {
+                "name": "Report test room",
+                "code": "REPORT-TEST-ROOM",
+                "type_id": facility_type.id,
+                "complex_id": complex_record.id,
+                "users": 0,
+                "excess": 0,
+            }
+        )
+
+    def test_wizard_report_flow_and_week_boundaries(self):
+        facility = self._create_report_facility()
+        reservations = self.env["facility.reservation"].sudo()
+        monday = reservations.create(
+            {
+                "facility_id": facility.id,
+                "date_start": datetime(2027, 7, 12, 12),
+                "date_stop": datetime(2027, 7, 12, 13),
+            }
+        )
+        thursday = reservations.create(
+            {
+                "facility_id": facility.id,
+                "date_start": datetime(2027, 7, 14, 22, 30),
+                "date_stop": datetime(2027, 7, 14, 23, 30),
+            }
+        )
+        after_week = reservations.create(
+            {
+                "facility_id": facility.id,
+                "date_start": datetime(2027, 7, 19, 12),
+                "date_stop": datetime(2027, 7, 19, 13),
+            }
+        )
+
+        report = self.report.with_context(tz="UTC").sudo()
+        wizard_model = self.env["facility.reporting.wizard"].sudo()
+        for full_weeks, expected_days, expected_ids in (
+            (False, [date(2027, 7, 15)], {thursday.id}),
+            (
+                True,
+                [date(2027, 7, 12) + timedelta(days=i) for i in range(7)],
+                {monday.id, thursday.id},
+            ),
+        ):
+            wizard = wizard_model.create(
+                {
+                    "date_start": date(2027, 7, 15),
+                    "date_stop": date(2027, 7, 15),
+                    "full_weeks": full_weeks,
+                    "facility_ids": [(6, 0, facility.ids)],
+                }
+            )
+            action = wizard.reporting()
+            values = report._get_report_values(
+                facility.ids, dict(action["data"])
+            )
+            weeks = values["datasheet"][facility.id]["weeks"]
+            days = [day for week in weeks for day in week["days"]]
+            self.assertEqual(
+                [day["date_start"] for day in days], expected_days
+            )
+            actual_ids = {
+                row["id"]
+                for day in days
+                for row in day["reservations"]
+            }
+            self.assertEqual(actual_ids, expected_ids)
+            self.assertNotIn(after_week.id, actual_ids)
+            self.assertEqual(
+                sum(week["reservation_count"] for week in weeks),
+                len(expected_ids),
+            )
