@@ -21,9 +21,6 @@
         <t t-set="title" t-value="''"/>
         <t t-set="subtitle"
           t-value="'Reservation requests awaiting confirmation'"/>
-        <t t-set="logo_src"
-          t-value="'/logo.png?company=%s' % object.company_id.id"/>
-
         <t t-set="body_html">
           <t t-call="facility_management.email_body_reservation_requests"/>
         </t>

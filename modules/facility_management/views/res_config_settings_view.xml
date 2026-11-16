@@ -10,7 +10,7 @@
     <field name="arch" type="xml">
       <xpath expr="//form" position="inside">
         <app string="Facilities" name="facility_management" groups="base.group_system">
-          <block title="Week" name="hidden_resources">
+          <block title="Week" name="facility_management_week">
             <setting string="Setup weekdays"
               help="Establish the order for the days of the week and determine which are working days.">
               <div class="content-group mt8">
@@ -26,11 +26,11 @@
 
           </block>
 
-          <block title="Reservations" name="hidden_resources">
+          <block title="Reservations" name="facility_management_reservations">
             <setting string="Availability margin"
               help="Number of minutes after the current time during which future reservations will mark a facility as unavailable.">
               <div class="content-group mt8">
-                <field name="availability_margin_minutes" widget="number"/>
+                <field name="availability_margin_minutes" />
               </div>
             </setting>
           </block>
