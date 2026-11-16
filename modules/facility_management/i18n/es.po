@@ -3192,12 +3192,12 @@ msgid "Facility reservations"
 msgstr "Reservas de instalaciones"
 
 #. module: facility_management
-#: model_terms:ir.ui.view,name:facility_management.facility_reservation_state_changed_email
+#: model:ir.ui.view,name:facility_management.facility_reservation_state_changed_email
 msgid "Facility reservation state changed"
 msgstr "Estado de la reserva de instalación modificado"
 
 #. module: facility_management
-#: model_terms:ir.ui.view,name:facility_management.facility_reservation_has_changed_email
+#: model:ir.ui.view,name:facility_management.facility_reservation_has_changed_email
 msgid "Facility reservation has changed"
 msgstr "La reserva de instalación ha cambiado"
 
