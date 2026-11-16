@@ -2,8 +2,14 @@
 
 <odoo noupdate="1">
 
-  <!-- Multicompany
-    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <record id="facility_facility_multi_company_rule" model="ir.rule">
+    <field name="name">Facility Facility: multi-company</field>
+    <field name="model_id" ref="facility_management.model_facility_facility"/>
+    <field name="global" eval="True"/>
+    <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    <field name="active" eval="True"/>
+  </record>
+
   <record id="ir_rule_restricted_facility_complex_multi_company" model="ir.rule">
     <field name="name">Restricted Facility Complex: multi-company</field>
     <field name="model_id" ref="facility_management.model_facility_complex"/>
@@ -15,6 +21,14 @@
   <record id="ir_rule_restricted_facility_facility_multi_company" model="ir.rule">
     <field name="name">Restricted Facility Facility: multi-company</field>
     <field name="model_id" ref="facility_management.model_facility_facility"/>
+    <field name="global" eval="True"/>
+    <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    <field name="active" eval="True"/>
+  </record>
+
+  <record id="facility_reservation_multi_company_rule" model="ir.rule">
+    <field name="name">Facility Reservation: multi-company</field>
+    <field name="model_id" ref="facility_management.model_facility_reservation"/>
     <field name="global" eval="True"/>
     <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     <field name="active" eval="True"/>
